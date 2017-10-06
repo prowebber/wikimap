@@ -6,6 +6,7 @@
 	| Page ID       | Query Time    | Nickname      | Notes                         |
 	|-------------------------------------------------------------------------------|
 	| 18978754      | 1s 194ms      | Apple         |                               |
+	| 4335          | 6s 863ms      | Batman        |                               |
 	 
 	 */
 EXPLAIN SELECT
@@ -27,7 +28,7 @@ FROM wikimap.page_connections pc
 	LEFT JOIN wikimap.pages p2
 		ON p2.page_id = pc.T0
 WHERE
-	pc.T0 = '18978754'
+	pc.T0 = '4335'
 	
 	-- Only show results for shared connections between T0 and T1
 	AND pc2.T1 IN (
@@ -36,7 +37,7 @@ WHERE
 			pc3.T1
 		FROM wikimap.page_connections pc3
 		WHERE
-			pc3.T0 IN (18978754)
+			pc3.T0 IN (4335)
 	)
 GROUP BY pc.T1
 ORDER BY T0_T1_shared_connections DESC
