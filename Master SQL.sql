@@ -5,7 +5,7 @@
 	--------------------------------------------------------------------------------
 	| Page ID       | Query Time    | Nickname      | Notes                         |
 	|-------------------------------------------------------------------------------|
-	| 18978754      | 1m 55s 641ms  | Apple         | Server under load              |
+	| 18978754      | 1s 194ms      | Apple         |                               |
 	 
 	 */
 EXPLAIN SELECT
@@ -13,20 +13,8 @@ EXPLAIN SELECT
 	CAST(p2.page_title AS CHAR) AS T0_page_title,
 	pc.T1 AS T1_page_id,
 	CAST(p.page_title AS CHAR) AS T1_page_title,
-    (   -- Get the total links for T0
-	    SELECT
-		    COUNT(*) AS T0_total_links
-	    FROM wikimap.page_connections pc4
-	    WHERE
-		    pc4.T0 = pc.T0
-    ) AS T0_total_links,
-	(   -- Get the total links for T1
-	    SELECT
-		    COUNT(*) AS T1_total_links
-	    FROM wikimap.page_connections pc5
-	    WHERE
-		    pc5.T0 = pc.T1
-    ) AS T0_total_links,
+	p2.total_connections AS T0_total_connections,
+	p.total_connections AS T1_total_connections,
 	COUNT(pc2.T1) AS T0_T1_shared_connections       # Count the total shared connections
 FROM wikimap.page_connections pc
 	-- Find all of the connections between T0 and T1
