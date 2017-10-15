@@ -1,9 +1,9 @@
 <?php
    $server   = "localhost"; // MySql host name
-   $username = "root"; // MySQL username
-   $password = ""; // MySQL password
-   $dbname   = "admins"; // MySQL database name
-   $table    = "usersvisit"; // MySql table name
+   $username = "admin"; // MySQL username
+   $password = "adminpass"; // MySQL password
+   $dbname   = "wikimap"; // MySQL database name
+   $table    = ""; // MySql table name
    $db=mysql_connect($server,$username,$password) or die(mysql_error());
    mysql_select_db($dbname) or die(mysql_error());
    $results=mysql_query("SELECT * FROM $table LIMIT 30") or die(mysql_error());
