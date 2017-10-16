@@ -20,4 +20,4 @@ function databaseRequest(t0_page_id){
 
 $(function() {
 	databaseRequest('54484061');		// Sugar bee
-}
+});
