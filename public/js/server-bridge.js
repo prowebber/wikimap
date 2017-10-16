@@ -3,7 +3,7 @@ function ajaxFetch(form_data){
 		method: "POST",
 		data: form_data,
 		url: 'http://src.purewebber.com/src/scripts/wikimaps.php',
-		dataType: json
+		dataType: 'json'
 	});
 }
 
