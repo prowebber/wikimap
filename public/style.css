@@ -2,3 +2,27 @@ body {
 	font-family: 'Roboto Condensed', sans-serif;
 	font-size: 16px;
 }
+form input{
+    border:1px solid #37474f;
+    border-radius: 3px;
+    font-family: 'Source Code Pro', monospace;
+    font-size:18px;
+    font-weight:500;
+    padding:2px 5px;
+}
+button{
+    background-color: #37474f;
+    color: #fff;
+    cursor:pointer;
+    border: 0;
+    border-radius: 3px;
+    font-size: 18px;
+    font-family: 'Roboto Condensed', sans-serif;
+    height: 30px;
+    margin:-2px 0 0 10px;
+}
+
+section.response-results{
+    font-family: 'Source Code Pro', monospace;
+    font-size:14px;
+}
