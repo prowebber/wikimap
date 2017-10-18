@@ -15,10 +15,12 @@ function databaseRequest(user_input){
 
 	ajaxFetch(form_data).done(function (data) {			// Call the Ajax function and wait for it to finish
 
+		var parsed_data = JSON.parse(data);
+
 		/* Get the data from the request */
-		var matched_page_id = data.target_page_id;
-		var matched_page_title = data.target_page_title;
-		var json_response = data.results;
+		var matched_page_id = parsed_data.target_page_id;
+		var matched_page_title = parsed_data.target_page_title;
+		var json_response = parsed_data.results;
 
 		/* Show the raw JSON results to the user */
 		$('#results_text').val(json_response);					// Display results in the HTML textarea container
@@ -26,14 +28,14 @@ function databaseRequest(user_input){
 		$('#matched_page_title').html(matched_page_title);
 
 
-		var test = JSON.parse(json_response);
+		//var test = JSON.parse(json_response);
 
-		console.log(test);
+		console.log(json_response);
 
 
 		const Graph = ForceGraph3D()
 		(document.getElementById('3d-graph'))
-			.graphData(test)
+			.graphData(json_response)
 			.nameField('id')
 			.autoColorBy('group');
 	});
