@@ -16,10 +16,15 @@ function databaseRequest(t0_page_id){
 	ajaxFetch(form_data).done(function (data) {			// Call the Ajax function and wait for it to finish
 		$('#results').html(data);
 
+		var test = JSON.stringify(data);
+
+		console(data);
+
+
 
 		const Graph = ForceGraph3D()
 		(document.getElementById('3d-graph'))
-			.graphData(data)
+			.graphData(test)
 			.nameField('id')
 			.autoColorBy('group');
 	});
