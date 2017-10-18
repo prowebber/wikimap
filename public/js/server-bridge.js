@@ -18,8 +18,7 @@ function databaseRequest(t0_page_id){
 
 		var test = JSON.parse(data);
 
-		console.log(data);
-		$.parseJSON(jsonString);
+		console.log(test);
 
 
 		const Graph = ForceGraph3D()
