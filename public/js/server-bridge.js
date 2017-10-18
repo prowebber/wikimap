@@ -18,7 +18,7 @@ function databaseRequest(t0_page_id){
 
 		var test = JSON.stringify(data);
 
-		console(data);
+		console.log(data);
 
 
 
