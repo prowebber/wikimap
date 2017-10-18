@@ -23,7 +23,7 @@ function databaseRequest(user_input){
 		var json_response = parsed_data.results;
 
 		/* Show the raw JSON results to the user */
-		$('#results_text').val(data.results);					// Display results in the HTML textarea container
+		$('#results_text').val( JSON.stringify(json_response) );					// Display results in the HTML textarea container
 		$('#matched_page_id').html(matched_page_id);
 		$('#matched_page_title').html(matched_page_title);
 
