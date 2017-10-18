@@ -16,10 +16,10 @@ function databaseRequest(t0_page_id){
 	ajaxFetch(form_data).done(function (data) {			// Call the Ajax function and wait for it to finish
 		$('#results').html(data);
 
-		var test = JSON.stringify(data);
+		var test = JSON.parse(data);
 
 		console.log(data);
-
+		$.parseJSON(jsonString);
 
 
 		const Graph = ForceGraph3D()
