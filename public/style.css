@@ -9,6 +9,7 @@ form input{
     font-size:18px;
     font-weight:500;
     padding:2px 5px;
+    width:600px;
 }
 button{
     background-color: #37474f;
@@ -25,4 +26,24 @@ button{
 section.response-results{
     font-family: 'Source Code Pro', monospace;
     font-size:14px;
+    text-align: center;
+}
+textarea{
+    font-family: 'Source Code Pro', monospace;
+    font-size:14px;
+    margin:0 auto;
+    width:80%;
+    height:500px;
+}
+
+table.results{
+    float:left;
+    text-align: left;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+table.results tr td:nth-child(1){
+    font-weight:300;
+}
+table.results tr td:nth-child(1){
+    font-weight:700;
 }
