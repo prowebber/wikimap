@@ -15,6 +15,13 @@ function databaseRequest(t0_page_id){
 
 	ajaxFetch(form_data).done(function (data) {			// Call the Ajax function and wait for it to finish
 		$('#results').html(data);
+
+
+		const Graph = ForceGraph3D()
+		(document.getElementById('3d-graph'))
+			.graphData(data)
+			.nameField('id')
+			.autoColorBy('group');
 	});
 }
 
