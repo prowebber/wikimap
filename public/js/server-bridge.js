@@ -15,6 +15,9 @@ function databaseRequest(user_input){
 
 	ajaxFetch(form_data).done(function (data) {			// Call the Ajax function and wait for it to finish
 
+		console.log(data);
+
+		return;
 		var parsed_data = JSON.parse(data);
 
 		/* Get the data from the request */
