@@ -2,7 +2,7 @@ function ajaxFetch(form_data){
 	return $.ajax({
 		method: "POST",
 		data: form_data,
-		url: 'https://src.purewebber.com/src/scripts/wikimaps.php',
+		url: '/wikimap/src/scripts/wikilinks.php',
 		dataType: 'text'
 	});
 }
