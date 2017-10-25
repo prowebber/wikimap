@@ -5,7 +5,7 @@
       <paths name="Datapeak.co">
         <serverdata>
           <mappings>
-            <mapping deploy="/public_html/wikimap" local="$PROJECT_DIR$" web="/wikimap" />
+            <mapping deploy="/public_html/wikimap" local="$PROJECT_DIR$" web="/public_html/wikimap" />
           </mappings>
         </serverdata>
       </paths>
