@@ -144,9 +144,10 @@ class Fetch_Ajax_Script{
 				$T0_readable = $this->makeTitleReadable($T0_page_title);
 				
 				#$beta['nodes'][$i]['id']
-				
+				$data['nodes'][$i]['color'] = '#00ffff';
 				$data['nodes'][$i]['id']   = $T1_readable;
 				$data['nodes'][$i]['name'] = $T1_page_title;
+				
 				//$data['nodes'][$i]['val']  = $T0_T1_shared_connections;
 				
 				$data['links'][$i]['source'] = $T0_readable;
@@ -156,6 +157,7 @@ class Fetch_Ajax_Script{
 			}
 			
 			// Add T0 data
+			$data['nodes'][$i]['color'] = '#00ffff';
 			$data['nodes'][$i]['id']   = $T0_readable;
 			$data['nodes'][$i]['name'] = $T0_page_title;
 			//$data['nodes'][$i]['val']  = $T0_total_connections;
