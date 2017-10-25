@@ -126,7 +126,7 @@ class Fetch_Ajax_Script{
 												)
 											GROUP BY pc.T1
 											ORDER BY T0_T1_shared_connections DESC
-											  LIMIT 10
+											  LIMIT 100
                                 ");
 		
 		if($result->num_rows){
