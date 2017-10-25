@@ -3,4 +3,6 @@
 .idea/workspace.xml
 
 .idea/deployment.xml
+.idea/dataSources
+.idea/dataSources.local.xml
 .idea/dataSources.xml
