@@ -58,11 +58,6 @@ class Fetch_Ajax_Script_Multi{
 		$i            = 0;                         # Incremental counter for the array
 		$node_counter = 0;
 		
-		// Add T0 to the nodes list
-		$final['results']['nodes'][$node_counter]['id']   = $T0_page_title;      # This is the title, not ID
-		$final['results']['nodes'][$node_counter]['name'] = $T0_page_title;
-		$node_counter++;
-		
 		// Loop through each of the results for T0
 		foreach(array_keys($data['results']) as $key){
 			$T1_page_id               = $data['results'][$key]['id'];           # Get T1 page ID
