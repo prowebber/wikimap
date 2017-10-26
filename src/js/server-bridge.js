@@ -2,7 +2,8 @@ function ajaxFetch(form_data){
 	return $.ajax({
 		method: "POST",
 		data: form_data,
-		url: '/wikimap/src/scripts/wikilinks.php',
+		url: '/wikimap/src/scripts/wikilinks-multi.php',
+		//url: '/wikimap/src/scripts/wikilinks.php',
 		dataType: 'text'
 	});
 }
@@ -11,9 +12,11 @@ function ajaxFetch(form_data){
 function databaseRequest(user_input){
 	var form_data = [];
 	form_data.push({name: 'user_input', value: user_input});
-	form_data.push({name: 'server_class', value: 'fetchT0Data'});
+	//form_data.push({name: 'server_class', value: 'fetchT0Data'});
+	form_data.push({name: 'server_class', value: 'fetchMultiData'});
 
 	ajaxFetch(form_data).done(function (data) {			// Call the Ajax function and wait for it to finish
+		console.log('Data:\n' + data);
 
 		var parsed_data = JSON.parse(data);
 
@@ -44,6 +47,7 @@ function databaseRequest(user_input){
 $(function() {
 
 	$("form").submit( function (e) {
+		console.log('submitted');
 		e.preventDefault();											// Prevent POST data from displaying in the URL
 		var user_input = $('#user_input').val();
 		databaseRequest(user_input);
