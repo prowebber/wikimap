@@ -157,9 +157,9 @@ class Fetch_Ajax_Script{
 			}
 			
 			// Add T0 data
-			$data['nodes'][$i]['color'] = '#00ffff';
-			$data['nodes'][$i]['id']   = $T0_readable;
-			$data['nodes'][$i]['name'] = $T0_page_title;
+//			$data['nodes'][$i]['color'] = '#00ffff';
+//			$data['nodes'][$i]['id']   = $T0_readable;
+//			$data['nodes'][$i]['name'] = $T0_page_title;
 			//$data['nodes'][$i]['val']  = $T0_total_connections;
 		}
 		
