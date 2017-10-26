@@ -15,7 +15,7 @@ function databaseRequest(user_input){
 	form_data.push({name: 'server_class', value: 'fetchMultiData'});
 
 	ajaxFetch(form_data).done(function (data) {			// Call the Ajax function and wait for it to finish
-		console.log('Data:\n' + data);
+		//console.log('Data:\n' + data);
 
 		var parsed_data = JSON.parse(data);
 
@@ -23,16 +23,18 @@ function databaseRequest(user_input){
 		var matched_page_id = parsed_data.target_page_id;
 		var matched_page_title = parsed_data.target_page_title;
 		var json_response = parsed_data.results;
+		var execution_time = parsed_data.execution_time;
 
 		/* Show the raw JSON results to the user */
 		$('#results_text').val( JSON.stringify(json_response) );					// Display results in the HTML textarea container
 		$('#matched_page_id').html(matched_page_id);
 		$('#matched_page_title').html(matched_page_title);
+		console.log('Execution Times:\n' + execution_time);
 
 
 		//var test = JSON.parse(json_response);
 
-		console.log(json_response);
+		//console.log(json_response);
 
 
 		const Graph = ForceGraph3D()

@@ -28,6 +28,11 @@ class Fetch_Ajax_Script_Multi{
 	
 	
 	
+	/**
+	 * Start Here
+	 *
+	 * @param $post_data        An array of data being fed from the user's submit action
+	 */
 	public function classConfig($post_data){
 		if(!isset($post_data['server_class'])){
 			return;
@@ -104,6 +109,14 @@ class Fetch_Ajax_Script_Multi{
 			}
 		}
 		
+		// Make sure the T0 reference is in the array
+		if(!isset($history['nodes'][$T0_page_id])){                             # If T0 is not in the array
+			$data['nodes'][$node_counter]['id']   = $T0_page_title;
+			$data['nodes'][$node_counter]['name'] = $T0_page_title;
+		}
+		
+		
+		
 		$final                      = array();             # Array to store the final output data
 		$final['results']           = $data;
 		$final['execution_time']    = $this->execution_time;    # Not required - Used to display the execution time to the user
@@ -147,7 +160,7 @@ class Fetch_Ajax_Script_Multi{
 			
 			$final['results']['links'][$i]['source']          = $T0_page_title;
 			$final['results']['links'][$i]['target']          = $T1_page_title;
-			$final['results']['links'][$i]['distance']        = $T0_T1_shared_connections;
+			$final['results']['links'][$i]['strength']        = $T0_T1_shared_connections;
 			$history['links'][$T0_page_title][$T1_page_title] = 1;              # Add the link connections to history to prevent duplicates
 			$i++;
 			$node_counter++;
@@ -172,7 +185,7 @@ class Fetch_Ajax_Script_Multi{
 				if(!isset($history['links'][$T1_page_title][$T2_page_title])){
 					$final['results']['links'][$i]['source']          = $T1_page_title;
 					$final['results']['links'][$i]['target']          = $T2_page_title;
-					$final['results']['links'][$i]['distance']        = $T1_T2_shared_connections;
+					$final['results']['links'][$i]['strength']        = $T1_T2_shared_connections;
 					$history['links'][$T1_page_title][$T2_page_title] = 1;
 					$i++;
 				}
@@ -301,7 +314,7 @@ class Fetch_Ajax_Script_Multi{
 												)
 											GROUP BY pc.T1
 											ORDER BY T0_T1_shared_connections DESC
-											  LIMIT 5
+											  LIMIT 25
                                 ");
 		
 		if($result->num_rows){
@@ -325,7 +338,7 @@ class Fetch_Ajax_Script_Multi{
 		
 		// Record the number of seconds the query took
 		$total_time                           = number_format((microtime(TRUE) - $start_time), 6);
-		$this->execution_time[$T0_page_title] = $total_time;
+		$this->execution_time[] = $T0_page_title.": ".$total_time."\n";
 		
 		return $data;
 	}
