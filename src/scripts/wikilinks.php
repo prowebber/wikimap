@@ -154,11 +154,6 @@ class Fetch_Ajax_Script{
 				$data['links'][$i]['distance']  = $T0_T1_shared_connections;
 				$i++;
 			}
-			
-			// Add T0 data
-			$data['nodes'][$i]['id']   = $T0_readable;
-			$data['nodes'][$i]['name'] = $T0_page_title;
-			//$data['nodes'][$i]['val']  = $T0_total_connections;
 		}
 		
 		return $data;
