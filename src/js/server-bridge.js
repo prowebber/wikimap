@@ -2,8 +2,7 @@ function ajaxFetch(form_data){
 	return $.ajax({
 		method: "POST",
 		data: form_data,
-		url: '/wikimap/src/scripts/wikilinks-multi.php',
-		//url: '/wikimap/src/scripts/wikilinks.php',
+		url: '/wikimap/src/scripts/wikilinks.php',
 		dataType: 'text'
 	});
 }
