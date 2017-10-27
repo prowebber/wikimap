@@ -206,7 +206,7 @@ class Fetch_Ajax_Script_Multi{
 												)
 											GROUP BY pc.T1
 											ORDER BY T0_T1_shared_connections DESC
-											  LIMIT 25
+											  LIMIT 100
                                 ");
 		
 		if($result->num_rows){
@@ -222,7 +222,7 @@ class Fetch_Ajax_Script_Multi{
 				
 				$data[$i]['id']       = $T1_page_id;
 				$data[$i]['name']     = $T1_page_title;
-				$data[$i]['color']     = '#0000ff';
+				#$data[$i]['color']     = '#00ffff';
 				$data[$i]['val'] = $T0_T1_shared_connections;
 				
 				$i++;
