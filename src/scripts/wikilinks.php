@@ -28,6 +28,11 @@ class Fetch_Ajax_Script_Multi{
 	
 	
 	
+	/**
+	 * Start Here
+	 *
+	 * @param $post_data        An array of data being fed from the user's submit action
+	 */
 	public function classConfig($post_data){
 		if(!isset($post_data['server_class'])){
 			return;
@@ -40,6 +45,90 @@ class Fetch_Ajax_Script_Multi{
 	
 	
 	public function fetchMultiData($post_data){
+		$user_input = $post_data['user_input'] ?? 'HTTP_404';   # Default to 'HTTP_404' if not found
+		
+		$target_data   = $this->getPageId($user_input);           # Use the user's input to grab the correct page_id
+		$T0_page_id    = $target_data['page_id'];
+		$T0_page_title = $target_data['page_title'];
+		
+		$data    = array();
+		$history = array();                                                     # Array to store which nodes have already been included in the data array to help prevent duplicates
+		
+		/* Fetch the data for T0 */
+		$T0_results = $this->dbQuery($T0_page_id);                              # Query the database for all the connections for T0
+		
+		$links_counter = 0;                                                     # Incremental counter for the array
+		$node_counter  = 0;                                                     # Incremental counter for the nodes
+		
+		// Loop through each of the results for T0
+		foreach(array_keys($T0_results) as $T0_key){
+			$T1_page_id               = $T0_results[$T0_key]['id'];             # Get T1 page ID
+			$T1_page_title            = $T0_results[$T0_key]['name'];           # Get T1 page Title
+			$T0_T1_shared_connections = $T0_results[$T0_key]['distance'];       # Get the total shared connections between T0->T1
+			
+			/* Create the data array for the JSON script */
+			// Add to the nodes
+			$data['nodes'][$node_counter]['id']   = $T1_page_title;
+			$data['nodes'][$node_counter]['name'] = $T1_page_title;
+			$history['nodes'][$T1_page_id]        = 1;                                 # Add the page ID to the history array so we can prevent it from being included multiple times
+			$node_counter++;
+			
+			// Add to the links
+			$data['links'][$links_counter]['source']          = $T0_page_title;
+			$data['links'][$links_counter]['target']          = $T1_page_title;
+			$data['links'][$links_counter]['distance']        = $T0_T1_shared_connections;
+			$history['links'][$T0_page_title][$T1_page_title] = 1;                  # Add the link connections to history to prevent duplicates
+			$links_counter++;
+			
+			/* Fetch the data for the T1 */
+			$T1_results = $this->dbQuery($T1_page_id);                              # Query the database for all connections for T1
+			
+			// Loop through each of the top 10 sub tier results
+			foreach(array_keys($T1_results) as $T1_key){
+				$T2_page_id               = $T1_results[$T1_key]['id'];         # Get T2 page ID
+				$T2_page_title            = $T1_results[$T1_key]['name'];       # Get T2 page Title
+				$T1_T2_shared_connections = $T1_results[$T1_key]['distance'];   # Get the total connections between T1->T2
+				
+				/* Add to the data array for the JSON script */
+				// Add to the nodes
+				if(!isset($history['nodes'][$T2_page_id])){                     # If the node hasn't previously been added to the array
+					$data['nodes'][$node_counter]['id']   = $T2_page_title;
+					$data['nodes'][$node_counter]['name'] = $T2_page_title;
+					$history['nodes'][$T2_page_id]        = 1;
+					$node_counter++;
+				}
+				
+				// If the links are not already computed for the connections
+				if(!isset($history['links'][$T1_page_title][$T2_page_title])){
+					$data['links'][$links_counter]['source']          = $T1_page_title;
+					$data['links'][$links_counter]['target']          = $T2_page_title;
+					$data['links'][$links_counter]['distance']        = $T1_T2_shared_connections;
+					$history['links'][$T1_page_title][$T2_page_title] = 1;
+					$links_counter++;
+				}
+			}
+		}
+		
+		// Make sure the T0 reference is in the array
+		if(!isset($history['nodes'][$T0_page_id])){                             # If T0 is not in the array
+			$data['nodes'][$node_counter]['id']   = $T0_page_title;
+			$data['nodes'][$node_counter]['name'] = $T0_page_title;
+		}
+		
+		
+		
+		$final                      = array();             # Array to store the final output data
+		$final['results']           = $data;
+		$final['execution_time']    = $this->execution_time;    # Not required - Used to display the execution time to the user
+		$final['target_page_id']    = $T0_page_id;              # Not required - Used to show the target page ID to the user
+		$final['target_page_title'] = $T0_page_title;           # Not required - Used to show the target page name to the user
+		
+		echo json_encode($final);
+	}
+	
+	
+	
+	public function fetchMultiData_old($post_data){
 		$user_input = $post_data['user_input'] ?? 'HTTP_404';   # Default to 'HTTP_404' if not found
 		
 		$target_data   = $this->getPageId($user_input);           # Use the user's input to grab the correct page_id
@@ -71,7 +160,7 @@ class Fetch_Ajax_Script_Multi{
 			
 			$final['results']['links'][$i]['source']          = $T0_page_title;
 			$final['results']['links'][$i]['target']          = $T1_page_title;
-			$final['results']['links'][$i]['distance']        = $T0_T1_shared_connections;
+			$final['results']['links'][$i]['strength']        = $T0_T1_shared_connections;
 			$history['links'][$T0_page_title][$T1_page_title] = 1;              # Add the link connections to history to prevent duplicates
 			$i++;
 			$node_counter++;
@@ -96,7 +185,7 @@ class Fetch_Ajax_Script_Multi{
 				if(!isset($history['links'][$T1_page_title][$T2_page_title])){
 					$final['results']['links'][$i]['source']          = $T1_page_title;
 					$final['results']['links'][$i]['target']          = $T2_page_title;
-					$final['results']['links'][$i]['distance']        = $T1_T2_shared_connections;
+					$final['results']['links'][$i]['strength']        = $T1_T2_shared_connections;
 					$history['links'][$T1_page_title][$T2_page_title] = 1;
 					$i++;
 				}
@@ -225,7 +314,7 @@ class Fetch_Ajax_Script_Multi{
 												)
 											GROUP BY pc.T1
 											ORDER BY T0_T1_shared_connections DESC
-											  LIMIT 5
+											  LIMIT 25
                                 ");
 		
 		if($result->num_rows){
@@ -249,7 +338,7 @@ class Fetch_Ajax_Script_Multi{
 		
 		// Record the number of seconds the query took
 		$total_time                           = number_format((microtime(TRUE) - $start_time), 6);
-		$this->execution_time[$T0_page_title] = $total_time;
+		$this->execution_time[] = $T0_page_title.": ".$total_time."\n";
 		
 		return $data;
 	}
