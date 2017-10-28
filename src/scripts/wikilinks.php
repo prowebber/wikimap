@@ -46,7 +46,8 @@ class Fetch_Ajax_Script_Multi{
 	
 	public function fetchMultiData($post_data){
 		$user_input = $post_data['user_input'] ?? 'HTTP_404';   # Default to 'HTTP_404' if not found
-		
+		$nodeColor = 0x0000ff;                                  # Color constant to use for all nodes
+		$linkColor = 0x00ffff;                                  # Color constant to use for all links
 		$target_data   = $this->getPageId($user_input);           # Use the user's input to grab the correct page_id
 		$T0_page_id    = $target_data['page_id'];
 		$T0_page_title = $target_data['page_title'];
@@ -71,7 +72,7 @@ class Fetch_Ajax_Script_Multi{
 			if(!isset($history['nodes'][$T1_page_id])){                         # Only create a node if it doesn't exist (prevent stragglers)
 				$data['nodes'][$node_counter]['id']   = $T1_page_title;
 				$data['nodes'][$node_counter]['name'] = $T1_page_title;
-				$data['nodes'][$node_counter]['color'] = 0xff0000;
+				$data['nodes'][$node_counter]['color'] = $nodeColor;
 				$history['nodes'][$T1_page_id]        = 1;                      # Add the page ID to the history array so we can prevent it from being included multiple times
 				$node_counter++;
 			}
@@ -81,7 +82,7 @@ class Fetch_Ajax_Script_Multi{
 			$data['links'][$links_counter]['source']          = $T0_page_title;
 			$data['links'][$links_counter]['target']          = $T1_page_title;
 			$data['links'][$links_counter]['val']        = $T0_T1_shared_connections;
-			$data['links'][$links_counter]['color']        = 0xffffff;
+			$data['links'][$links_counter]['color']        = $linkColor;
 			$history['links'][$T0_page_title][$T1_page_title] = 1;                  # Add the link connections to history to prevent duplicates
 			$links_counter++;
 			
@@ -99,7 +100,7 @@ class Fetch_Ajax_Script_Multi{
 				if(!isset($history['nodes'][$T2_page_id])){                     # If the node hasn't previously been added to the array
 					$data['nodes'][$node_counter]['id']   = $T2_page_title;
 					$data['nodes'][$node_counter]['name'] = $T2_page_title;
-					$data['nodes'][$node_counter]['color'] = 0xff0000;
+					$data['nodes'][$node_counter]['color'] = $nodeColor;
 					$history['nodes'][$T2_page_id]        = 1;
 					$node_counter++;
 				}
@@ -109,7 +110,7 @@ class Fetch_Ajax_Script_Multi{
 					$data['links'][$links_counter]['source']          = $T1_page_title;
 					$data['links'][$links_counter]['target']          = $T2_page_title;
 					$data['links'][$links_counter]['val']        = $T1_T2_shared_connections;
-					$data['links'][$links_counter]['color']        = 0xffffff;
+					$data['links'][$links_counter]['color']        = $linkColor;
 					$history['links'][$T1_page_title][$T2_page_title] = 1;
 					$links_counter++;
 				}
