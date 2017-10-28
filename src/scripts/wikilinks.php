@@ -71,7 +71,7 @@ class Fetch_Ajax_Script_Multi{
 			if(!isset($history['nodes'][$T1_page_id])){                         # Only create a node if it doesn't exist (prevent stragglers)
 				$data['nodes'][$node_counter]['id']   = $T1_page_title;
 				$data['nodes'][$node_counter]['name'] = $T1_page_title;
-				$data['nodes'][$node_counter]['color'] = '0xff0000';
+				$data['nodes'][$node_counter]['color'] = 0xff0000;
 				$history['nodes'][$T1_page_id]        = 1;                      # Add the page ID to the history array so we can prevent it from being included multiple times
 				$node_counter++;
 			}
@@ -98,7 +98,7 @@ class Fetch_Ajax_Script_Multi{
 				if(!isset($history['nodes'][$T2_page_id])){                     # If the node hasn't previously been added to the array
 					$data['nodes'][$node_counter]['id']   = $T2_page_title;
 					$data['nodes'][$node_counter]['name'] = $T2_page_title;
-					$data['nodes'][$node_counter]['color'] = '0xff0000';
+					$data['nodes'][$node_counter]['color'] = 0xff0000;
 					$history['nodes'][$T2_page_id]        = 1;
 					$node_counter++;
 				}
