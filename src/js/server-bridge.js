@@ -40,7 +40,7 @@ function databaseRequest(user_input){
 		const Graph = ForceGraph3D()
 		(document.getElementById('3d-graph'))
 			.graphData(json_response)
-			.nameField('id');
+			.nameField('id')
 			// .autoColorBy('group');
 	});
 }

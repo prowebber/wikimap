@@ -81,6 +81,7 @@ class Fetch_Ajax_Script_Multi{
 			$data['links'][$links_counter]['source']          = $T0_page_title;
 			$data['links'][$links_counter]['target']          = $T1_page_title;
 			$data['links'][$links_counter]['val']        = $T0_T1_shared_connections;
+			$data['links'][$links_counter]['color']        = 0xffffff;
 			$history['links'][$T0_page_title][$T1_page_title] = 1;                  # Add the link connections to history to prevent duplicates
 			$links_counter++;
 			
@@ -108,6 +109,7 @@ class Fetch_Ajax_Script_Multi{
 					$data['links'][$links_counter]['source']          = $T1_page_title;
 					$data['links'][$links_counter]['target']          = $T2_page_title;
 					$data['links'][$links_counter]['val']        = $T1_T2_shared_connections;
+					$data['links'][$links_counter]['color']        = 0xffffff;
 					$history['links'][$T1_page_title][$T2_page_title] = 1;
 					$links_counter++;
 				}
