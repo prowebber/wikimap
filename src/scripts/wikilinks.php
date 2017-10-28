@@ -64,14 +64,17 @@ class Fetch_Ajax_Script_Multi{
 		foreach(array_keys($T0_results) as $T0_key){
 			$T1_page_id               = $T0_results[$T0_key]['id'];             # Get T1 page ID
 			$T1_page_title            = $T0_results[$T0_key]['name'];           # Get T1 page Title
-			$T0_T1_shared_connections = $T0_results[$T0_key]['val'];       # Get the total shared connections between T0->T1
+			$T0_T1_shared_connections = $T0_results[$T0_key]['val'];            # Get the total shared connections between T0->T1
 			
 			/* Create the data array for the JSON script */
 			// Add to the nodes
-			$data['nodes'][$node_counter]['id']   = $T1_page_title;
-			$data['nodes'][$node_counter]['name'] = $T1_page_title;
-			$history['nodes'][$T1_page_id]        = 1;                                 # Add the page ID to the history array so we can prevent it from being included multiple times
-			$node_counter++;
+			if(!isset($history['nodes'][$T1_page_id])){                         # Only create a node if it doesn't exist (prevent stragglers)
+				$data['nodes'][$node_counter]['id']   = $T1_page_title;
+				$data['nodes'][$node_counter]['name'] = $T1_page_title;
+				$history['nodes'][$T1_page_id]        = 1;                      # Add the page ID to the history array so we can prevent it from being included multiple times
+				$node_counter++;
+			}
+			
 			
 			// Add to the links
 			$data['links'][$links_counter]['source']          = $T0_page_title;
