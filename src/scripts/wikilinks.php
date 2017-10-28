@@ -228,7 +228,7 @@ class Fetch_Ajax_Script_Multi{
 				$T0_T1_shared_connections = $row['T0_T1_shared_connections'];
 				
 				$data[$i]['id']       = $T1_page_id;
-				$data[$i]['name']     = $T1_page_title;
+				$data[$i]['name']     = $this->makeTitleReadable($T1_page_title);
 				#$data[$i]['color']     = '#00ffff';
 				$data[$i]['val'] = $T0_T1_shared_connections;
 				
