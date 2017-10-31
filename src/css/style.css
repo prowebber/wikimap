@@ -47,3 +47,18 @@ table.results tr td:nth-child(1){
 table.results tr td:nth-child(1){
     font-weight:700;
 }
+
+.graph-tooltip {
+    position: absolute !important;
+    color: lavender;
+    font-size:18px !important;
+}
+
+
+section.wiki-header{
+    background-color:#fff;
+    opacity: 0.5;
+    position:absolute;
+    width:100%;
+    top:0;
+}
