@@ -41,9 +41,20 @@ function databaseRequest(user_input){
 		(document.getElementById('3d-graph'))
 			.graphData(json_response)
 			.nameField('id')
-			// .autoColorBy('group');
+			.onNodeClick(colorNode);
+		function colorNode(node){
+			let { nodes, links } = Graph.graphData();
+			if (!node) return;
+			if (node.color !== 0x00ffff){
+				node.color = 0x00ffff;
+			} else {
+				node.color = 0x0000ff;
+			}
+			Graph.graphData({ nodes, links });
+		};
 	});
 }
+
 
 $(function() {
 
