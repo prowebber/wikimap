@@ -45,12 +45,13 @@ class Fetch_Ajax_Script_Multi{
 	
 	
 	public function fetchMultiData($post_data){
-		$user_input = $post_data['user_input'] ?? 'HTTP_404';   # Default to 'HTTP_404' if not found
-		$nodeColor = 0x0000ff;                                  # Color constant to use for all nodes
-		$linkColor = 0x00ffff;                                  # Color constant to use for all links
-		$target_data   = $this->getPageId($user_input);           # Use the user's input to grab the correct page_id
-		$T0_page_id    = $target_data['page_id'];
-		$T0_page_title = $target_data['page_title'];
+		$user_input           = $post_data['user_input'] ?? 'HTTP_404';   # Default to 'HTTP_404' if not found
+		$nodeColor            = 0x0000ff;                                  # Color constant to use for all nodes
+		$linkColor            = 0x00ffff;                                  # Color constant to use for all links
+		$target_data          = $this->getPageId($user_input);           # Use the user's input to grab the correct page_id
+		$T0_page_id           = $target_data['page_id'];
+		$T0_page_title        = $target_data['page_title'];
+		$T0_pretty_page_title = $this->makeTitleReadable($T0_page_title);
 		
 		$data    = array();
 		$history = array();                                                     # Array to store which nodes have already been included in the data array to help prevent duplicates
@@ -65,15 +66,16 @@ class Fetch_Ajax_Script_Multi{
 		foreach(array_keys($T0_results) as $T0_key){
 			$T1_page_id               = $T0_results[$T0_key]['id'];             # Get T1 page ID
 			$T1_page_title            = $T0_results[$T0_key]['name'];           # Get T1 page Title
+			$T1_pretty_page_title     = $this->makeTitleReadable($T1_page_title);
 			$T0_T1_shared_connections = $T0_results[$T0_key]['val'];            # Get the total shared connections between T0->T1
 			
 			/* Create the data array for the JSON script */
 			// Add to the nodes
 			if(!isset($history['nodes'][$T1_page_id])){                         # Only create a node if it doesn't exist (prevent stragglers)
-				$data['nodes'][$node_counter]['id']   = $T1_page_title;
-				$data['nodes'][$node_counter]['name'] = $T1_page_title;
+				$data['nodes'][$node_counter]['id']    = $T1_page_title;
+				$data['nodes'][$node_counter]['name']  = $T1_pretty_page_title;
 				$data['nodes'][$node_counter]['color'] = $nodeColor;
-				$history['nodes'][$T1_page_id]        = 1;                      # Add the page ID to the history array so we can prevent it from being included multiple times
+				$history['nodes'][$T1_page_id]         = 1;                      # Add the page ID to the history array so we can prevent it from being included multiple times
 				$node_counter++;
 			}
 			
@@ -81,8 +83,8 @@ class Fetch_Ajax_Script_Multi{
 			// Add to the links
 			$data['links'][$links_counter]['source']          = $T0_page_title;
 			$data['links'][$links_counter]['target']          = $T1_page_title;
-			$data['links'][$links_counter]['val']        = $T0_T1_shared_connections;
-			$data['links'][$links_counter]['color']        = $linkColor;
+			$data['links'][$links_counter]['val']             = $T0_T1_shared_connections;
+			$data['links'][$links_counter]['color']           = $linkColor;
 			$history['links'][$T0_page_title][$T1_page_title] = 1;                  # Add the link connections to history to prevent duplicates
 			$links_counter++;
 			
@@ -93,15 +95,16 @@ class Fetch_Ajax_Script_Multi{
 			foreach(array_keys($T1_results) as $T1_key){
 				$T2_page_id               = $T1_results[$T1_key]['id'];         # Get T2 page ID
 				$T2_page_title            = $T1_results[$T1_key]['name'];       # Get T2 page Title
+				$T2_pretty_page_title     = $this->makeTitleReadable($T2_page_title);
 				$T1_T2_shared_connections = $T1_results[$T1_key]['val'];   # Get the total connections between T1->T2
 				
 				/* Add to the data array for the JSON script */
 				// Add to the nodes
 				if(!isset($history['nodes'][$T2_page_id])){                     # If the node hasn't previously been added to the array
-					$data['nodes'][$node_counter]['id']   = $T2_page_title;
-					$data['nodes'][$node_counter]['name'] = $T2_page_title;
+					$data['nodes'][$node_counter]['id']    = $T2_page_title;
+					$data['nodes'][$node_counter]['name']  = $T2_pretty_page_title;
 					$data['nodes'][$node_counter]['color'] = $nodeColor;
-					$history['nodes'][$T2_page_id]        = 1;
+					$history['nodes'][$T2_page_id]         = 1;
 					$node_counter++;
 				}
 				
@@ -109,8 +112,8 @@ class Fetch_Ajax_Script_Multi{
 				if(!isset($history['links'][$T1_page_title][$T2_page_title])){
 					$data['links'][$links_counter]['source']          = $T1_page_title;
 					$data['links'][$links_counter]['target']          = $T2_page_title;
-					$data['links'][$links_counter]['val']        = $T1_T2_shared_connections;
-					$data['links'][$links_counter]['color']        = $linkColor;
+					$data['links'][$links_counter]['val']             = $T1_T2_shared_connections;
+					$data['links'][$links_counter]['color']           = $linkColor;
 					$history['links'][$T1_page_title][$T2_page_title] = 1;
 					$links_counter++;
 				}
@@ -120,9 +123,8 @@ class Fetch_Ajax_Script_Multi{
 		// Make sure the T0 reference is in the array
 		if(!isset($history['nodes'][$T0_page_id])){                             # If T0 is not in the array
 			$data['nodes'][$node_counter]['id']   = $T0_page_title;
-			$data['nodes'][$node_counter]['name'] = $T0_page_title;
+			$data['nodes'][$node_counter]['name'] = $T0_pretty_page_title;
 		}
-		
 		
 		
 		$final                      = array();             # Array to store the final output data
@@ -133,6 +135,8 @@ class Fetch_Ajax_Script_Multi{
 		
 		echo json_encode($final);
 	}
+	
+	
 	
 	public function getPageId($user_input){
 		// If the user entered a wikipedia URL
@@ -228,8 +232,8 @@ class Fetch_Ajax_Script_Multi{
 				$T1_total_connections     = $row['T1_total_connections'];
 				$T0_T1_shared_connections = $row['T0_T1_shared_connections'];
 				
-				$data[$i]['id']       = $T1_page_id;
-				$data[$i]['name']     = $this->makeTitleReadable($T1_page_title);
+				$data[$i]['id']   = $T1_page_id;
+				$data[$i]['name'] = $T1_page_title;
 				#$data[$i]['color']     = '#00ffff';
 				$data[$i]['val'] = $T0_T1_shared_connections;
 				
@@ -238,8 +242,8 @@ class Fetch_Ajax_Script_Multi{
 		}
 		
 		// Record the number of seconds the query took
-		$total_time                           = number_format((microtime(TRUE) - $start_time), 6);
-		$this->execution_time[] = $T0_page_title.": ".$total_time."\n";
+		$total_time             = number_format((microtime(TRUE) - $start_time), 6);
+		$this->execution_time[] = $T0_page_title . ": " . $total_time . "\n";
 		
 		return $data;
 	}
