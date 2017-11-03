@@ -43,7 +43,7 @@ function databaseRequest(user_input){
 		function colorNode(node){
 			let { nodes, links } = Graph.graphData();
 			if (!node) return;
-			window.open("https://en.wikipedia.org/wiki/" + node.name,"mywindow","menubar=1,resizable=1,width=350,height=250");
+			window.open("https://en.m.wikipedia.org/wiki/" + node.name,"wikiWindow","menubar=1,resizable=1,width=350,height=250");
 			if (node.color!== 0x00ffff){
 				node.color = 0x00ffff;
 			} else {
