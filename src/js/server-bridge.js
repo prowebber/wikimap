@@ -25,7 +25,7 @@ function databaseRequest(user_input){
 		var execution_time = parsed_data.execution_time;
 
 		/* Show the raw JSON results to the user */
-		$('#results').show();												// Make the JSON area visible
+		//$('#results').show();												// Make the JSON area visible
 		$('#results_text').val( JSON.stringify(json_response) );			// Display JSON results in the HTML textarea container
 		$('#matched_page_id').html(matched_page_id);
 		$('#matched_page_title').html(matched_page_title);
@@ -40,10 +40,31 @@ function databaseRequest(user_input){
 		(document.getElementById('3d-graph'))
 			.graphData(json_response)
 			.onNodeClick(colorNode);
+
+
+
 		function colorNode(node){
+
 			let { nodes, links } = Graph.graphData();
-			if (!node) return;
-			window.open("https://en.m.wikipedia.org/wiki/" + node.name,"wikiWindow","menubar=1,resizable=1,width=350,height=250");
+
+
+
+			var $wikiView = $("aside.pageinfo");															// Define the Wikipedia page preview
+			console.log('node val: ' + node);
+
+			if (!node) {
+				console.log('attempted to hide node');
+				$wikiView.css({'display':'none'});															// Make the wikipedia preview visible and slide it into the page
+				return;
+			}
+
+			/* Control Wikipedia Page Preview*/
+			$wikiView.animate({"right":"0px"}, "slow").css({'display':'inline-block'});						// Make the wikipedia preview visible and slide it into the page
+			$wikiView.html("<iframe src='https://en.m.wikipedia.org/wiki/" + node.name + "'><iframe>");		// Load Wikipedia page into a element on the screen
+
+
+
+			//window.open("https://en.m.wikipedia.org/wiki/" + node.name,"wikiWindow","menubar=1,resizable=1,width=350,height=250");
 			if (node.color!== 0x00ffff){
 				node.color = 0x00ffff;
 			} else {
