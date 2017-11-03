@@ -15,7 +15,6 @@ function databaseRequest(user_input){
 	form_data.push({name: 'server_class', value: 'fetchMultiData'});
 
 	ajaxFetch(form_data).done(function (data) {			// Call the Ajax function and wait for it to finish
-		//console.log('Data:\n' + data);
 
 		var parsed_data = JSON.parse(data);
 
@@ -26,15 +25,15 @@ function databaseRequest(user_input){
 		var execution_time = parsed_data.execution_time;
 
 		/* Show the raw JSON results to the user */
-		$('#results_text').val( JSON.stringify(json_response) );					// Display results in the HTML textarea container
+		$('#results').show();												// Make the JSON area visible
+		$('#results_text').val( JSON.stringify(json_response) );			// Display JSON results in the HTML textarea container
 		$('#matched_page_id').html(matched_page_id);
 		$('#matched_page_title').html(matched_page_title);
+
+		// Output data to the console for debugging
+		console.log('Matched Page ID: ' + matched_page_id);
+		console.log('Matched Page Title: ' + matched_page_title);
 		console.log('Execution Times:\n' + execution_time);
-
-
-		//var test = JSON.parse(json_response);
-
-		//console.log(json_response);
 
 
 		const Graph = ForceGraph3D()
@@ -58,10 +57,39 @@ function databaseRequest(user_input){
 
 $(function() {
 
+	// When the user clicks on the search bar, make it more visible
+	$('header').on('click', '#user_input', function (e) {
+		$( this ).fadeTo( "fast", 1 );
+		$(this).removeClass('dark');									// Make the text easier to read when background is white
+	});
+
+
+
+	function doneTyping(){												// When the user is done typing
+		$( 'header #user_input' ).fadeTo( "fast", .33 );				// Fade the searchbar
+		$('header #user_input').addClass('dark');								// Make the text easier to read when faded
+	}
+
+
 	$("form").submit( function (e) {
-		console.log('submitted');
-		e.preventDefault();											// Prevent POST data from displaying in the URL
+		e.preventDefault();												// Prevent POST data from displaying in the URL
+		$( 'header #user_input' ).fadeTo( "fast", .33 );				// Fade the searchbar
+		$('header #user_input').addClass('dark');								// Make the text easier to read when faded
+
 		var user_input = $('#user_input').val();
 		databaseRequest(user_input);
+
+		/* Fade the search bar after n seconds, unless the user is interacting with it */
+		var typingTimer;													// Keeps track of the time (in ms) after someone has been typing
+		var doneTypingTime = 2000;											// Time in ms when you consider someone to be done typing
+
+		$('#user_input').keyup(function(){									// When someone types in the search box
+			clearTimeout(typingTimer);										// Reset the typing time
+			typingTimer = setTimeout(doneTyping, doneTypingTime);			// Check to see if the done typing time has been reached, if so - call the function
+		});
+
+		$('#user_input').keydown(function(){								// When someone hits a key in the search box
+			clearTimeout(typingTimer);										// Reset the typing time
+		});
 	});
 });

@@ -15,8 +15,6 @@ if($http_origin == "http://purewebber.dev" || $http_origin == "http://purewebber
 	header("Access-Control-Allow-Origin: $http_origin");
 }
 
-include $_SERVER['DOCUMENT_ROOT'] . "/config.php";
-
 class Fetch_Ajax_Script_Multi{
 	public $execution_time = array();
 	

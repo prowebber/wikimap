@@ -11,26 +11,19 @@
     <script src="/wikimap/src/node_modules/3d-force-graph/dist/3d-force-graph.js"></script>
 </head>
 <body>
-<h1>WikiMap</h1>
-<form>
-    <input type="text" id="user_input" placeholder="Page Title OR Wikipedia URL" required autocomplete="off"><button>Go!</button>
-</form>
-<br><br>
-Read results more easily at <a href="http://jsonviewer.stack.hu/">http://jsonviewer.stack.hu/</a>
-<hr>
-<table class="results">
-    <tr>
-        <td>Matched Page ID:</td><td id="matched_page_id"></td>
-    </tr>
-    <tr>
-        <td>Matched Page Title:</td><td id="matched_page_title"></td>
-    </tr>
-</table>
-<span style="display:inline-block; width:100%; height:10px;"></span>
-<div id="3d-graph"></div>
+<header class="wikimap-header">
+    <h1>WikiMap</h1>
+    <div>
+    <form>
+        <input type="text" id="user_input" placeholder="Page Title OR Wikipedia URL" required autocomplete="off"><button>Go!</button>
+    </form>
+    </div>
+</header>
+<div id="3d-graph" style="graph-canvas"></div>
 
 <section id="results" class="response-results">
     <b>Raw JSON</b><br><textarea id="results_text"></textarea>
 </section>
+<aside class='pageinfo'></aside>
 </body>
 </html>
