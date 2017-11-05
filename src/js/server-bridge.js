@@ -42,20 +42,14 @@ function databaseRequest(user_input){
 			.onNodeClick(colorNode);
 
 		function colorNode(node){
-
 			let { nodes, links } = Graph.graphData();
-
-
-
 			var $wikiView = $("aside.pageinfo");															// Define the Wikipedia page preview
 			console.log('node val: ' + node);
-
 			if (!node) {
 				console.log('attempted to hide node');
 				$wikiView.css({'display':'none'});															// Make the wikipedia preview visible and slide it into the page
 				return;
 			}
-
 			/* Control Wikipedia Page Preview*/
 			$wikiView.animate({"right":"0px"}, "slow").css({'display':'inline-block'});						// Make the wikipedia preview visible and slide it into the page
 			$wikiView.html("<iframe src='https://en.m.wikipedia.org/wiki/" + node.name + "'><iframe>");		// Load Wikipedia page into a element on the screen
@@ -63,12 +57,8 @@ function databaseRequest(user_input){
 			// Make sure the nav tips are not displayed
 			$('div.graph-nav-info').hide();
 
-			//window.open("https://en.m.wikipedia.org/wiki/" + node.name,"wikiWindow","menubar=1,resizable=1,width=350,height=250");
-			if (node.color!== 0x00ffff){
-				node.color = 0x00ffff;
-			} else {
-				node.color = 0x0000ff;
-			}
+			node.color= 0x00ffff;
+			node.visited=true;
 			Graph.graphData({ nodes, links });
 		};
 	});
