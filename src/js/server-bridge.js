@@ -39,6 +39,7 @@ function databaseRequest(user_input){
 		const Graph = ForceGraph3D()
 		(document.getElementById('3d-graph'))
 			.graphData(json_response)
+			.colorField('duck')
 			.onNodeClick(colorNode);
 
 		function colorNode(node){
@@ -57,8 +58,8 @@ function databaseRequest(user_input){
 			// Make sure the nav tips are not displayed
 			$('div.graph-nav-info').hide();
 
-			node.color= 0x00ffff;
-			node.visited=true;
+			node.duck = 0xff00ff;
+			node.visited = true;
 			Graph.graphData({ nodes, links });
 		};
 	});
