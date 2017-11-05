@@ -41,8 +41,6 @@ function databaseRequest(user_input){
 			.graphData(json_response)
 			.onNodeClick(colorNode);
 
-
-
 		function colorNode(node){
 
 			let { nodes, links } = Graph.graphData();
@@ -62,7 +60,8 @@ function databaseRequest(user_input){
 			$wikiView.animate({"right":"0px"}, "slow").css({'display':'inline-block'});						// Make the wikipedia preview visible and slide it into the page
 			$wikiView.html("<iframe src='https://en.m.wikipedia.org/wiki/" + node.name + "'><iframe>");		// Load Wikipedia page into a element on the screen
 
-
+			// Make sure the nav tips are not displayed
+			$('div.graph-nav-info').hide();
 
 			//window.open("https://en.m.wikipedia.org/wiki/" + node.name,"wikiWindow","menubar=1,resizable=1,width=350,height=250");
 			if (node.color!== 0x00ffff){
@@ -82,6 +81,12 @@ $(function() {
 	$('header').on('click', '#user_input', function (e) {
 		$( this ).fadeTo( "fast", 1 );
 		$(this).removeClass('dark');									// Make the text easier to read when background is white
+	});
+
+
+	// When the user clicks on the node canvas, close the wikipedia perview
+	$('div#3d-graph').on('click', 'canvas', function (e) {
+		$("aside.pageinfo").hide();
 	});
 
 
