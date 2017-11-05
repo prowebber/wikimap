@@ -34,6 +34,7 @@ function databaseRequest(user_input){
 		console.log('Matched Page ID: ' + matched_page_id);
 		console.log('Matched Page Title: ' + matched_page_title);
 		console.log('Execution Times:\n' + execution_time);
+		console.log('Converted Node:\n' + parsed_data.converted_node);
 
 
 		const Graph = ForceGraph3D()

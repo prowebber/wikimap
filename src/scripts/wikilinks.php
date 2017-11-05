@@ -17,7 +17,7 @@ if($http_origin == "http://purewebber.dev" || $http_origin == "http://purewebber
 
 class Fetch_Ajax_Script_Multi{
 	public $execution_time = array();
-	
+	public $used_page_title;
 	
 	
 	public function __construct(){
@@ -130,6 +130,7 @@ class Fetch_Ajax_Script_Multi{
 		$final['execution_time']    = $this->execution_time;    # Not required - Used to display the execution time to the user
 		$final['target_page_id']    = $T0_page_id;              # Not required - Used to show the target page ID to the user
 		$final['target_page_title'] = $T0_page_title;           # Not required - Used to show the target page name to the user
+		$final['converted_node'] = $this->used_page_title;
 		
 		echo json_encode($final);
 	}
@@ -146,9 +147,10 @@ class Fetch_Ajax_Script_Multi{
 		// If the user entered a page title
 		else{
 			//$page_title = str_replace('_', ' ', $user_input);   # Convert any underscores to spaces
-			
-			$page_title = $user_input;
+			$page_title = $this->formatInputText($user_input);
 		}
+		
+		$this->used_page_title = $page_title;
 		
 		$page_title = $this->db->cleanText($page_title);
 		
@@ -173,6 +175,17 @@ class Fetch_Ajax_Script_Multi{
 		}
 		
 		return $data;
+	}
+	
+	
+	public function formatInputText($user_input){
+		$wiki_title = str_replace('_', ' ', $user_input);    # Convert any user entered underscores to spaces
+		$wiki_title = strtolower($wiki_title);                           # Convert the entire string to lowercase words
+		$wiki_title = ucfirst($wiki_title);                             # Capitalize the first letter of each word
+		$wiki_title = trim($wiki_title);                                # Remove leading and trailing spaces from the user's input
+		$wiki_title = str_replace(' ', '_', $wiki_title);   # Replace spaces with underscores
+		
+		return $wiki_title;
 	}
 	
 	
