@@ -78,7 +78,7 @@ function databaseRequest(user_input){
 					link.lineOpacity=1;
 					link.lineWidth=10;
 				} else {
-					link.color=0xffffff;
+					link.color=0x00ffff;
 					link.lineOpacity=0.2;
 				};
 			});
