@@ -40,11 +40,10 @@ function databaseRequest(user_input){
 		const Graph = ForceGraph3D()
 		(document.getElementById('3d-graph'))
 			.graphData(json_response)
-			.colorField('duck')
 			.onNodeClick(colorNode);
-
 		function colorNode(node){
 			let { nodes, links } = Graph.graphData();
+			colorOthers(nodes);
 			var $wikiView = $("aside.pageinfo");															// Define the Wikipedia page preview
 			console.log('node val: ' + node);
 			if (!node) {
@@ -58,10 +57,18 @@ function databaseRequest(user_input){
 
 			// Make sure the nav tips are not displayed
 			$('div.graph-nav-info').hide();
-
-			node.duck = 0xff00ff;
+			node.color = 0xff00ff;
 			node.visited = true;
 			Graph.graphData({ nodes, links });
+		};
+		function colorOthers(nodes){
+			nodes.forEach(function(node){
+				if (node.visited) {
+					node.color=0x00ff00;
+				} else {
+					node.color=0x0000ff;
+				};
+			});
 		};
 	});
 }
