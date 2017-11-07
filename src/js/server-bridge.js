@@ -7,16 +7,14 @@ function ajaxFetch(form_data){
 	});
 }
 
-
 function databaseRequest(user_input){
 	var form_data = [];
 	form_data.push({name: 'user_input', value: user_input});
 	//form_data.push({name: 'server_class', value: 'fetchT0Data'});
 	form_data.push({name: 'server_class', value: 'fetchMultiData'});
 
-	ajaxFetch(form_data).done(function (data) {			// Call the Ajax function and wait for it to finish
-
-		var parsed_data = JSON.parse(data);
+	ajaxFetch(form_data).done(function (data) {						// Call the Ajax function and wait for it to finish
+		var parsed_data = JSON.parse(data);							// Parse the JSON data
 
 		/* Get the data from the request */
 		var matched_page_id = parsed_data.target_page_id;
@@ -25,7 +23,6 @@ function databaseRequest(user_input){
 		var execution_time = parsed_data.execution_time;
 
 		/* Show the raw JSON results to the user */
-		//$('#results').show();												// Make the JSON area visible
 		$('#results_text').val( JSON.stringify(json_response) );			// Display JSON results in the HTML textarea container
 		$('#matched_page_id').html(matched_page_id);
 		$('#matched_page_title').html(matched_page_title);
@@ -36,56 +33,76 @@ function databaseRequest(user_input){
 		console.log('Execution Times:\n' + execution_time);
 		console.log('Converted Node:\n' + parsed_data.converted_node);
 
+		/**
+		 * Initiate Shit
+		 */
+		// const Graph = ForceGraph3D()
+		showGraph(json_response);
 
-		const Graph = ForceGraph3D()
-		(document.getElementById('3d-graph'))
-			.graphData(json_response)
-			.onNodeClick(colorNode);
-		function colorNode(node){
-			let { nodes, links } = Graph.graphData();
-			colorOthers(nodes);
-			var $wikiView = $("aside.pageinfo");															// Define the Wikipedia page preview
-			console.log('node val: ' + node);
-			if (!node) {
-				console.log('attempted to hide node');
-				$wikiView.css({'display':'none'});															// Make the wikipedia preview visible and slide it into the page
-				return;
-			}
-			/* Control Wikipedia Page Preview*/
-			$wikiView.animate({"right":"0px"}, "slow").css({'display':'inline-block'});						// Make the wikipedia preview visible and slide it into the page
-			$wikiView.html("<iframe src='https://en.m.wikipedia.org/wiki/" + node.name + "'><iframe>");		// Load Wikipedia page into a element on the screen
 
-			// Make sure the nav tips are not displayed
-			$('div.graph-nav-info').hide();
-			node.color = 0xff00ff;
-			node.visited = true;
-			colorLinks(nodes, links);
-			Graph.graphData({ nodes, links });
-		};
-		function colorOthers(nodes){
-			nodes.forEach(function(node){
-				if (node.visited) {
-					node.color=0x00ff00;
-				} else {
-					node.color=0x0000ff;
-				};
-			});
-		};
-		function colorLinks(nodes, links){
-			links.forEach(function(link){
-				if (link.source.visited && link.target.visited) {
-					link.color=0x00ff00;
-					link.lineOpacity=1;
-					link.lineWidth=10;
-				} else {
-					link.color=0xffffff;
-					link.lineOpacity=0.2;
-				};
-			});
-		};
 	});
 }
 
+
+function showGraph(json_response){
+	const Graph = ForceGraph3D()
+	(document.getElementById('3d-graph'))
+		.graphData(json_response)
+		.onNodeClick(colorNode);
+
+	function colorNode(node){
+		let { nodes, links } = Graph.graphData();
+
+		colorOthers(nodes);
+		var $wikiView = $("aside.pageinfo");															// Define the Wikipedia page preview
+		console.log('node val: ' + node);
+		if (!node) {
+			console.log('attempted to hide node');
+			$wikiView.css({'display':'none'});															// Make the wikipedia preview visible and slide it into the page
+			return;
+		}
+
+		/* Control Wikipedia Page Preview*/
+		$wikiView.animate({"right":"0px"}, "slow").css({'display':'inline-block'});						// Make the wikipedia preview visible and slide it into the page
+		$wikiView.html("<iframe src='https://en.m.wikipedia.org/wiki/" + node.name + "'><iframe>");		// Load Wikipedia page into a element on the screen
+
+		// Make sure the nav tips are not displayed
+		$('div.graph-nav-info').hide();
+		node.color = 0xff00ff;
+		node.visited = true;
+		colorLinks(nodes, links);
+		Graph.graphData({ nodes, links });
+	}
+}
+
+
+
+
+
+// @not being used; leaving for temp. reference
+function colorLinks(nodes, links){
+	links.forEach(function(link){
+		if (link.source.visited && link.target.visited) {
+			link.color=0x00ff00;
+			link.lineOpacity=1;
+			link.lineWidth=10;
+		} else {
+			link.color=0xffffff;
+			link.lineOpacity=0.2;
+		};
+	});
+};
+
+// @not being used; leaving for temp. reference
+function colorOthers(nodes){
+	nodes.forEach(function(node){
+		if (node.visited) {
+			node.color=0x00ff00;
+		} else {
+			node.color=0x0000ff;
+		};
+	});
+};
 
 $(function() {
 
