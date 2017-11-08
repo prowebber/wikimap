@@ -45,10 +45,12 @@ function databaseRequest(user_input){
 
 
 function showGraph(json_response){
+	const CAMERA_DISTANCE2NODES_FACTOR = 10;
 	const Graph = ForceGraph3D()
 	(document.getElementById('3d-graph'))
 		.graphData(json_response)
 		.onNodeClick(colorNode);
+
 
 	function colorNode(node){
 		let { nodes, links } = Graph.graphData();
@@ -72,6 +74,7 @@ function showGraph(json_response){
 		node.visited = true;
 		colorLinks(nodes, links);
 		Graph.graphData({ nodes, links });
+		Graph.cooldownTicks(0);
 	}
 }
 
