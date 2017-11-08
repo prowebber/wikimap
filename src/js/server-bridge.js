@@ -50,8 +50,6 @@ function showGraph(json_response){
 	(document.getElementById('3d-graph'))
 		.graphData(json_response)
 		.onNodeClick(colorNode);
-
-
 	function colorNode(node){
 		let { nodes, links } = Graph.graphData();
 
@@ -73,8 +71,8 @@ function showGraph(json_response){
 		node.color = 0xff00ff;
 		node.visited = true;
 		colorLinks(nodes, links);
-		Graph.graphData({ nodes, links });
 		Graph.cooldownTicks(0);
+		Graph.graphData({ nodes, links });
 	}
 }
 
