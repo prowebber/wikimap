@@ -8,7 +8,6 @@ include $_SERVER['DOCUMENT_ROOT'] . "/config.php";
 
 ini_set('max_execution_time', 300);     # Set the maximum script execution time to 300 seconds (5 min.)
 
-
 // Allows purewebber.com to send requests to src.purewebber.com
 $http_origin = $_SERVER['HTTP_ORIGIN'];
 if($http_origin == "http://purewebber.dev" || $http_origin == "http://purewebber.com" || $http_origin == "https://prowebber.github.io"){
