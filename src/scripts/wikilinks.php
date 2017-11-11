@@ -45,6 +45,8 @@ class Fetch_Ajax_Script_Multi{
 		$user_input           = $post_data['user_input'] ?? 'HTTP_404';   # Default to 'HTTP_404' if not found
 		$nodeColor            = 0x0000ff;                                  # Color constant to use for all nodes
 		$linkColor            = 0x00ffff;                                  # Color constant to use for all links
+		$min_shared_links     = 0;                                         # stored minimum shared links for weighting
+		$max_shared_links     = 0;                                         # stores maximum shared links for weighting
 		$target_data          = $this->getPageId($user_input);           # Use the user's input to grab the correct page_id
 		$T0_page_id           = $target_data['page_id'];
 		$T0_page_title        = $target_data['page_title'];
@@ -80,6 +82,8 @@ class Fetch_Ajax_Script_Multi{
 			// Add to the links
 			$data['links'][$links_counter]['source']          = $T0_page_title;
 			$data['links'][$links_counter]['target']          = $T1_page_title;
+			if ($min_shared_links = 0 or $T0_T1_shared_connections < $min_shared_links ){$min_shared_links = $T0_T1_shared_connections;};
+			if ($max_shared_links = 0 or $T0_T1_shared_connections > $max_shared_links ){$max_shared_links = $T0_T1_shared_connections;};
 			$data['links'][$links_counter]['val']             = $T0_T1_shared_connections;
 			$data['links'][$links_counter]['color']           = $linkColor;
 			$history['links'][$T0_page_title][$T1_page_title] = 1;                  # Add the link connections to history to prevent duplicates
