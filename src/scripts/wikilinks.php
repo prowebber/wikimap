@@ -134,6 +134,8 @@ class Fetch_Ajax_Script_Multi{
 		$final['target_page_id']    = $T0_page_id;              # Not required - Used to show the target page ID to the user
 		$final['target_page_title'] = $T0_page_title;           # Not required - Used to show the target page name to the user
 		$final['converted_node'] = $this->used_page_title;
+		$final['max_shared_links'] = $max_shared_links;
+		$final['min_shared_links'] = $min_shared_links;
 		
 		echo json_encode($final);
 	}
