@@ -44,7 +44,6 @@ function databaseRequest(user_input){
 
 	});
 }
-
 function showGraph(json_response){
 	const CAMERA_DISTANCE2NODES_FACTOR = 10;
 	const Graph = ForceGraph3D()
@@ -78,12 +77,7 @@ function showGraph(json_response){
 		Graph.graphData({ nodes, links });
 	}
 }
-
-
-
-
-
-// @not being used; leaving for temp. reference
+// colors links between visited nodes a color else a default color
 function colorLinks(nodes, links){
 	links.forEach(function(link){
 		if (link.source.visited && link.target.visited) {
@@ -97,7 +91,7 @@ function colorLinks(nodes, links){
 	});
 };
 
-// @not being used; leaving for temp. reference
+// color all nodes but the current one (must come before visited node coloring)
 function colorOthers(nodes){
 	nodes.forEach(function(node){
 		if (node.visited) {
@@ -109,7 +103,6 @@ function colorOthers(nodes){
 };
 
 $(function() {
-
 	// When the user clicks on the search bar, make it more visible
 	$('header').on('click', '#user_input', function (e) {
 		$( this ).fadeTo( "fast", 1 );
