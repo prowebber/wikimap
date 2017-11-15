@@ -36,8 +36,8 @@ class Multi_Thread extends \Thread{
 	 * Starts a new PHP instance on a separate thread
 	 */
 	public function run(){
-		#$db = new \datapeak\server\classes\SQL_Database('wiki_links'); # Local DB
-		$db = new \datapeak\server\classes\SQL_Database('wikimap');     # Online Server
+		$db = new \datapeak\server\classes\SQL_Database('wiki_links'); # Local DB
+		#$db = new \datapeak\server\classes\SQL_Database('wikimap');     # Online Server
 		
 		$start_time = microtime(TRUE);                       # Record the time before the loop starts
 		
@@ -90,7 +90,7 @@ class Multi_Thread extends \Thread{
 		}
 		
 		$sql_string = implode(',', $sql_data);                              # Convert the array of SQL code to a string for the SQL insert query
-		$db->query("	INSERT INTO wikimap.page_connections_test
+		$db->query("	INSERT INTO wiki_links.page_connections_test
 							(T0, T1, total_shared)
 						VALUES
 							$sql_string
@@ -127,8 +127,8 @@ class Get_Data{
 	
 	
 	public function __construct(){
-		#$this->db = new SQL_Database('wiki_links');                        # Used only for local testing
-		$this->db = new SQL_Database('wikimap');                            # Used only for online server
+		$this->db = new SQL_Database('wiki_links');                        # Used only for local testing
+		#$this->db = new SQL_Database('wikimap');                            # Used only for online server
 	}
 	
 	
@@ -142,7 +142,8 @@ class Get_Data{
 		// Run this loop until 'continue' equals FALSE
 		while($continue){
 			$continue = $this->sampleSetLoop();
-			sleep(1);                                           # Wait 1 second (makes monitoring easier; can delete this later)
+			usleep(200000);                                # Wait 0.2 seconds
+			#sleep(1);                                           # Wait 1 second (makes monitoring easier; can delete this later)
 		}
 	}
 	
@@ -227,7 +228,7 @@ class Get_Data{
 		$result = $this->db->query("	SELECT
 											pc.T0,
 											pc.T1
-										FROM wikimap.page_connections pc
+										FROM wiki_links.page_connections pc
 										WHERE
 											pc.T0 != pc.T1
 										LIMIT $offset, $limit
