@@ -16,7 +16,6 @@ ini_set('memory_limit', '3000M');                           # 3 GB memory limit
  * Runs PHP scripts independently on separate threads
  */
 class Multi_Thread extends \Thread{
-	
 	/**
 	 * Multi_Thread constructor.
 	 *
@@ -36,8 +35,7 @@ class Multi_Thread extends \Thread{
 	 * Starts a new PHP instance on a separate thread
 	 */
 	public function run(){
-		$db = new \datapeak\server\classes\SQL_Database('wiki_links'); # Local DB
-		#$db = new \datapeak\server\classes\SQL_Database('wikimap');     # Online Server
+		$db = new \datapeak\server\classes\SQL_Database('wiki_links');  # Local DB
 		
 		$start_time = microtime(TRUE);                       # Record the time before the loop starts
 		
@@ -45,33 +43,23 @@ class Multi_Thread extends \Thread{
 		$t0_array   = array_keys($sample_set);                          # Create an array of all the T0's
 		$final      = array();                                          # Array to hold final data
 		
-		/* Start the Loop */
-		$rows = 0;                                          # Count the number of rows (i.e. links) the loop processes
-		foreach($t0_array as $t0){                          # Loop through each T0
-			foreach($sample_set[$t0] as $t1){               # Loop through each T0->T1
-				$rows++;                                    # Increment the number of rows
-				if(!isset($sample_set[$t1]) || $t1 < $t0){  # If T1 doesn't have any pages
-					continue;                               # Skip
+		$rows = 0;                                                      # Count the number of rows (i.e. links) the loop processes
+		foreach($t0_array as $t0){                                      # Loop through each T0
+			foreach($sample_set[$t0] as $t1){                           # Loop through each T0->T1
+				$rows++;                                                # Increment the number of rows
+				
+				/* Add initial connection */
+				if(!isset($final[$t0][$t1])){
+					$final[$t0][$t1] = 1;                               # Specify the pages as having 1 shared link
 				}
 				
-				foreach($sample_set[$t1] as $t2){           # Loop through each T1->T2
-					if(isset($sample_set[$t0][$t2])){       # If a link shared between T0 and T2 exists
-						
-						if(isset($final[$t0][$t1])){        # If the pages have 1 or more shared links already
-							$final[$t0][$t1]++;             # Increment the shared links by 1
-						}
-						else{                               # If the pages don't already have a shared link
-							$final[$t0][$t1] = 1;           # Specify the pages as having 1 shared link
-						}
-						
-						
-						// Reverse the T0->T1 so T1->T0
-						if(isset($final[$t1][$t0])){        # If the pages have 1 or more shared links already
-							$final[$t1][$t0]++;             # Increment the shared links by 1
-						}
-						else{                               # If the pages don't already have a shared link
-							$final[$t1][$t0] = 1;           # Specify the pages as having 1 shared link
-						}
+				if(!isset($sample_set[$t1]) || $t1 < $t0){              # If T1 doesn't have any pages; If T0 is greater than T1
+					continue;                                           # Skip
+				}
+				
+				foreach($sample_set[$t1] as $t2){                       # Loop through each T1->T2
+					if(isset($sample_set[$t0][$t2])){                   # If a link shared between T0 and T2 exists
+						$final[$t0][$t1]++;                             # Increment the shared links by 1
 					}
 				}
 			}
@@ -108,27 +96,25 @@ class Multi_Thread extends \Thread{
 	}
 }
 
-
 class Get_Data{
-	public $concurrent_threads   = 0;                 # Counts the current concurrent threads
+	public $concurrent_threads   = 0;                   # Counts the current concurrent threads
 	
-	public $thread_number        = 0;                 # Increments the thread number
+	public $thread_number        = 0;                   # Increments the thread number
 	
-	public $active_threads       = array();           # Keeps track of which threads are active
+	public $active_threads       = array();             # Keeps track of which threads are active
 	
-	public $thread               = array();           # Holds the 'Thread' class instances
+	public $thread               = array();             # Holds the 'Thread' class instances
 	
-	public $mysql_offset         = 0;                 # Where to start collecting data for the next database query
+	public $total_rows_processed = 0;                   # Counts the total number of MySQL rows processed
 	
-	public $total_rows_processed = 0;                 # Counts the total number of MySQL rows processed
+	public $mysql_finished       = 0;                   # If mysql is finished
 	
-	public $mysql_finished       = 0;                 # If mysql is finished
+	public $start_after_page_id = 0;                    # Tells MySQL query which page ID to start after; Is auto-incremented the to previous page ID processed
 	
 	
 	
 	public function __construct(){
 		$this->db = new SQL_Database('wiki_links');                        # Used only for local testing
-		#$this->db = new SQL_Database('wikimap');                            # Used only for online server
 	}
 	
 	
@@ -143,7 +129,6 @@ class Get_Data{
 		while($continue){
 			$continue = $this->sampleSetLoop();
 			usleep(200000);                                # Wait 0.2 seconds
-			#sleep(1);                                           # Wait 1 second (makes monitoring easier; can delete this later)
 		}
 	}
 	
@@ -199,8 +184,8 @@ class Get_Data{
 				return TRUE;                                                        # No need to initiate another thread, exit this function
 			}
 			
-			$row_number = number_format($this->mysql_offset);                       # Fetch the number of links fetched from the database
-			echo "Thread $this->thread_number Started on row number $row_number \n";# Display the number of links in the console
+			$row_number = number_format($this->total_rows_processed);                                       # Fetch the number of links fetched from the database
+			echo "Thread $this->thread_number Started on row number $row_number \n";                        # Display the number of links in the console
 			
 			// Start a new thread
 			$this->thread[$this->thread_number] = new Multi_Thread($this->thread_number, $sample_set);      # Declare the new thread -- specify the thread number and send an array of T0->T1 info
@@ -221,41 +206,73 @@ class Get_Data{
 	 * 3) Return the array
 	 */
 	public function getSampleSetLocal(){
-		$limit  = "1000000";                    # The number of rows to fetch at a time from MySQL
-		$offset = $this->mysql_offset;          # The starting row # for MySQL
+		$conn_limit          = 1000000;                   # Fetch a max of 1,000,000 links
+		$start_after_page_id = $this->start_after_page_id;
 		
-		$data   = array();
-		$result = $this->db->query("	SELECT
+		/* Fetch Page IDs until the sum of their total_connections exceeds n OR the max page limit is reached */
+		$page_id_list = array();
+		$result       = $this->db->query("	SELECT
+											p.page_id,
+											p.total_connections
+										FROM wiki_links.pages p
+										WHERE
+											p.page_id > '$start_after_page_id'          -- Tell the script where to start collecting new Page IDs
+											AND total_connections IS NOT NULL           -- Skip pages without connections
+										ORDER BY p.page_id
+										LIMIT 10000                                     -- Don't fetch more than 10,000 pages
+                                ");
+		
+		$sum_total_connections = 0;                             # Reset the total connections counter to 0
+		while($row = $result->fetch_assoc()){
+			$page_id           = $row['page_id'];
+			$total_connections = $row['total_connections'];
+			
+			$sum_total_connections += $total_connections;       # SUM the total connections included
+			$page_id_list[]        = $page_id;                  # Add the page ID to the array to fetch links for
+			
+			if($sum_total_connections >= $conn_limit){
+				$this->start_after_page_id = $page_id;          # Update the last page ID processed
+				break;
+			}
+		}
+		
+		// If the script has gone through all the page_ids
+		if(empty($page_id_list)){                               # If there are no more page IDs to go through
+			$this->mysql_finished = 1;                          # Tell this class MySQL has finished all jobs
+			return;                                             # Exit this method
+		}
+		
+		$data       = array();
+		$sql_string = implode(',', $page_id_list);
+		$result     = $this->db->query("	SELECT
 											pc.T0,
 											pc.T1
 										FROM wiki_links.page_connections pc
 										WHERE
-											pc.T0 != pc.T1
-										LIMIT $offset, $limit
+											pc.T0 IN ($sql_string)
+											AND pc.T0 != pc.T1
+											AND pc.T0 > '$start_after_page_id'
+										ORDER BY pc.T1
                                 ");
 		
-		// If the script has gone through all the rows
-		if(!$result->num_rows){
-			$this->mysql_finished = 1;          # Tell this class MySQL has finished all jobs
-			return;                             # Exit this method
-		}
-		
+		$i = 0;
 		while($row = $result->fetch_assoc()){   # Loop through each row, until all rows have been fetched from this SQL query
 			$T0_page_id = $row['T0'];
 			$T1_page_id = $row['T1'];
 			
 			// Build the array to pass back
 			$data[$T0_page_id][$T1_page_id] = $T1_page_id;
+			$i++;
 		}
-		
-		$this->mysql_offset += 1000000;         # Increment the total number of rows MySQL has downloaded by n
+
+		$this->total_rows_processed += $i;      # Count the total number of rows the script has gone through (helps to keep track of total progress)
 		
 		return $data;                           # Return the data
 	}
 }
 
 /* Get the Data from the Database */
-$get_data   = new Get_Data();                   # Declare the 'Get_Data' class
+$get_data = new Get_Data();                   # Declare the 'Get_Data' class
 $get_data->classConfig();                       # Start everything (i.e. this is where this entire script starts)
 
 ?>
