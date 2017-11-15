@@ -70,6 +70,7 @@ function showGraph(json_response){
 
 		// Make sure the nav tips are not displayed
 		$('div.graph-nav-info').hide();
+		// sets current node color
 		node.color = 0xff00ff;
 		node.visited = true;
 		colorLinks(nodes, links);
