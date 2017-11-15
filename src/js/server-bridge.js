@@ -6,13 +6,13 @@ function ajaxFetch(form_data){
 		dataType: 'text'
 	});
 }
-
+var max_shared_links;
+var min_shared_links;
 function databaseRequest(user_input){
 	var form_data = [];
 	form_data.push({name: 'user_input', value: user_input});
 	//form_data.push({name: 'server_class', value: 'fetchT0Data'});
 	form_data.push({name: 'server_class', value: 'fetchMultiData'});
-
 	ajaxFetch(form_data).done(function (data) {						// Call the Ajax function and wait for it to finish
 		var parsed_data = JSON.parse(data);							// Parse the JSON data
 
@@ -21,6 +21,8 @@ function databaseRequest(user_input){
 		var matched_page_title = parsed_data.target_page_title;
 		var json_response = parsed_data.results;
 		var execution_time = parsed_data.execution_time;
+		max_shared_links = parsed_data.max_shared_links;
+		min_shared_links = parsed_data.min_shared_links;
 
 		/* Show the raw JSON results to the user */
 		$('#results_text').val( JSON.stringify(json_response) );			// Display JSON results in the HTML textarea container
@@ -43,16 +45,17 @@ function databaseRequest(user_input){
 	});
 }
 
-
 function showGraph(json_response){
 	const CAMERA_DISTANCE2NODES_FACTOR = 10;
 	const Graph = ForceGraph3D()
+	var MIN_SHARED_LINKS = min_shared_links;
+	var MAX_SHARED_LINKS = max_shared_links;
+	const STRENGTH_SCALE = 0.4;
 	(document.getElementById('3d-graph'))
 		.graphData(json_response)
 		.onNodeClick(colorNode);
 	function colorNode(node){
 		let { nodes, links } = Graph.graphData();
-
 		colorOthers(nodes);
 		var $wikiView = $("aside.pageinfo");															// Define the Wikipedia page preview
 		console.log('node val: ' + node);
