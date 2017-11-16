@@ -47,8 +47,10 @@ function databaseRequest(user_input){
 function showGraph(json_response){
 	const CAMERA_DISTANCE2NODES_FACTOR = 10;
 	const Graph = ForceGraph3D()
-	var MIN_SHARED_LINKS = min_shared_links;
-	var MAX_SHARED_LINKS = max_shared_links;
+	const MIN_SHARED_LINKS = min_shared_links;
+	console.log('Min shared links: ' +  MIN_SHARED_LINKS);
+	const MAX_SHARED_LINKS = max_shared_links;
+	console.log('Max shared links: ' +  MAX_SHARED_LINKS);
 	const STRENGTH_SCALE = 0.4;
 	(document.getElementById('3d-graph'))
 		.graphData(json_response)
