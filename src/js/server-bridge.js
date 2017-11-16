@@ -44,13 +44,17 @@ function databaseRequest(user_input){
 
 	});
 }
-// var MIN_SHARED_LINKS = min_shared_links;
-// // console.log('Min shared links: ' +  MIN_SHARED_LINKS);
-// var MAX_SHARED_LINKS = max_shared_links;
-// // console.log('Max shared links: ' +  MAX_SHARED_LINKS);
-// var STRENGTH_SCALE = 0.4;
+var MIN_SHARED_LINKS;
+
+var MAX_SHARED_LINKS;
+
+var STRENGTH_SCALE = 0.4;
 function showGraph(json_response){
 	const CAMERA_DISTANCE2NODES_FACTOR = 10;
+	MIN_SHARED_LINKS = min_shared_links;
+	MAX_SHARED_LINKS = max_shared_links;
+	console.log('Min shared links: ' +  MIN_SHARED_LINKS);
+	console.log('Max shared links: ' +  MAX_SHARED_LINKS);
 	const Graph = ForceGraph3D()
 	(document.getElementById('3d-graph'))
 		.graphData(json_response)

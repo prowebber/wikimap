@@ -82,8 +82,8 @@ class Fetch_Ajax_Script_Multi{
 			// Add to the links
 			$data['links'][$links_counter]['source']          = $T0_page_title;
 			$data['links'][$links_counter]['target']          = $T1_page_title;
-			if ($min_shared_links = 0 or $T0_T1_shared_connections < $min_shared_links ){$min_shared_links = $T0_T1_shared_connections;};
-			if ($max_shared_links = 0 or $T0_T1_shared_connections > $max_shared_links ){$max_shared_links = $T0_T1_shared_connections;};
+			if ($min_shared_links == 0 or $T0_T1_shared_connections < $min_shared_links ){$min_shared_links = $T0_T1_shared_connections;};
+			if ($max_shared_links == 0 or $T0_T1_shared_connections > $max_shared_links ){$max_shared_links = $T0_T1_shared_connections;};
 			$data['links'][$links_counter]['val']             = $T0_T1_shared_connections;
 			$data['links'][$links_counter]['color']           = $linkColor;
 			$history['links'][$T0_page_title][$T1_page_title] = 1;                  # Add the link connections to history to prevent duplicates
