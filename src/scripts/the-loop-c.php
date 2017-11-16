@@ -147,6 +147,8 @@ class Compute_Connections{
 					}
 				}
 			}
+			
+			unset($raw[$t0]);
 		}
 		
 		$end_time = number_format((microtime(TRUE) - $start_time), 6);
@@ -196,7 +198,7 @@ class Compute_Connections{
 										FROM wiki_links.page_connections pc
 										WHERE
 											pc.T0 < pc.T1
-										ORDER BY pc.T1
+										ORDER BY pc.T0
 										LIMIT $start_at_row, $rows_per_request
                                 ");
 			
