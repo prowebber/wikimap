@@ -147,8 +147,8 @@ class Fetch_Ajax_Script_Multi{
                                 ");
 		
 		$data               = array();
-		$data['page_id']    = '18978754';             # Set a fallback page_id (HTTP_404)
-		$data['page_title'] = 'Apple';
+		$data['page_id']    = '308';             # Set a fallback page_id (HTTP_404)
+		$data['page_title'] = 'Aristotle';
 		
 		if($result->num_rows){
 			$row                = $result->fetch_assoc();
