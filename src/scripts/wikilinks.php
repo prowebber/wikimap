@@ -174,7 +174,7 @@ class Fetch_Ajax_Script_Multi{
 	
 	
 	public function dbQuery($t0_page_id){
-		$start_time = microtime(TRUE);                     # Count the number of sections the script takes
+		$start_time = microtime(TRUE);                     # Count the number of seconds the script takes
 		
 		$data       = array();
 		$t0_page_id = $this->db->cleanText($t0_page_id);
