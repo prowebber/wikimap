@@ -24,6 +24,8 @@ function databaseRequest(user_input){
 		max_shared_links = parsed_data.max_shared_links;
 		min_shared_links = parsed_data.min_shared_links;
 
+		console.log('JSON:\n' + JSON.stringify(json_response));
+
 		/* Show the raw JSON results to the user */
 		$('#results_text').val( JSON.stringify(json_response) );			// Display JSON results in the HTML textarea container
 		$('#matched_page_id').html(matched_page_id);

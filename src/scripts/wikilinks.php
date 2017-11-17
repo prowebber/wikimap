@@ -16,7 +16,9 @@ if($http_origin == "http://purewebber.dev" || $http_origin == "http://purewebber
 
 class Fetch_Ajax_Script_Multi{
 	public $execution_time = array();
+	
 	public $used_page_title;
+	
 	
 	
 	public function __construct(){
@@ -42,12 +44,12 @@ class Fetch_Ajax_Script_Multi{
 	
 	
 	public function fetchMultiData($post_data){
-		$user_input           = $post_data['user_input'] ?? 'HTTP_404';   # Default to 'HTTP_404' if not found
+		$user_input           = $post_data['user_input'] ?? 'HTTP_404';    # Default to 'HTTP_404' if not found
 		$nodeColor            = 0x0000ff;                                  # Color constant to use for all nodes
 		$linkColor            = 0x00ffff;                                  # Color constant to use for all links
 		$min_shared_links     = 0;                                         # stored minimum shared links for weighting
 		$max_shared_links     = 0;                                         # stores maximum shared links for weighting
-		$target_data          = $this->getPageId($user_input);           # Use the user's input to grab the correct page_id
+		$target_data          = $this->getPageId($user_input);             # Use the user's input to grab the correct page_id
 		$T0_page_id           = $target_data['page_id'];
 		$T0_page_title        = $target_data['page_title'];
 		$T0_pretty_page_title = $this->makeTitleReadable($T0_page_title);
@@ -80,45 +82,20 @@ class Fetch_Ajax_Script_Multi{
 			
 			
 			// Add to the links
-			$data['links'][$links_counter]['source']          = $T0_page_title;
-			$data['links'][$links_counter]['target']          = $T1_page_title;
-			if ($min_shared_links == 0 or $T0_T1_shared_connections < $min_shared_links ){$min_shared_links = $T0_T1_shared_connections;};
-			if ($max_shared_links == 0 or $T0_T1_shared_connections > $max_shared_links ){$max_shared_links = $T0_T1_shared_connections;};
+			$data['links'][$links_counter]['source'] = $T0_page_title;
+			$data['links'][$links_counter]['target'] = $T1_page_title;
+			if($min_shared_links == 0 or $T0_T1_shared_connections < $min_shared_links){
+				$min_shared_links = $T0_T1_shared_connections;
+			};
+			if($max_shared_links == 0 or $T0_T1_shared_connections > $max_shared_links){
+				$max_shared_links = $T0_T1_shared_connections;
+			};
 			$data['links'][$links_counter]['val']             = $T0_T1_shared_connections;
 			$data['links'][$links_counter]['color']           = $linkColor;
 			$history['links'][$T0_page_title][$T1_page_title] = 1;                  # Add the link connections to history to prevent duplicates
 			$links_counter++;
 			
-			/* Fetch the data for the T1 */
-			$T1_results = $this->dbQuery($T1_page_id);                              # Query the database for all connections for T1
 			
-			// Loop through each of the top 10 sub tier results
-			foreach(array_keys($T1_results) as $T1_key){
-				$T2_page_id               = $T1_results[$T1_key]['id'];         # Get T2 page ID
-				$T2_page_title            = $T1_results[$T1_key]['name'];       # Get T2 page Title
-				$T2_pretty_page_title     = $this->makeTitleReadable($T2_page_title);
-				$T1_T2_shared_connections = $T1_results[$T1_key]['val'];   # Get the total connections between T1->T2
-				
-				/* Add to the data array for the JSON script */
-				// Add to the nodes
-				if(!isset($history['nodes'][$T2_page_id])){                     # If the node hasn't previously been added to the array
-					$data['nodes'][$node_counter]['id']    = $T2_page_title;
-					$data['nodes'][$node_counter]['name']  = $T2_pretty_page_title;
-					$data['nodes'][$node_counter]['color'] = $nodeColor;
-					$history['nodes'][$T2_page_id]         = 1;
-					$node_counter++;
-				}
-				
-				// If the links are not already computed for the connections
-				if(!isset($history['links'][$T1_page_title][$T2_page_title])){
-					$data['links'][$links_counter]['source']          = $T1_page_title;
-					$data['links'][$links_counter]['target']          = $T2_page_title;
-					$data['links'][$links_counter]['val']             = $T1_T2_shared_connections;
-					$data['links'][$links_counter]['color']           = $linkColor;
-					$history['links'][$T1_page_title][$T2_page_title] = 1;
-					$links_counter++;
-				}
-			}
 		}
 		
 		// Make sure the T0 reference is in the array
@@ -133,9 +110,9 @@ class Fetch_Ajax_Script_Multi{
 		$final['execution_time']    = $this->execution_time;    # Not required - Used to display the execution time to the user
 		$final['target_page_id']    = $T0_page_id;              # Not required - Used to show the target page ID to the user
 		$final['target_page_title'] = $T0_page_title;           # Not required - Used to show the target page name to the user
-		$final['converted_node'] = $this->used_page_title;
-		$final['max_shared_links'] = $max_shared_links;
-		$final['min_shared_links'] = $min_shared_links;
+		$final['converted_node']    = $this->used_page_title;
+		$final['max_shared_links']  = $max_shared_links;
+		$final['min_shared_links']  = $min_shared_links;
 		
 		echo json_encode($final);
 	}
@@ -183,6 +160,7 @@ class Fetch_Ajax_Script_Multi{
 	}
 	
 	
+	
 	public function formatInputText($user_input){
 		$wiki_title = str_replace('_', ' ', $user_input);    # Convert any user entered underscores to spaces
 		$wiki_title = strtolower($wiki_title);                           # Convert the entire string to lowercase words
@@ -202,58 +180,81 @@ class Fetch_Ajax_Script_Multi{
 		$t0_page_id = $this->db->cleanText($t0_page_id);
 		
 		$result = $this->db->query("	SELECT
-												pc.T0 AS T0_page_id,
-												CAST(p2.page_title AS CHAR) AS T0_page_title,
-												pc.T1 AS T1_page_id,
-												CAST(p.page_title AS CHAR) AS T1_page_title,
-												p2.total_connections AS T0_total_connections,
-												p.total_connections AS T1_total_connections,
-												COUNT(pc2.T1) AS T0_T1_shared_connections       # Count the total shared connections
-												
-											FROM wikimap.page_connections pc
-												-- Find all of the connections between T0 and T1
-												LEFT JOIN wikimap.page_connections pc2
-													ON pc2.T0 = pc.T1                           # Find all the page_ids connected to the page_ids that T0 is connected to
-												
-												-- Get the page_titles for T0 and T1
-												LEFT JOIN wikimap.pages p
-													ON p.page_id = pc.T1
-												LEFT JOIN wikimap.pages p2
-													ON p2.page_id = pc.T0
-											WHERE
-												pc.T0 = '$t0_page_id'                                  # ENTER T0 ID HERE
-												
-												-- Only show results for shared connections between T0 and T1
-												AND pc2.T1 IN (
-													-- Create a list of the page_ids T0 is connected to
-													SELECT
-														pc3.T1
-													FROM wikimap.page_connections pc3
-													WHERE
-														pc3.T0 = '$t0_page_id'                         # ENTER T0 ID HERE
-												)
-											GROUP BY pc.T1
-											ORDER BY T0_T1_shared_connections DESC
-											  LIMIT 10
+											pct.T0 AS T0_page_id,
+											CAST(p.page_title AS CHAR) AS T0_page_title,
+											pct.T1 AS T1_page_id,
+											CAST(p2.page_title AS CHAR) AS T1_page_title,
+											pct.total_shared AS T0_T1_shared_connections
+										FROM wikimap.page_connections_test pct
+											LEFT JOIN wikimap.pages p
+												ON p.page_id = pct.T0
+											LEFT JOIN wikimap.pages p2
+												ON p2.page_id = pct.T1
+										WHERE
+											pct.T0 = '$t0_page_id'
+										ORDER BY T0_T1_shared_connections DESC
+										LIMIT 10
                                 ");
 		
 		if($result->num_rows){
 			$i = 0;
+			
+			$master_tier = array();
 			while($row = $result->fetch_assoc()){
 				$T0_page_id               = $row['T0_page_id'];
 				$T0_page_title            = $row['T0_page_title'];
 				$T1_page_id               = $row['T1_page_id'];
 				$T1_page_title            = $row['T1_page_title'];
-				$T0_total_connections     = $row['T0_total_connections'];
-				$T1_total_connections     = $row['T1_total_connections'];
 				$T0_T1_shared_connections = $row['T0_T1_shared_connections'];
 				
 				$data[$i]['id']   = $T1_page_id;
 				$data[$i]['name'] = $T1_page_title;
-				#$data[$i]['color']     = '#00ffff';
-				$data[$i]['val'] = $T0_T1_shared_connections;
+				$data[$i]['val']  = $T0_T1_shared_connections;
+				
+				// Add the top T1 IDs to the tier to loop through
+				$master_tier[$T1_page_id] = $T1_page_id;
+				
 				
 				$i++;
+			}
+			
+			$total_time             = number_format((microtime(TRUE) - $start_time), 6);
+			$this->execution_time[] = $T0_page_title . ": " . $total_time . "\n";
+			
+			/* Get N-Tiers */
+			foreach(array_keys($master_tier) as $n_tier_id){
+				$result = $this->db->query("	SELECT
+											pct.T0 AS T0_page_id,
+											CAST(p.page_title AS CHAR) AS T0_page_title,
+											pct.T1 AS T1_page_id,
+											CAST(p2.page_title AS CHAR) AS T1_page_title,
+											pct.total_shared AS T0_T1_shared_connections
+										FROM wikimap.page_connections_test pct
+											LEFT JOIN wikimap.pages p
+												ON p.page_id = pct.T0
+											LEFT JOIN wikimap.pages p2
+												ON p2.page_id = pct.T1
+										WHERE
+											pct.T0 = '$n_tier_id'
+										ORDER BY T0_T1_shared_connections DESC
+										LIMIT 5
+                                ");
+				
+				while($row = $result->fetch_assoc()){
+					$T0_page_id               = $row['T0_page_id'];
+					$T0_page_title            = $row['T0_page_title'];
+					$T1_page_id               = $row['T1_page_id'];
+					$T1_page_title            = $row['T1_page_title'];
+					$T0_T1_shared_connections = $row['T0_T1_shared_connections'];
+					
+					if(isset($master_tier[$T1_page_id])){
+						continue;
+					}
+					
+					$data[$i]['id']   = $T1_page_id;
+					$data[$i]['name'] = $T1_page_title;
+					$data[$i]['val']  = $T0_T1_shared_connections;
+				}
 			}
 		}
 		
