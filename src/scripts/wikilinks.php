@@ -272,42 +272,30 @@ class Fetch_Ajax_Script_Multi{
 	
 	public function newAlgo($t0){
 		$max_tiers      = 3;
-		$nodes_per_tier = 5;
+		$nodes_per_tier = 3;
 		
 		$t0_array    = array();
 		$t1_array    = array();
-		$links_array = array();
-		$t0_array[0]  = $t0;
+		$data      = array();
 		
-		
-		$t0_data = $this->newAlgo_fetchLinks($t0);
-		
-		
-		$data = array();
-		
-		$data[$t0] = $t0_data;
-		
-		$count = 1;
-		foreach(array_keys($t0_data) as $t1){                  # Loop through all the T1's
-			$data[$t1] = $this->newAlgo_fetchLinks($t1);
-			
-			#$t0 = key($data[$t0]);               # Rename the T0
-			
-			$count++;
-			if($count > 4){
-				break;
+		$t0_array[0] = $t0;
+		for($tier = 0; $tier < $max_tiers; $tier++){
+			$temp_array = array();
+			foreach($t0_array as $t0){                  # Loop through all the T0's
+				$t1_array = $this->newAlgo_fetchLinks($t0, $nodes_per_tier); #Get T1s for this t0
+				foreach(array_keys($t1_array) as $t1){  #Loop through T1's
+					$data[$t0][$t1]=$t1_array[$t1];     #apped to final data
+					array_push($temp_array,$t1);        #append to temp_array (to feed next t0_array)
+				}
 			}
+			$t0_array = $temp_array;
 		}
-		
-		
 		echo "<pre>".print_r($data, true)."</pre>";
-		
 		#return $data;      // Uncomment the hash
 	}
 	
 	
-	
-	public function newAlgo_fetchLinks($t0){
+	public function newAlgo_fetchLinks($t0, $nodes_per_tier){
 		$t0 = $this->db->cleanText($t0);
 		
 		$return_array = array();
@@ -326,7 +314,7 @@ class Fetch_Ajax_Script_Multi{
 										WHERE
 											pct.T0 = '$t0'
 										ORDER BY T0_T1_shared_connections DESC
-										LIMIT 10
+										LIMIT $nodes_per_tier
                                 ");
 		
 		if($result->num_rows){
@@ -336,7 +324,7 @@ class Fetch_Ajax_Script_Multi{
 				$T0_T1_shared_connections = $row['T0_T1_shared_connections'];
 				
 				$return_array[$T1_page_id]['page_title']         = $T1_page_title;
-				$return_array[$T1_page_id]['shared_connecitons'] = $T0_T1_shared_connections;
+				$return_array[$T1_page_id]['shared_connections'] = $T0_T1_shared_connections;
 			}
 		}
 		
