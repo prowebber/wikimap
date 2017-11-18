@@ -118,8 +118,8 @@ class Fetch_Ajax_Script_Multi{
 	}
 	
 	public function newAlgo($t0, $t0_page_title){
-		$max_tiers      = 3;
-		$nodes_per_tier = 10;
+		$max_tiers      = 5;
+		$nodes_per_tier = 5;
 		$links_counter = 0;
 		$node_counter = 0;
 		$t0_array    = array();
@@ -135,17 +135,16 @@ class Fetch_Ajax_Script_Multi{
 					$history[$t0] = array();              # Add to history
 					$t1_array = $this->newAlgo_fetchLinks($t0, $nodes_per_tier); #Get T1s for this t0
 					foreach(array_keys($t1_array) as $t1){  #Loop through T1's
-						if (!isset($history[$t1][$t0])){
+						if (!isset($history[$t1][$t0])){        # Do not add link if the opposite has already been added
 							$history[$t0][$t1] = 1;
 							$data['links'][$links_counter]['source'] = $t0;
 							$data['links'][$links_counter]['target'] = $t1;
 							$data['links'][$links_counter]['val']    = $t1_array[$t1]['shared_connections'];
 							$links_counter++;
 							if(!isset($history['nodes'][$t1])){        # Only add node if it doesn't already exist
-								$T1_pretty_page_title                 = $this->makeTitleReadable($t1_array[$t1]['page_title']);
-								$data['nodes'][$node_counter]['id']   = $t1;    #Add to the nodes
-								$data['nodes'][$node_counter]['name'] = $T1_pretty_page_title;
-								$history['nodes'][$t1]                = 1;                      # Add the page ID to the history array so we can prevent it from being included multiple times
+								$data['nodes'][$node_counter]['id']   = $t1;
+								$data['nodes'][$node_counter]['name'] = $this->makeTitleReadable($t1_array[$t1]['page_title']);
+								$history['nodes'][$t1]                = 1; # Add the page ID to the history array so we can prevent it from being included multiple times
 								$node_counter++;
 							}
 							$temp_array[] = $t1;        #append to temp_array (to feed next t0_array)
