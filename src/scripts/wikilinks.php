@@ -191,9 +191,7 @@ class Fetch_Ajax_Script_Multi{
 	
 	
 	public function makeTitleReadable($wiki_title){
-		$pretty_title = str_replace('_', ' ', $wiki_title);
-		
-		return $pretty_title;
+		return str_replace('_', ' ', $wiki_title);
 	}
 }
 
