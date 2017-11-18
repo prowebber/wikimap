@@ -304,8 +304,8 @@ class Fetch_Ajax_Script_Multi{
 			}
 			$t0_array = $temp_array;
 		}
-		echo "<pre>".print_r($data, true)."</pre>";
-		#return $data;      // Uncomment the hash
+//		echo "<pre>".print_r($data, true)."</pre>";
+		return $data;      // Uncomment the hash
 	}
 	
 	
@@ -355,6 +355,6 @@ class Fetch_Ajax_Script_Multi{
 }
 
 $class = new Fetch_Ajax_Script_Multi();
-//$class->classConfig($_POST);           // Uncomment this out
-$class->newAlgo('308');             // Comment this out
+$class->classConfig($_POST);           // Uncomment this out
+//$class->newAlgo('308');             // Comment this out
 ?>
