@@ -47,8 +47,6 @@ class Fetch_Ajax_Script_Multi{
 		$user_input           = $post_data['user_input'] ?? 'HTTP_404';    # Default to 'HTTP_404' if not found
 		$nodeColor            = 0x0000ff;                                  # Color constant to use for all nodes
 		$linkColor            = 0x00ffff;                                  # Color constant to use for all links
-		$min_shared_links     = 0;                                         # stored minimum shared links for weighting
-		$max_shared_links     = 0;                                         # stores maximum shared links for weighting
 		$target_data          = $this->getPageId($user_input);             # Use the user's input to grab the correct page_id
 		$T0_page_id           = $target_data['page_id'];
 		$T0_page_title        = $target_data['page_title'];
@@ -120,13 +118,8 @@ class Fetch_Ajax_Script_Multi{
 	public function newAlgo($t0, $t0_page_title){
 		$max_tiers      = 5;
 		$nodes_per_tier = 5;
-		$links_counter = 0;
-		$node_counter = 0;
-		$t0_array    = array();
-		$t1_array    = array();
-		$data      = array();
-		$history = array();
-		
+		$links_counter = $node_counter = $min_shared_links= $max_shared_links  = 0;
+		$t0_array = $t1_array = $data = $history = array();
 		$t0_array[0] = $t0;
 		for($tier = 0; $tier < $max_tiers; $tier++){
 			$temp_array = array();
