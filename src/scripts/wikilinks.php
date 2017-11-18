@@ -267,6 +267,108 @@ class Fetch_Ajax_Script_Multi{
 	
 	
 	
+	public function newAlgo($t0){
+		$max_tiers      = 3;
+		$nodes_per_tier = 5;
+		
+		$t0_array    = array();
+		$t1_array    = array();
+		$links_array = array();
+		$t0_array[0]  = $t0;
+		
+		
+		$t0_data = $this->newAlgo_fetchLinks($t0);
+		
+		
+		$data = array();
+		
+		$data[$t0] = $t0_data;
+		
+		$count = 1;
+		foreach(array_keys($t0_data) as $t1){                  # Loop through all the T1's
+			$data[$t1] = $this->newAlgo_fetchLinks($t1);
+			
+			#$t0 = key($data[$t0]);               # Rename the T0
+			
+			$count++;
+			if($count > 4){
+				break;
+			}
+		}
+		
+		
+		echo "<pre>".print_r($data, true)."</pre>";
+		
+		exit;
+		
+		
+		for($i = 0; $i < $max_tiers; $i++){
+			$temp_array = array();
+			
+			foreach($t0_array as $t0){
+				$t1_array[$i] = $this->newAlgo_fetchLinks($t0);
+				
+				foreach(array_keys($t1_array[$i]) as $t1){
+					$links_array[$t0][$t1] = $t1_array[$i][$t1];
+				}
+			}
+			
+			
+			
+			#$t1_array[$i] = $this->newAlgo_fetchLinks($t0);
+			
+//			foreach(array_keys($t1_array[$i]) as $t1){
+//				$links_array[$t0][$t1] = $t1_array[$i][$t1];
+//			}
+			
+			#$t0 = key($t1_array[$i]);               # Rename the T0
+
+			$t0_array[$i] = $temp_array;
+		}
+		
+		echo "<pre>".print_r($t0_array, true)."</pre>";
+	}
+	
+	
+	
+	public function newAlgo_fetchLinks($t0){
+		$t0 = $this->db->cleanText($t0);
+		
+		$return_array = array();
+		
+		$result = $this->db->query("	SELECT
+											pct.T0 AS T0_page_id,
+											CAST(p.page_title AS CHAR) AS T0_page_title,
+											pct.T1 AS T1_page_id,
+											CAST(p2.page_title AS CHAR) AS T1_page_title,
+											pct.total_shared AS T0_T1_shared_connections
+										FROM wikimap.page_connections_test pct
+											LEFT JOIN wikimap.pages p
+												ON p.page_id = pct.T0
+											LEFT JOIN wikimap.pages p2
+												ON p2.page_id = pct.T1
+										WHERE
+											pct.T0 = '$t0'
+										ORDER BY T0_T1_shared_connections DESC
+										LIMIT 10
+                                ");
+		
+		if($result->num_rows){
+			while($row = $result->fetch_assoc()){
+				$T1_page_id               = $row['T1_page_id'];
+				$T1_page_title            = $row['T1_page_title'];
+				$T0_T1_shared_connections = $row['T0_T1_shared_connections'];
+				
+				$return_array[$T1_page_id]['page_title']         = $T1_page_title;
+				$return_array[$T1_page_id]['shared_connecitons'] = $T0_T1_shared_connections;
+			}
+		}
+		
+		return $return_array;
+	}
+	
+	
+	
 	public function makeTitleReadable($wiki_title){
 		$pretty_title = str_replace('_', ' ', $wiki_title);
 		
@@ -275,5 +377,6 @@ class Fetch_Ajax_Script_Multi{
 }
 
 $class = new Fetch_Ajax_Script_Multi();
-$class->classConfig($_POST);
+#$class->classConfig($_POST);
+$class->newAlgo('308');
 ?>
