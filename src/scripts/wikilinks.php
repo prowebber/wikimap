@@ -56,58 +56,58 @@ class Fetch_Ajax_Script_Multi{
 		
 		$data = $this->newAlgo($T0_page_id);
 		
-		
-		#$data    = array();
-		#$history = array();                                                     # Array to store which nodes have already been included in the data array to help prevent duplicates
-		
-		/* Fetch the data for T0 */
-		#$T0_results = $this->dbQuery($T0_page_id);                              # Query the database for all the connections for T0
-		
-		$links_counter = 0;                                                     # Incremental counter for the array
-		$node_counter  = 0;                                                     # Incremental counter for the nodes
-		
-		// Loop through each of the results for T0
-		foreach(array_keys($data) as $T0_key){
-			$T1_page_id               = $data[$T0_key]['id'];             # Get T1 page ID
-			$T1_page_title            = $data[$T0_key]['name'];           # Get T1 page Title
-			$T1_pretty_page_title     = $this->makeTitleReadable($T1_page_title);
-			$T0_T1_shared_connections = $data[$T0_key]['val'];            # Get the total shared connections between T0->T1
-			
-			/* Create the data array for the JSON script */
-			// Add to the nodes
-			if(!isset($history['nodes'][$T1_page_id])){                         # Only create a node if it doesn't exist (prevent stragglers)
-				$data['nodes'][$node_counter]['id']    = $T1_page_title;
-				$data['nodes'][$node_counter]['name']  = $T1_pretty_page_title;
-				$data['nodes'][$node_counter]['color'] = $nodeColor;
-				$history['nodes'][$T1_page_id]         = 1;                      # Add the page ID to the history array so we can prevent it from being included multiple times
-				$node_counter++;
-			}
-			
-			
-			// Add to the links
-			$data['links'][$links_counter]['source'] = $T0_page_title;
-			$data['links'][$links_counter]['target'] = $T1_page_title;
-			if($min_shared_links == 0 or $T0_T1_shared_connections < $min_shared_links){
-				$min_shared_links = $T0_T1_shared_connections;
-			};
-			if($max_shared_links == 0 or $T0_T1_shared_connections > $max_shared_links){
-				$max_shared_links = $T0_T1_shared_connections;
-			};
-			$data['links'][$links_counter]['val']             = $T0_T1_shared_connections;
-			$data['links'][$links_counter]['color']           = $linkColor;
-			$history['links'][$T0_page_title][$T1_page_title] = 1;                  # Add the link connections to history to prevent duplicates
-			$links_counter++;
-			
-			
-		}
-		
-		// Make sure the T0 reference is in the array
-		if(!isset($history['nodes'][$T0_page_id])){                             # If T0 is not in the array
-			$data['nodes'][$node_counter]['id']   = $T0_page_title;
-			$data['nodes'][$node_counter]['name'] = $T0_pretty_page_title;
-		}
-		
-		
+//
+//		#$data    = array();
+//		#$history = array();                                                     # Array to store which nodes have already been included in the data array to help prevent duplicates
+//
+//		/* Fetch the data for T0 */
+//		#$T0_results = $this->dbQuery($T0_page_id);                              # Query the database for all the connections for T0
+//
+//		$links_counter = 0;                                                     # Incremental counter for the array
+//		$node_counter  = 0;                                                     # Incremental counter for the nodes
+//
+//		// Loop through each of the results for T0
+//		foreach(array_keys($data) as $T0_key){
+//			$T1_page_id               = $data[$T0_key]['id'];             # Get T1 page ID
+//			$T1_page_title            = $data[$T0_key]['name'];           # Get T1 page Title
+//			$T1_pretty_page_title     = $this->makeTitleReadable($T1_page_title);
+//			$T0_T1_shared_connections = $data[$T0_key]['val'];            # Get the total shared connections between T0->T1
+//
+//			/* Create the data array for the JSON script */
+//			// Add to the nodes
+//			if(!isset($history['nodes'][$T1_page_id])){                         # Only create a node if it doesn't exist (prevent stragglers)
+//				$data['nodes'][$node_counter]['id']    = $T1_page_title;
+//				$data['nodes'][$node_counter]['name']  = $T1_pretty_page_title;
+//				$data['nodes'][$node_counter]['color'] = $nodeColor;
+//				$history['nodes'][$T1_page_id]         = 1;                      # Add the page ID to the history array so we can prevent it from being included multiple times
+//				$node_counter++;
+//			}
+//
+//
+//			// Add to the links
+//			$data['links'][$links_counter]['source'] = $T0_page_title;
+//			$data['links'][$links_counter]['target'] = $T1_page_title;
+//			if($min_shared_links == 0 or $T0_T1_shared_connections < $min_shared_links){
+//				$min_shared_links = $T0_T1_shared_connections;
+//			};
+//			if($max_shared_links == 0 or $T0_T1_shared_connections > $max_shared_links){
+//				$max_shared_links = $T0_T1_shared_connections;
+//			};
+//			$data['links'][$links_counter]['val']             = $T0_T1_shared_connections;
+//			$data['links'][$links_counter]['color']           = $linkColor;
+//			$history['links'][$T0_page_title][$T1_page_title] = 1;                  # Add the link connections to history to prevent duplicates
+//			$links_counter++;
+//
+//
+//		}
+//
+//		// Make sure the T0 reference is in the array
+//		if(!isset($history['nodes'][$T0_page_id])){                             # If T0 is not in the array
+//			$data['nodes'][$node_counter]['id']   = $T0_page_title;
+//			$data['nodes'][$node_counter]['name'] = $T0_pretty_page_title;
+//		}
+//
+//
 		$final                      = array();             # Array to store the final output data
 		$final['results']           = $data;
 		$final['execution_time']    = $this->execution_time;    # Not required - Used to display the execution time to the user
@@ -294,8 +294,8 @@ class Fetch_Ajax_Script_Multi{
 			}
 			$t0_array = $temp_array;
 		}
-		echo "<pre>".print_r($data, true)."</pre>";
-		#return $data;      // Uncomment the hash
+//		echo "<pre>".print_r(json_encode($data), true)."</pre>";
+		return $data;      // Uncomment the hash
 	}
 	
 	
@@ -345,6 +345,6 @@ class Fetch_Ajax_Script_Multi{
 }
 
 $class = new Fetch_Ajax_Script_Multi();
-#$class->classConfig($_POST);           // Uncomment this out
-$class->newAlgo('308');             // Comment this out
+$class->classConfig($_POST);           // Uncomment this out
+//$class->newAlgo('308');             // Comment this out
 ?>
