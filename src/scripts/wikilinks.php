@@ -51,12 +51,12 @@ class Fetch_Ajax_Script_Multi{
 		$T0_page_id           = $target_data['page_id'];
 		$T0_page_title        = $target_data['page_title'];
 		$T0_pretty_page_title = $this->makeTitleReadable($T0_page_title);
-		
 		$max_tiers      = 5;
 		$nodes_per_tier = 5;
 		$links_counter = $node_counter = $min_shared_links = $max_shared_links  = 0;
 		$t0_array = $t1_array = $data = $history = array();
-		$t0_array[0] = $t0;
+		
+		$t0_array[0] = $T0_page_id;
 		for($tier = 0; $tier < $max_tiers; $tier++){
 			$temp_array = array();
 			foreach($t0_array as $t0){                  # Loop through all the T0's
@@ -70,8 +70,8 @@ class Fetch_Ajax_Script_Multi{
 							$data['links'][$links_counter]['target'] = $t1;
 							$data['links'][$links_counter]['val']    = $sc_val = $t1_array[$t1]['shared_connections'];
 							$data['links'][$links_counter]['color']    = $linkColor;
-							$min_shared_links = ($sc_val < $min_shared_links or $min_shared_links == 0 ? $sc_val : $min_shared_links);
-							$max_shared_links = ($sc_val > $max_shared_links or $max_shared_links == 0 ? $sc_val : $max_shared_links);
+							$min_shared_links = (($sc_val < $min_shared_links or $min_shared_links == 0) ? $sc_val : $min_shared_links);
+							$max_shared_links = (($sc_val > $max_shared_links or $max_shared_links == 0) ? $sc_val : $max_shared_links);
 							$links_counter++;
 							if(!isset($history['nodes'][$t1])){        # Only add node if it doesn't already exist
 								$data['nodes'][$node_counter]['id']   = $t1;
@@ -89,7 +89,6 @@ class Fetch_Ajax_Script_Multi{
 		}
 //		echo "<pre>".print_r($data, true)."</pre>";
 //		echo "<pre>".print_r($history, true)."</pre>";
-		
 		
 		$final                      = array();             # Array to store the final output data
 		$final['results']           = $data;
@@ -150,10 +149,6 @@ class Fetch_Ajax_Script_Multi{
 		$wiki_title = str_replace(' ', '_', $wiki_title);   # Replace spaces with underscores
 		
 		return $wiki_title;
-	}
-	
-	public function newAlgo($t0, $t0_page_title){
-		return $data;      // Uncomment the hash
 	}
 	
 	public function newAlgo_fetchLinks($t0, $nodes_per_tier){
