@@ -273,7 +273,7 @@ class Fetch_Ajax_Script_Multi{
 	public function newAlgo($t0){
 		$max_tiers      = 3;
 		$nodes_per_tier = 3;
-		
+		$links_counter = 0;
 		$t0_array    = array();
 		$t1_array    = array();
 		$data      = array();
@@ -284,7 +284,11 @@ class Fetch_Ajax_Script_Multi{
 			foreach($t0_array as $t0){                  # Loop through all the T0's
 				$t1_array = $this->newAlgo_fetchLinks($t0, $nodes_per_tier); #Get T1s for this t0
 				foreach(array_keys($t1_array) as $t1){  #Loop through T1's
-					$data[$t0][$t1]=$t1_array[$t1];     #apped to final data
+//					$data[$t0][$t1]=$t1_array[$t1];     #append to final data
+					$data['links'][$links_counter]['source']=$t0;
+					$data['links'][$links_counter]['target']=$t1;
+					$data['links'][$links_counter]['val']=$t1_array[$t1]['shared_connections'];
+					$links_counter++;
 					array_push($temp_array,$t1);        #append to temp_array (to feed next t0_array)
 				}
 			}
