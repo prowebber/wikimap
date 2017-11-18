@@ -52,7 +52,44 @@ class Fetch_Ajax_Script_Multi{
 		$T0_page_title        = $target_data['page_title'];
 		$T0_pretty_page_title = $this->makeTitleReadable($T0_page_title);
 		
-		$data = $this->newAlgo($T0_page_id,$T0_page_title);
+		$max_tiers      = 5;
+		$nodes_per_tier = 5;
+		$links_counter = $node_counter = $min_shared_links = $max_shared_links  = 0;
+		$t0_array = $t1_array = $data = $history = array();
+		$t0_array[0] = $t0;
+		for($tier = 0; $tier < $max_tiers; $tier++){
+			$temp_array = array();
+			foreach($t0_array as $t0){                  # Loop through all the T0's
+				if(!array_key_exists($t0,$history)){    # If t0 not in history, avoids data being queried for same t0 twice
+					$history[$t0] = array();              # Add to history
+					$t1_array = $this->newAlgo_fetchLinks($t0, $nodes_per_tier); #Get T1s for this t0
+					foreach(array_keys($t1_array) as $t1){  #Loop through T1's
+						if (!isset($history[$t1][$t0])){        # Do not add link if the opposite has already been added
+							$history[$t0][$t1] = 1;
+							$data['links'][$links_counter]['source'] = $t0;
+							$data['links'][$links_counter]['target'] = $t1;
+							$data['links'][$links_counter]['val']    = $sc_val = $t1_array[$t1]['shared_connections'];
+							$data['links'][$links_counter]['color']    = $linkColor;
+							$min_shared_links = ($sc_val < $min_shared_links or $min_shared_links == 0 ? $sc_val : $min_shared_links);
+							$max_shared_links = ($sc_val > $max_shared_links or $max_shared_links == 0 ? $sc_val : $max_shared_links);
+							$links_counter++;
+							if(!isset($history['nodes'][$t1])){        # Only add node if it doesn't already exist
+								$data['nodes'][$node_counter]['id']   = $t1;
+								$data['nodes'][$node_counter]['name'] = $this->makeTitleReadable($t1_array[$t1]['page_title']);
+								$data['nodes'][$node_counter]['color']    = $nodeColor;
+								$history['nodes'][$t1]                = 1; # Add the page ID to the history array so we can prevent it from being included multiple times
+								$node_counter++;
+							}
+							$temp_array[] = $t1;        #append to temp_array (to feed next t0_array)
+						}
+					}
+				}
+			}
+			$t0_array = $temp_array;
+		}
+//		echo "<pre>".print_r($data, true)."</pre>";
+//		echo "<pre>".print_r($history, true)."</pre>";
+		
 		
 		$final                      = array();             # Array to store the final output data
 		$final['results']           = $data;
@@ -116,41 +153,6 @@ class Fetch_Ajax_Script_Multi{
 	}
 	
 	public function newAlgo($t0, $t0_page_title){
-		$max_tiers      = 5;
-		$nodes_per_tier = 5;
-		$links_counter = $node_counter = $min_shared_links= $max_shared_links  = 0;
-		$t0_array = $t1_array = $data = $history = array();
-		$t0_array[0] = $t0;
-		for($tier = 0; $tier < $max_tiers; $tier++){
-			$temp_array = array();
-			foreach($t0_array as $t0){                  # Loop through all the T0's
-				if(!array_key_exists($t0,$history)){    # If t0 not in history, avoids data being queried for same t0 twice
-					$history[$t0] = array();              # Add to history
-					$t1_array = $this->newAlgo_fetchLinks($t0, $nodes_per_tier); #Get T1s for this t0
-					foreach(array_keys($t1_array) as $t1){  #Loop through T1's
-						if (!isset($history[$t1][$t0])){        # Do not add link if the opposite has already been added
-							$history[$t0][$t1] = 1;
-							$data['links'][$links_counter]['source'] = $t0;
-							$data['links'][$links_counter]['target'] = $t1;
-							$data['links'][$links_counter]['val']    = $sc_val = $t1_array[$t1]['shared_connections'];
-							$min_shared_links = ($sc_val < $min_shared_links or $min_shared_links == 0 ? $sc_val : $min_shared_links);
-							$max_shared_links = ($sc_val > $max_shared_links or $max_shared_links == 0 ? $sc_val : $max_shared_links);
-							$links_counter++;
-							if(!isset($history['nodes'][$t1])){        # Only add node if it doesn't already exist
-								$data['nodes'][$node_counter]['id']   = $t1;
-								$data['nodes'][$node_counter]['name'] = $this->makeTitleReadable($t1_array[$t1]['page_title']);
-								$history['nodes'][$t1]                = 1; # Add the page ID to the history array so we can prevent it from being included multiple times
-								$node_counter++;
-							}
-							$temp_array[] = $t1;        #append to temp_array (to feed next t0_array)
-						}
-					}
-				}
-			}
-			$t0_array = $temp_array;
-		}
-//		echo "<pre>".print_r($data, true)."</pre>";
-//		echo "<pre>".print_r($history, true)."</pre>";
 		return $data;      // Uncomment the hash
 	}
 	
