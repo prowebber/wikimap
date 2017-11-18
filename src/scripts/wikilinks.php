@@ -54,60 +54,8 @@ class Fetch_Ajax_Script_Multi{
 		$T0_page_title        = $target_data['page_title'];
 		$T0_pretty_page_title = $this->makeTitleReadable($T0_page_title);
 		
-		$data = $this->newAlgo($T0_page_id);
+		$data = $this->newAlgo($T0_page_id,$T0_page_title);
 		
-//
-//		#$data    = array();
-//		#$history = array();                                                     # Array to store which nodes have already been included in the data array to help prevent duplicates
-//
-//		/* Fetch the data for T0 */
-//		#$T0_results = $this->dbQuery($T0_page_id);                              # Query the database for all the connections for T0
-//
-//		$links_counter = 0;                                                     # Incremental counter for the array
-//		$node_counter  = 0;                                                     # Incremental counter for the nodes
-//
-//		// Loop through each of the results for T0
-//		foreach(array_keys($data) as $T0_key){
-//			$T1_page_id               = $data[$T0_key]['id'];             # Get T1 page ID
-//			$T1_page_title            = $data[$T0_key]['name'];           # Get T1 page Title
-//			$T1_pretty_page_title     = $this->makeTitleReadable($T1_page_title);
-//			$T0_T1_shared_connections = $data[$T0_key]['val'];            # Get the total shared connections between T0->T1
-//
-//			/* Create the data array for the JSON script */
-//			// Add to the nodes
-//			if(!isset($history['nodes'][$T1_page_id])){                         # Only create a node if it doesn't exist (prevent stragglers)
-//				$data['nodes'][$node_counter]['id']    = $T1_page_title;
-//				$data['nodes'][$node_counter]['name']  = $T1_pretty_page_title;
-//				$data['nodes'][$node_counter]['color'] = $nodeColor;
-//				$history['nodes'][$T1_page_id]         = 1;                      # Add the page ID to the history array so we can prevent it from being included multiple times
-//				$node_counter++;
-//			}
-//
-//
-//			// Add to the links
-//			$data['links'][$links_counter]['source'] = $T0_page_title;
-//			$data['links'][$links_counter]['target'] = $T1_page_title;
-//			if($min_shared_links == 0 or $T0_T1_shared_connections < $min_shared_links){
-//				$min_shared_links = $T0_T1_shared_connections;
-//			};
-//			if($max_shared_links == 0 or $T0_T1_shared_connections > $max_shared_links){
-//				$max_shared_links = $T0_T1_shared_connections;
-//			};
-//			$data['links'][$links_counter]['val']             = $T0_T1_shared_connections;
-//			$data['links'][$links_counter]['color']           = $linkColor;
-//			$history['links'][$T0_page_title][$T1_page_title] = 1;                  # Add the link connections to history to prevent duplicates
-//			$links_counter++;
-//
-//
-//		}
-//
-//		// Make sure the T0 reference is in the array
-//		if(!isset($history['nodes'][$T0_page_id])){                             # If T0 is not in the array
-//			$data['nodes'][$node_counter]['id']   = $T0_page_title;
-//			$data['nodes'][$node_counter]['name'] = $T0_pretty_page_title;
-//		}
-//
-//
 		$final                      = array();             # Array to store the final output data
 		$final['results']           = $data;
 		$final['execution_time']    = $this->execution_time;    # Not required - Used to display the execution time to the user
@@ -119,8 +67,6 @@ class Fetch_Ajax_Script_Multi{
 		
 		echo json_encode($final);
 	}
-	
-	
 	
 	public function getPageId($user_input){
 		// If the user entered a wikipedia URL
@@ -161,9 +107,6 @@ class Fetch_Ajax_Script_Multi{
 		
 		return $data;
 	}
-	
-	
-	
 	public function formatInputText($user_input){
 		$wiki_title = str_replace('_', ' ', $user_input);    # Convert any user entered underscores to spaces
 		$wiki_title = strtolower($wiki_title);                           # Convert the entire string to lowercase words
@@ -174,105 +117,9 @@ class Fetch_Ajax_Script_Multi{
 		return $wiki_title;
 	}
 	
-	
-	
-	public function dbQuery($t0_page_id){
-		$start_time = microtime(TRUE);                     # Count the number of seconds the script takes
-		
-		$data       = array();
-		$t0_page_id = $this->db->cleanText($t0_page_id);
-		
-		$result = $this->db->query("	SELECT
-											pct.T0 AS T0_page_id,
-											CAST(p.page_title AS CHAR) AS T0_page_title,
-											pct.T1 AS T1_page_id,
-											CAST(p2.page_title AS CHAR) AS T1_page_title,
-											pct.total_shared AS T0_T1_shared_connections
-										FROM wikimap.page_connections_test pct
-											LEFT JOIN wikimap.pages p
-												ON p.page_id = pct.T0
-											LEFT JOIN wikimap.pages p2
-												ON p2.page_id = pct.T1
-										WHERE
-											pct.T0 = '$t0_page_id'
-										ORDER BY T0_T1_shared_connections DESC
-										LIMIT 10
-                                ");
-		
-		if($result->num_rows){
-			$i = 0;
-			
-			$master_tier = array();
-			while($row = $result->fetch_assoc()){
-				$T0_page_id               = $row['T0_page_id'];
-				$T0_page_title            = $row['T0_page_title'];
-				$T1_page_id               = $row['T1_page_id'];
-				$T1_page_title            = $row['T1_page_title'];
-				$T0_T1_shared_connections = $row['T0_T1_shared_connections'];
-				
-				$data[$i]['id']   = $T1_page_id;
-				$data[$i]['name'] = $T1_page_title;
-				$data[$i]['val']  = $T0_T1_shared_connections;
-				
-				// Add the top T1 IDs to the tier to loop through
-				$master_tier[$T1_page_id] = $T1_page_id;
-				
-				
-				$i++;
-			}
-			
-			$total_time             = number_format((microtime(TRUE) - $start_time), 6);
-			$this->execution_time[] = $T0_page_title . ": " . $total_time . "\n";
-			
-			/* Get N-Tiers */
-			foreach(array_keys($master_tier) as $n_tier_id){
-				$result = $this->db->query("	SELECT
-											pct.T0 AS T0_page_id,
-											CAST(p.page_title AS CHAR) AS T0_page_title,
-											pct.T1 AS T1_page_id,
-											CAST(p2.page_title AS CHAR) AS T1_page_title,
-											pct.total_shared AS T0_T1_shared_connections
-										FROM wikimap.page_connections_test pct
-											LEFT JOIN wikimap.pages p
-												ON p.page_id = pct.T0
-											LEFT JOIN wikimap.pages p2
-												ON p2.page_id = pct.T1
-										WHERE
-											pct.T0 = '$n_tier_id'
-										ORDER BY T0_T1_shared_connections DESC
-										LIMIT 5
-                                ");
-				
-				while($row = $result->fetch_assoc()){
-					$T0_page_id               = $row['T0_page_id'];
-					$T0_page_title            = $row['T0_page_title'];
-					$T1_page_id               = $row['T1_page_id'];
-					$T1_page_title            = $row['T1_page_title'];
-					$T0_T1_shared_connections = $row['T0_T1_shared_connections'];
-					
-					if(isset($master_tier[$T1_page_id])){
-						continue;
-					}
-					
-					$data[$i]['id']   = $T1_page_id;
-					$data[$i]['name'] = $T1_page_title;
-					$data[$i]['val']  = $T0_T1_shared_connections;
-				}
-			}
-		}
-		
-		// Record the number of seconds the query took
-		$total_time             = number_format((microtime(TRUE) - $start_time), 6);
-		$this->execution_time[] = $T0_page_title . ": " . $total_time . "\n";
-		
-		return $data;
-	}
-	
-	
-	
-	public function newAlgo($t0){
+	public function newAlgo($t0, $t0_page_title){
 		$max_tiers      = 3;
-		$nodes_per_tier = 3;
+		$nodes_per_tier = 4;
 		$links_counter = 0;
 		$node_counter = 0;
 		$t0_array    = array();
@@ -280,20 +127,25 @@ class Fetch_Ajax_Script_Multi{
 		$data      = array();
 		$history = array();
 		
+		$history[0] = $t0;  # Add first node id
+		$data['nodes'][$node_counter]['id']    = $t0;    #Add to the nodes
+		$data['nodes'][$node_counter]['name']  = $t0_page_title;
+		$node_counter++;
+		
 		$t0_array[0] = $t0;
 		for($tier = 0; $tier < $max_tiers; $tier++){
 			$temp_array = array();
 			foreach($t0_array as $t0){                  # Loop through all the T0's
 				$t1_array = $this->newAlgo_fetchLinks($t0, $nodes_per_tier); #Get T1s for this t0
 				foreach(array_keys($t1_array) as $t1){  #Loop through T1's
-					$data['links'][$links_counter]['source']=$t0;
-					$data['links'][$links_counter]['target']=$t1;
-					$data['links'][$links_counter]['val']=$t1_array[$t1]['shared_connections'];
-					$links_counter++;
-					$T1_pretty_page_title     = $this->makeTitleReadable($t1_array[$t1]['page_title']);
-							 #Add to the nodes
-					if(!in_array($t1,$history)){                         # Only create a node if it doesn't exist (prevent stragglers)
-						$data['nodes'][$node_counter]['id']    = $t1;
+					if(!in_array($t1,$history)){        # Only add node (and create link) if it doesn't already exist
+						$data['links'][$links_counter]['source']=$t0;
+						$data['links'][$links_counter]['target']=$t1;
+						$data['links'][$links_counter]['val']=$t1_array[$t1]['shared_connections'];
+						$links_counter++;
+						
+						$T1_pretty_page_title     = $this->makeTitleReadable($t1_array[$t1]['page_title']);
+						$data['nodes'][$node_counter]['id']    = $t1;    #Add to the nodes
 						$data['nodes'][$node_counter]['name']  = $T1_pretty_page_title;
 						array_push($history,$t1);                      # Add the page ID to the history array so we can prevent it from being included multiple times
 						$node_counter++;
