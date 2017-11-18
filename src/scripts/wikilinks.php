@@ -119,7 +119,7 @@ class Fetch_Ajax_Script_Multi{
 	
 	public function newAlgo($t0, $t0_page_title){
 		$max_tiers      = 3;
-		$nodes_per_tier = 3;
+		$nodes_per_tier = 10;
 		$links_counter = 0;
 		$node_counter = 0;
 		$t0_array    = array();
