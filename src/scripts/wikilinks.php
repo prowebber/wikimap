@@ -54,21 +54,24 @@ class Fetch_Ajax_Script_Multi{
 		$T0_page_title        = $target_data['page_title'];
 		$T0_pretty_page_title = $this->makeTitleReadable($T0_page_title);
 		
-		$data    = array();
-		$history = array();                                                     # Array to store which nodes have already been included in the data array to help prevent duplicates
+		$data = $this->newAlgo($T0_page_id);
+		
+		
+		#$data    = array();
+		#$history = array();                                                     # Array to store which nodes have already been included in the data array to help prevent duplicates
 		
 		/* Fetch the data for T0 */
-		$T0_results = $this->dbQuery($T0_page_id);                              # Query the database for all the connections for T0
+		#$T0_results = $this->dbQuery($T0_page_id);                              # Query the database for all the connections for T0
 		
 		$links_counter = 0;                                                     # Incremental counter for the array
 		$node_counter  = 0;                                                     # Incremental counter for the nodes
 		
 		// Loop through each of the results for T0
-		foreach(array_keys($T0_results) as $T0_key){
-			$T1_page_id               = $T0_results[$T0_key]['id'];             # Get T1 page ID
-			$T1_page_title            = $T0_results[$T0_key]['name'];           # Get T1 page Title
+		foreach(array_keys($data) as $T0_key){
+			$T1_page_id               = $data[$T0_key]['id'];             # Get T1 page ID
+			$T1_page_title            = $data[$T0_key]['name'];           # Get T1 page Title
 			$T1_pretty_page_title     = $this->makeTitleReadable($T1_page_title);
-			$T0_T1_shared_connections = $T0_results[$T0_key]['val'];            # Get the total shared connections between T0->T1
+			$T0_T1_shared_connections = $data[$T0_key]['val'];            # Get the total shared connections between T0->T1
 			
 			/* Create the data array for the JSON script */
 			// Add to the nodes
@@ -299,34 +302,7 @@ class Fetch_Ajax_Script_Multi{
 		
 		echo "<pre>".print_r($data, true)."</pre>";
 		
-		exit;
-		
-		
-		for($i = 0; $i < $max_tiers; $i++){
-			$temp_array = array();
-			
-			foreach($t0_array as $t0){
-				$t1_array[$i] = $this->newAlgo_fetchLinks($t0);
-				
-				foreach(array_keys($t1_array[$i]) as $t1){
-					$links_array[$t0][$t1] = $t1_array[$i][$t1];
-				}
-			}
-			
-			
-			
-			#$t1_array[$i] = $this->newAlgo_fetchLinks($t0);
-			
-//			foreach(array_keys($t1_array[$i]) as $t1){
-//				$links_array[$t0][$t1] = $t1_array[$i][$t1];
-//			}
-			
-			#$t0 = key($t1_array[$i]);               # Rename the T0
-
-			$t0_array[$i] = $temp_array;
-		}
-		
-		echo "<pre>".print_r($t0_array, true)."</pre>";
+		#return $data;      // Uncomment the hash
 	}
 	
 	
@@ -377,6 +353,6 @@ class Fetch_Ajax_Script_Multi{
 }
 
 $class = new Fetch_Ajax_Script_Multi();
-#$class->classConfig($_POST);
-$class->newAlgo('308');
+#$class->classConfig($_POST);           // Uncomment this out
+$class->newAlgo('308');             // Comment this out
 ?>
