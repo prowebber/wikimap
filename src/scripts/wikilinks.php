@@ -132,7 +132,9 @@ class Fetch_Ajax_Script_Multi{
 							$history[$t0][$t1] = 1;
 							$data['links'][$links_counter]['source'] = $t0;
 							$data['links'][$links_counter]['target'] = $t1;
-							$data['links'][$links_counter]['val']    = $t1_array[$t1]['shared_connections'];
+							$data['links'][$links_counter]['val']    = $sc_val = $t1_array[$t1]['shared_connections'];
+							$min_shared_links = ($sc_val < $min_shared_links or $min_shared_links == 0 ? $sc_val : $min_shared_links);
+							$max_shared_links = ($sc_val > $max_shared_links or $max_shared_links == 0 ? $sc_val : $max_shared_links);
 							$links_counter++;
 							if(!isset($history['nodes'][$t1])){        # Only add node if it doesn't already exist
 								$data['nodes'][$node_counter]['id']   = $t1;
