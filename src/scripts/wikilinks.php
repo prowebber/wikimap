@@ -51,8 +51,8 @@ class Fetch_Ajax_Script_Multi{
 		$T0_page_id           = $target_data['page_id'];
 		$T0_page_title        = $target_data['page_title'];
 		$T0_pretty_page_title = $this->makeTitleReadable($T0_page_title);
-		$max_tiers      = 5;
-		$nodes_per_tier = 5;
+		$max_tiers      = 3;
+		$nodes_per_tier = 3;
 		$links_counter = $node_counter = $min_shared_links = $max_shared_links  = 0;
 		$t0_array = $t1_array = $data = $history = array();
 		
@@ -88,7 +88,6 @@ class Fetch_Ajax_Script_Multi{
 			$t0_array = $temp_array;
 		}
 //		echo "<pre>".print_r($data, true)."</pre>";
-//		echo "<pre>".print_r($history, true)."</pre>";
 		
 		$final                      = array();             # Array to store the final output data
 		$final['results']           = $data;
