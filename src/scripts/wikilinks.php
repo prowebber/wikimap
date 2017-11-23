@@ -31,6 +31,7 @@ class Fetch_Ajax_Script_Multi{
 	}
 	public function fetchMultiData($post_data){
 		$user_input           = $post_data['user_input'] ?? 'HTTP_404';    # Default to 'HTTP_404' if not found
+		$start_time           = microtime(true);
 		$nodeColor            = 0x0000ff;                                  # Color constant to use for all nodes
 		$linkColor            = 0x00ffff;                                  # Color constant to use for all links
 		$target_data          = $this->getPageId($user_input);             # Use the user's input to grab the correct page_id
@@ -82,7 +83,8 @@ class Fetch_Ajax_Script_Multi{
 //		echo "<pre>".print_r($data, true)."</pre>";
 		$final                      = array();             # Array to store the final output data
 		$final['results']           = $data;
-		$final['execution_time']    = $this->execution_time;    # Not required - Used to display the execution time to the user
+//		$final['execution_time']    = $this->execution_time;    # Not required - Used to display the execution time to the user
+		$final['execution_time']    = microtime(true) - $start_time;
 		$final['target_page_id']    = $T0_page_id;              # Not required - Used to show the target page ID to the user
 		$final['target_page_title'] = $T0_page_title;           # Not required - Used to show the target page name to the user
 		$final['converted_node']    = $this->used_page_title;
