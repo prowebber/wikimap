@@ -109,6 +109,7 @@ function colorOthers(nodes){
 			node.color=0x0000ff;
 		};
 	});
+	nodes[0].color=0xffffff;
 };
 
 $(function() {
