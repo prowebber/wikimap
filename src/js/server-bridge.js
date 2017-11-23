@@ -93,11 +93,12 @@ function colorLinks(nodes, links){
 	links.forEach(function(link){
 		if (link.source.visited && link.target.visited) {
 			link.color=0x00ff00;
-			link.lineOpacity=1;
-			link.lineWidth=10;
+			link.opacity=1;
+			// link.lineWidth=10;
 		} else {
 			link.color=0x00ffff;
-			link.lineOpacity=0.2;
+			link.opacity=0.2;
+			// link.lineWidth=1;
 		};
 	});
 };
@@ -110,7 +111,7 @@ function colorOthers(nodes){
 			node.opacity =1;
 		} else {
 			node.color=0x0000ff;
-			node.opacity = 0.3;
+			node.opacity = 1;
 		};
 	});
 	nodes[0].color=0xffffff;
