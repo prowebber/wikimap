@@ -52,16 +52,22 @@ class Fetch_Ajax_Script_Multi{
 		$T0_page_title        = $target_data['page_title'];
 		$T0_pretty_page_title = $this->makeTitleReadable($T0_page_title);
 		$max_tiers      = 3;
-		$nodes_per_tier = 3;
+		$nodes_per_tier = 4;
 		$links_counter = $node_counter = $min_shared_links = $max_shared_links  = 0;
 		$t0_array = $t1_array = $data = $history = array();
-		
 		$t0_array[0] = $T0_page_id;
 		for($tier = 0; $tier < $max_tiers; $tier++){
 			$temp_array = array();
 			foreach($t0_array as $t0){                  # Loop through all the T0's
 				if(!array_key_exists($t0,$history)){    # If t0 not in history, avoids data being queried for same t0 twice
 					$history[$t0] = array();              # Add to history
+					if ($node_counter == 0){             # On initial T0
+						$data['nodes'][$node_counter]['id']   = $T0_page_id;           # Set nodes[0] = T0_page_id
+						$data['nodes'][$node_counter]['name'] = $T0_page_title;
+						$data['nodes'][$node_counter]['color']    = 0xffffff;
+						$node_counter++;
+						$history['nodes'][$T0_page_id] = 1;                            # Add T0 to history
+					}
 					$t1_array = $this->newAlgo_fetchLinks($t0, $nodes_per_tier); #Get T1s for this t0
 					foreach(array_keys($t1_array) as $t1){  #Loop through T1's
 						if (!isset($history[$t1][$t0])){        # Do not add link if the opposite has already been added
