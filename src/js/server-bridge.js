@@ -65,7 +65,6 @@ function showGraph(json_response){
 		let { nodes, links } = Graph.graphData();
 		colorOthers(nodes);
 		var $wikiView = $("aside.pageinfo");															// Define the Wikipedia page preview
-		console.log('node val: ' + node);
 		if (!node) {
 			console.log('attempted to hide node');
 			$wikiView.css({'display':'none'});															// Make the wikipedia preview visible and slide it into the page
@@ -78,9 +77,12 @@ function showGraph(json_response){
 
 		// Make sure the nav tips are not displayed
 		$('div.graph-nav-info').hide();
-		// sets current node color
-		node.color = 0xff00ff;
-		node.visited = true;
+		// sets current node color and opacity
+		if (!node.visited) {
+			node.color = 0xff00ff;
+			node.opacity = 1;
+		};
+		node.visited = !node.visited; // toggle visited
 		colorLinks(nodes, links);
 		Graph.cooldownTicks(0);
 		Graph.graphData({ nodes, links });
@@ -105,12 +107,17 @@ function colorOthers(nodes){
 	nodes.forEach(function(node){
 		if (node.visited) {
 			node.color=0x00ff00;
+			node.opacity =1;
 		} else {
 			node.color=0x0000ff;
+			node.opacity = 0.3;
 		};
 	});
 	nodes[0].color=0xffffff;
+	console.log('node x: ' + nodes[0].x); // get x coordinate of node (to be used for heat map color scale)
 };
+
+
 
 $(function() {
 	// When the user clicks on the search bar, make it more visible

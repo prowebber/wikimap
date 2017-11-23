@@ -1,11 +1,8 @@
 <?php
 
 namespace datapeak\public_html\src\scripts;
-
 use datapeak\server\classes\SQL_Database;
-
 include $_SERVER['DOCUMENT_ROOT'] . "/config.php";
-
 ini_set('max_execution_time', 300);     # Set the maximum script execution time to 300 seconds (5 min.)
 
 // Allows purewebber.com to send requests to src.purewebber.com
@@ -13,36 +10,25 @@ $http_origin = $_SERVER['HTTP_ORIGIN'];
 if($http_origin == "http://purewebber.dev" || $http_origin == "http://purewebber.com" || $http_origin == "https://prowebber.github.io"){
 	header("Access-Control-Allow-Origin: $http_origin");
 }
-
 class Fetch_Ajax_Script_Multi{
 	public $execution_time = array();
 	
 	public $used_page_title;
 	
-	
-	
 	public function __construct(){
 		$this->db = new SQL_Database(WIKIMAP_DB);
 	}
-	
-	
-	
 	/**
 	 * Start Here
-	 *
 	 * @param $post_data        An array of data being fed from the user's submit action
 	 */
 	public function classConfig($post_data){
 		if(!isset($post_data['server_class'])){
 			return;
 		}
-		
 		$class_name = $post_data['server_class'];       # Get the name of the class to be loaded
 		$this->$class_name($post_data);                 # Calls that function
 	}
-	
-	
-	
 	public function fetchMultiData($post_data){
 		$user_input           = $post_data['user_input'] ?? 'HTTP_404';    # Default to 'HTTP_404' if not found
 		$nodeColor            = 0x0000ff;                                  # Color constant to use for all nodes
@@ -94,7 +80,6 @@ class Fetch_Ajax_Script_Multi{
 			$t0_array = $temp_array;
 		}
 //		echo "<pre>".print_r($data, true)."</pre>";
-		
 		$final                      = array();             # Array to store the final output data
 		$final['results']           = $data;
 		$final['execution_time']    = $this->execution_time;    # Not required - Used to display the execution time to the user
@@ -103,7 +88,6 @@ class Fetch_Ajax_Script_Multi{
 		$final['converted_node']    = $this->used_page_title;
 		$final['max_shared_links']  = $max_shared_links;
 		$final['min_shared_links']  = $min_shared_links;
-		
 		echo json_encode($final);
 	}
 	
@@ -121,9 +105,7 @@ class Fetch_Ajax_Script_Multi{
 		}
 		
 		$this->used_page_title = $page_title;
-		
 		$page_title = $this->db->cleanText($page_title);
-		
 		$result = $this->db->query("	SELECT
 												p.page_id,
 												p.page_title
@@ -158,9 +140,7 @@ class Fetch_Ajax_Script_Multi{
 	
 	public function newAlgo_fetchLinks($t0, $nodes_per_tier){
 		$t0 = $this->db->cleanText($t0);
-		
 		$return_array = array();
-		
 		$result = $this->db->query("	SELECT
 											pct.T0 AS T0_page_id,
 											CAST(p.page_title AS CHAR) AS T0_page_title,
@@ -177,7 +157,6 @@ class Fetch_Ajax_Script_Multi{
 										ORDER BY T0_T1_shared_connections DESC
 										LIMIT $nodes_per_tier
                                 ");
-		
 		if($result->num_rows){
 			while($row = $result->fetch_assoc()){
 				$T1_page_id               = $row['T1_page_id'];
@@ -188,11 +167,8 @@ class Fetch_Ajax_Script_Multi{
 				$return_array[$T1_page_id]['shared_connections'] = $T0_T1_shared_connections;
 			}
 		}
-		
 		return $return_array;
 	}
-	
-	
 	
 	public function makeTitleReadable($wiki_title){
 		return str_replace('_', ' ', $wiki_title);
