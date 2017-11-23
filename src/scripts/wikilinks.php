@@ -161,8 +161,8 @@ class Fetch_Ajax_Script_Multi{
 											CAST(p.page_title AS CHAR) AS T0_page_title,
 											pct.T1 AS T1_page_id,
 											CAST(p2.page_title AS CHAR) AS T1_page_title,
-											pct.total_shared AS T0_T1_shared_connections
-										FROM wikimap.page_connections_test pct
+											pct.shared_connections AS T0_T1_shared_connections
+										FROM wikimap.connections pct
 											LEFT JOIN wikimap.pages p
 												ON p.page_id = pct.T0
 											LEFT JOIN wikimap.pages p2
