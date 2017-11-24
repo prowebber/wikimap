@@ -6,6 +6,16 @@ function ajaxFetch(form_data){
 		dataType: 'text'
 	});
 }
+
+
+
+
+function closeWikiPreviewWindow() {
+	$("aside.pageinfo").hide();								// Hide the wiki preview
+	$("div#3d-graph canvas").css({'width':'100%'});			// Make sure the canvas stays the full screen width
+}
+
+
 var max_shared_links;
 var min_shared_links;
 function databaseRequest(user_input){
@@ -126,17 +136,9 @@ $(function() {
 		$(this).removeClass('dark');									// Make the text easier to read when background is white
 	});
 
-
-	// When the user clicks on the node canvas, close the wikipedia perview
-	$('div#3d-graph').on('click', 'canvas', function (e) {
-		$("aside.pageinfo").hide();
-	});
-
-
-
-	function doneTyping(){												// When the user is done typing
-		$( 'header #user_input' ).fadeTo( "fast", .33 );				// Fade the searchbar
-		$('header #user_input').addClass('dark');								// Make the text easier to read when faded
+	function doneTyping(){													// When the user is done typing
+		$( 'header #user_input' ).fadeTo( "fast", .33 );					// Fade the searchbar
+		$('header #user_input').addClass('dark');							// Make the text easier to read when faded
 	}
 
 
