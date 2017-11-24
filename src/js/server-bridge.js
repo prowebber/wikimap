@@ -42,7 +42,7 @@ function databaseRequest(user_input){
 		showGraph(json_response);
 	});
 }
-window.strength_scale = 1;
+strength_scale = 3;
 function showGraph(json_response){
 	console.log('Min shared links: ' +  window.min_shared_links);
 	console.log('Max shared links: ' +  window.max_shared_links);
