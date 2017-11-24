@@ -6,8 +6,6 @@ function ajaxFetch(form_data){
 		dataType: 'text'
 	});
 }
-var max_shared_links;
-var min_shared_links;
 function databaseRequest(user_input){
 	var form_data = [];
 	form_data.push({name: 'user_input', value: user_input});
@@ -21,8 +19,8 @@ function databaseRequest(user_input){
 		var matched_page_title = parsed_data.target_page_title;
 		var json_response = parsed_data.results;
 		var execution_time = parsed_data.execution_time;
-		max_shared_links = parsed_data.max_shared_links;
-		min_shared_links = parsed_data.min_shared_links;
+		window.max_shared_links = parsed_data.max_shared_links;
+		window.min_shared_links = parsed_data.min_shared_links;
 
 		console.log('JSON:\n' + JSON.stringify(json_response));
 
@@ -44,17 +42,13 @@ function databaseRequest(user_input){
 		showGraph(json_response);
 	});
 }
-var STRENGTH_SCALE = 0.4;
+window.strength_scale = 1;
 function showGraph(json_response){
-	// const CAMERA_DISTANCE2NODES_FACTOR = 400;
-	// MIN_SHARED_LINKS = min_shared_links;
-	// MAX_SHARED_LINKS = max_shared_links;
-	// console.log('Min shared links: ' +  MIN_SHARED_LINKS);
-	// console.log('Max shared links: ' +  MAX_SHARED_LINKS);
+	console.log('Min shared links: ' +  window.min_shared_links);
+	console.log('Max shared links: ' +  window.max_shared_links);
 	const Graph = ForceGraph3D()
 	(document.getElementById('3d-graph'))
 		.graphData(json_response)
-		.cameraDistance(10)
 		.onNodeClick(colorNode);
 	function colorNode(node){
 		let { nodes, links } = Graph.graphData();
