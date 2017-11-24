@@ -39,9 +39,9 @@ class Fetch_Ajax_Script_Multi{
 		$T0_page_title        = $target_data['page_title'];
 		$T0_pretty_page_title = $this->makeTitleReadable($T0_page_title);
 		$max_tiers      = 4;
-		$nodes_per_tier = 4;
-		$links_counter = $node_counter = $min_shared_links = $max_shared_links  = 0;
-		$t0_array = $t1_array = $data = $history = array();
+		$nodes_per_tier = 3;
+		$links_counter = $node_counter = $min_shared_links = $max_shared_links  = 0;    # Initialize int variables
+		$t0_array = $t1_array = $data = $history = array();                             # Initialize arrays
 		$t0_array[0] = $T0_page_id;
 		for($tier = 0; $tier < $max_tiers; $tier++){
 			$temp_array = array();
@@ -53,18 +53,21 @@ class Fetch_Ajax_Script_Multi{
 						$data['nodes'][$node_counter]['name'] = $T0_page_title;
 						$data['nodes'][$node_counter]['color']    = 0xffffff;
 						$node_counter++;
-						$history['nodes'][$T0_page_id] = 1;                            # Add T0 to history
+						$history['nodes'][$T0_page_id] = $target_data['total_connections'];                            # Add total_connections for T0 to history
 					}
 					$t1_array = $this->newAlgo_fetchLinks($t0, $nodes_per_tier); #Get T1s for this t0
 					foreach(array_keys($t1_array) as $t1){  #Loop through T1's
 						if (!isset($history[$t1][$t0])){        # Do not add link if the opposite has already been added
 							$history[$t0][$t1] = 1;
-							$data['links'][$links_counter]['source'] = $t0;
-							$data['links'][$links_counter]['target'] = $t1;
-							$data['links'][$links_counter]['val']    = $sc_val = $t1_array[$t1]['shared_connections'];
-							$data['links'][$links_counter]['color']    = $linkColor;
+//							$sc_val = $t1_array[$t1]['shared_connections'];              # simply shared connections count, old
+							$sc_val = $t1_array[$t1]['shared_connections']/($t1_array[$t1]['T0_total_connections']+$t1_array[$t1]['T1_total_connections']); # shared links weighted by total
 							$min_shared_links = (($sc_val < $min_shared_links or $min_shared_links == 0) ? $sc_val : $min_shared_links);
 							$max_shared_links = (($sc_val > $max_shared_links or $max_shared_links == 0) ? $sc_val : $max_shared_links);
+							$data['links'][$links_counter]['source'] = $t0;
+							$data['links'][$links_counter]['target'] = $t1;
+							$data['links'][$links_counter]['val']    = $sc_val;
+							$data['links'][$links_counter]['color']    = $linkColor;
+							
 							$links_counter++;
 							if(!isset($history['nodes'][$t1])){        # Only add node if it doesn't already exist
 								$data['nodes'][$node_counter]['id']   = $t1;
@@ -110,7 +113,8 @@ class Fetch_Ajax_Script_Multi{
 		$page_title = $this->db->cleanText($page_title);
 		$result = $this->db->query("	SELECT
 												p.page_id,
-												p.page_title
+												p.page_title,
+												p.total_connections
 											FROM wikimap.pages p
 											WHERE
 												p.page_title = '$page_title'
@@ -121,11 +125,13 @@ class Fetch_Ajax_Script_Multi{
 		$data               = array();
 		$data['page_id']    = '308';             # Set a fallback page_id (HTTP_404)
 		$data['page_title'] = 'Aristotle';
+		$data['total_connections'] = '5186';
 		
 		if($result->num_rows){
 			$row                = $result->fetch_assoc();
 			$data['page_id']    = $row['page_id'];
 			$data['page_title'] = $row['page_title'];
+			$data['total_connections'] = $row['total_connections'];
 		}
 		
 		return $data;
@@ -146,8 +152,10 @@ class Fetch_Ajax_Script_Multi{
 		$result = $this->db->query("	SELECT
 											pct.T0 AS T0_page_id,
 											CAST(p.page_title AS CHAR) AS T0_page_title,
+											p.total_connections AS T0_total_connections,
 											pct.T1 AS T1_page_id,
 											CAST(p2.page_title AS CHAR) AS T1_page_title,
+											p2.total_connections as T1_total_connections,
 											pct.shared_connections AS T0_T1_shared_connections
 										FROM wikimap.connections pct
 											LEFT JOIN wikimap.pages p
@@ -161,12 +169,11 @@ class Fetch_Ajax_Script_Multi{
                                 ");
 		if($result->num_rows){
 			while($row = $result->fetch_assoc()){
-				$T1_page_id               = $row['T1_page_id'];
-				$T1_page_title            = $row['T1_page_title'];
-				$T0_T1_shared_connections = $row['T0_T1_shared_connections'];
-				
-				$return_array[$T1_page_id]['page_title']         = $T1_page_title;
-				$return_array[$T1_page_id]['shared_connections'] = $T0_T1_shared_connections;
+				$T1_page_id                                         = $row['T1_page_id'];
+				$return_array[$T1_page_id]['page_title']            = $row['T1_page_title'];
+				$return_array[$T1_page_id]['shared_connections']    = $row['T0_T1_shared_connections'];
+				$return_array[$T1_page_id]['T0_total_connections']  = $row['T0_total_connections'];
+				$return_array[$T1_page_id]['T1_total_connections']  = $row['T1_total_connections'];
 			}
 		}
 		return $return_array;

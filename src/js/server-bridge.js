@@ -31,8 +31,8 @@ function databaseRequest(user_input){
 		var matched_page_title = parsed_data.target_page_title;
 		var json_response = parsed_data.results;
 		var execution_time = parsed_data.execution_time;
-		max_shared_links = parsed_data.max_shared_links;
-		min_shared_links = parsed_data.min_shared_links;
+		window.max_shared_links = parsed_data.max_shared_links;
+		window.min_shared_links = parsed_data.min_shared_links;
 
 		console.log('JSON:\n' + JSON.stringify(json_response));
 
@@ -52,21 +52,12 @@ function databaseRequest(user_input){
 		 */
 		// const Graph = ForceGraph3D()
 		showGraph(json_response);
-
-
 	});
 }
-var MIN_SHARED_LINKS;
-
-var MAX_SHARED_LINKS;
-
-var STRENGTH_SCALE = 0.4;
+strength_scale = 3;
 function showGraph(json_response){
-	const CAMERA_DISTANCE2NODES_FACTOR = 10;
-	MIN_SHARED_LINKS = min_shared_links;
-	MAX_SHARED_LINKS = max_shared_links;
-	console.log('Min shared links: ' +  MIN_SHARED_LINKS);
-	console.log('Max shared links: ' +  MAX_SHARED_LINKS);
+	console.log('Min shared links: ' +  window.min_shared_links);
+	console.log('Max shared links: ' +  window.max_shared_links);
 	const Graph = ForceGraph3D()
 	(document.getElementById('3d-graph'))
 		.graphData(json_response)
@@ -103,11 +94,12 @@ function colorLinks(nodes, links){
 	links.forEach(function(link){
 		if (link.source.visited && link.target.visited) {
 			link.color=0x00ff00;
-			link.lineOpacity=1;
-			link.lineWidth=10;
+			link.opacity=1;
+			// link.lineWidth=10;
 		} else {
 			link.color=0x00ffff;
-			link.lineOpacity=0.2;
+			link.opacity=0.2;
+			// link.lineWidth=1;
 		};
 	});
 };
@@ -120,7 +112,7 @@ function colorOthers(nodes){
 			node.opacity =1;
 		} else {
 			node.color=0x0000ff;
-			node.opacity = 0.3;
+			node.opacity = 1;
 		};
 	});
 	nodes[0].color=0xffffff;
