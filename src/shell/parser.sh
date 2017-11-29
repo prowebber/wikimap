@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-input_file = pagelinks_small.sql
-output_file = shell_output.txt
-time cat input_file >> shell_output.txt
+input_file="C:/Users/Charles/PycharmProjects/untitled/all_page_links.sql"
+output_file="C:/Users/Charles/PycharmProjects/untitled/shell_output_2.txt"
+ time sed "s/ //g" $input_file >> $output_file
