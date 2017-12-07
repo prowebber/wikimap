@@ -8,3 +8,4 @@
 .idea/dataSources.xml
 .idea/
 .idea/*
+/redirect.sql
