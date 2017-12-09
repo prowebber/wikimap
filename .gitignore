@@ -8,3 +8,5 @@
 .idea/dataSources.xml
 .idea/
 .idea/*
+/redirect.sql
+720MB_page.sql
