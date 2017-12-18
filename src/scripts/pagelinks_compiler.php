@@ -33,18 +33,20 @@ function page_array_no_redirects($redirect_array){
 			$page_array[$col_a] = $tok;
 			continue;
 		}
-		$redirect_title = $redirect_array[$col_a];                                            # If redirect ID, change title to redirect title
-		$page_array[$col_a] = $redirect_title;
+//		$redirect_title = $redirect_array[$col_a];                                            # If redirect ID, change title to redirect title
+//		$page_array[$col_a] = $redirect_title;
 	}
 	return $page_array;
 }
 function compiled_pagelinks($page_array){
 	echo "Page array size before flip:".count($page_array)."\n";
-//	$flipped_page_array = array_flip($page_array);
+	file_put_contents("../../page_array_new.txt", print_r($page_array, TRUE));
+	$flipped_page_array = array_flip($page_array);
+//	$flipped_page_array=array();
 //	foreach($page_array as $key => $value){
-//		$flipped_page_array[]=array($value, $key);
+//		$flipped_page_array=$flipped_page_array+array($value, $key);
 //	}
-	$flipped_page_array=array_combine(array_values($page_array),array_keys($page_array));
+//	$flipped_page_array=array_combine(array_values($page_array),array_keys($page_array));
 	file_put_contents("../../flipped_page_array_new.txt", print_r($flipped_page_array, TRUE));
 	echo "Flipped page array size after flip:".count($flipped_page_array)."\n";
 	$count = 0;
