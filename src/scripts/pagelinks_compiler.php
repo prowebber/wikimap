@@ -11,7 +11,7 @@ file_put_contents($output_file, print_r($pagelinks_final, TRUE));
 $end_time = number_format((microtime(TRUE) - $start_time), 6); # Calculate how long it took
 echo "<hr>Total Time: $end_time (sec.)";                                          # Display the run time results
 
-public function redirect_array(){
+function redirect_array(){
 	$contents = file_get_contents("redirect_parsed.txt", TRUE);  # Convert the redirect_parsed tsv to a string
 	$redirect_array = array();                                                  # Initialize associative array
 	$tok = strtok($contents, "\n");                                       # Split the string by token (new line)
@@ -23,7 +23,7 @@ public function redirect_array(){
 	return $redirect_array;
 }
 
-public function page_array_no_redirects($redirect_array){
+function page_array_no_redirects($redirect_array){
 	$page_array = array();
 	$contents   = file_get_contents("page_parsed.txt", TRUE);          # Convert page_parsed tsv to a string
 	$tok        = strtok($contents, "\n");                                             # Split the string by token (new line)
@@ -38,7 +38,7 @@ public function page_array_no_redirects($redirect_array){
 		$page_array[$tok] = $redirect_title;
 	}
 }
-public function compiled_pagelinks($page_array){
+function compiled_pagelinks($page_array){
 	$flipped_page_array = array_flip($page_array);
 	$pagelinks_final = array();
 	$count = 0;
