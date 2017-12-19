@@ -83,7 +83,6 @@ while ($tok !== false) {                                                        
 //	$pagelinks_final[$col_a] =$page_id;
 }
 
-
 #1,772,596
 echo 'Count: '.$count;
 file_put_contents($output_file, print_r($final_array, TRUE));
