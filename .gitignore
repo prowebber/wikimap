@@ -9,3 +9,6 @@
 .idea/
 .idea/*
 /redirect.sql
+/src/scripts/aoc/*
+/src/scripts/example.db
+/src/scripts/php-test.php
