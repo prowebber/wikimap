@@ -64,3 +64,9 @@ pagelinks_shared_links.txt
 /pagelinks_no_redirects.txt
 /pagelinks_redirects_merged.txt
 /redirect_array2.txt
+/pagelinks_id_tsv.txt
+/page_title_tsv.txt
+/redirect_title_tsv.txt
+/redirect_id_tsv.txt
+/pagelinks_title_tsv.txt
+/page_id_tsv.txt
