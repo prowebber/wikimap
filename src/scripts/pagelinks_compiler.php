@@ -13,65 +13,79 @@ file_put_contents("../../page_array.txt", print_r($page_array, TRUE));
 echo end_time($start_time_1,"write page_array to file");
 
 $start_time_1 = microtime(TRUE);
-$redirect_array = array_from_tsv_1D("../../redirect_parsed.txt");
-echo end_time($start_time_1,"redirect_array creation");
-$start_time_1 = microtime(TRUE);
-file_put_contents("../../redirect_array.txt", print_r($redirect_array, TRUE));
-echo end_time($start_time_1,"write redirect_array to file");
+$page_id_array=explode("\n",file_get_contents("../../page_id_tsv.txt"));
+$page_title_array=explode("\n",file_get_contents("../../page_title_tsv.txt"));
 
-$start_time_1 = microtime(TRUE);
-$page_no_redirects = array_diff_key($page_array,$redirect_array);
-echo end_time($start_time_1,"page remove redirects");
-$start_time_1 = microtime(TRUE);
-file_put_contents("../../page_no_redirects.txt", print_r($page_no_redirects, TRUE));
-echo end_time($start_time_1,"write page_no_redirects to file");
+//echo end_time($start_time_1,"page_title_array creation");
+file_put_contents("../../page_id_array.txt", print_r($page_id_array, TRUE));
+file_put_contents("../../page_title_array.txt", print_r($page_title_array, TRUE));
 
-$start_time_1 = microtime(TRUE);
-$pagelinks_array = array_from_tsv("../../pagelinks_parsed.txt");
-echo end_time($start_time_1,"pagelinks_array creation");
-$start_time_1 = microtime(TRUE);
-file_put_contents("../../pagelinks_array.txt", print_r($pagelinks_array, TRUE));
-echo end_time($start_time_1,"write pagelinks_array to file");
+echo "Page ids in page_parsed: ".count($page_array)."\n";
+echo "Page ids in page_id_array: ".count($page_id_array)."\n";
+echo "Page ids in page_title_array: ".count($page_title_array)."\n";
+$page_array_diff=array_diff($page_id_array,array_keys($page_array));
+file_put_contents("../../page_array missing id.txt", print_r($page_array_diff, TRUE));
 
-$start_time_1 = microtime(TRUE);
-$pagelinks_no_redirects = array_diff_key($pagelinks_array,$redirect_array);
-echo end_time($start_time_1,"get pagelinks without redirect from_ids");
-echo "Pagelinks without redirect from_ids: ".count($pagelinks_no_redirects)."\n";
-$start_time_1 = microtime(TRUE);
-file_put_contents("../../pagelinks_no_redirects.txt", print_r($pagelinks_no_redirects, TRUE));
-echo end_time($start_time_1,"write pagelinks_no_redirects to file");
-
-$start_time_1 = microtime(TRUE);
-$pagelinks_in_redirects = array_intersect_key($pagelinks_array,$redirect_array);
-echo end_time($start_time_1,"get pagelinks with redirect from_ids");
-echo "Pagelinks with redirect from_ids: ".count($pagelinks_in_redirects)."\n";
-$start_time_1 = microtime(TRUE);
-file_put_contents("../../pagelinks_in_redirects.txt", print_r($pagelinks_no_redirects, TRUE));
-echo end_time($start_time_1,"write pagelinks_in_redirects to file");
-
-$start_time_1 = microtime(TRUE);
-$redirects_in_pagelinks = array_intersect_key($redirect_array,$pagelinks_array);
-echo end_time($start_time_1,"get redirects with from_ids in pagelinks");
-echo "Redirects with from_ids in pagelinks: ".count($redirects_in_pagelinks)."\n";
-$start_time_1 = microtime(TRUE);
-file_put_contents("../../redirects_in_pagelinks.txt", print_r($pagelinks_no_redirects, TRUE));
-echo end_time($start_time_1,"write redirects_in_pagelinks to file");
-
-$start_time_1 = microtime(TRUE);
-$pagelinks_redirects_merged =array_merge($pagelinks_in_redirects, $redirects_in_pagelinks);
-echo end_time($start_time_1,"merge pagelinks redirect ids with redirect titles");
-echo "Merged redirects with from_ids in pagelinks: ".count($pagelinks_redirects_merged)."\n";
-$start_time_1 = microtime(TRUE);
-file_put_contents("../../pagelinks_redirects_merged.txt", print_r($pagelinks_redirects_merged, TRUE));
-echo end_time($start_time_1,"write pagelinks_redirects_merged to file");
-
-
-$start_time_1 = microtime(TRUE);
-$pagelinks_redirects_replaced = array_combine($pagelinks_redirects_merged, $pagelinks_in_redirects);
-echo end_time($start_time_1,"replace pagelinks redirect ids with redirect titles");
-$start_time_1 = microtime(TRUE);
-file_put_contents("../../pagelinks_redirects_replaced.txt", print_r($pagelinks_redirects_replaced, TRUE));
-echo end_time($start_time_1,"write pagelinks_redirects_replaced to file");
+//$start_time_1 = microtime(TRUE);
+//$redirect_array = array_from_tsv_1D("../../redirect_parsed.txt");
+//echo end_time($start_time_1,"redirect_array creation");
+//$start_time_1 = microtime(TRUE);
+//file_put_contents("../../redirect_array.txt", print_r($redirect_array, TRUE));
+//echo end_time($start_time_1,"write redirect_array to file");
+//
+//$start_time_1 = microtime(TRUE);
+//$page_no_redirects = array_diff_key($page_array,$redirect_array);
+//echo end_time($start_time_1,"page remove redirects");
+//$start_time_1 = microtime(TRUE);
+//file_put_contents("../../page_no_redirects.txt", print_r($page_no_redirects, TRUE));
+//echo end_time($start_time_1,"write page_no_redirects to file");
+//
+//$start_time_1 = microtime(TRUE);
+//$pagelinks_array = array_from_tsv("../../pagelinks_parsed.txt");
+//echo end_time($start_time_1,"pagelinks_array creation");
+//$start_time_1 = microtime(TRUE);
+//file_put_contents("../../pagelinks_array.txt", print_r($pagelinks_array, TRUE));
+//echo end_time($start_time_1,"write pagelinks_array to file");
+//
+//$start_time_1 = microtime(TRUE);
+//$pagelinks_no_redirects = array_diff_key($pagelinks_array,$redirect_array);
+//echo end_time($start_time_1,"get pagelinks without redirect from_ids");
+//echo "Pagelinks without redirect from_ids: ".count($pagelinks_no_redirects)."\n";
+//$start_time_1 = microtime(TRUE);
+//file_put_contents("../../pagelinks_no_redirects.txt", print_r($pagelinks_no_redirects, TRUE));
+//echo end_time($start_time_1,"write pagelinks_no_redirects to file");
+//
+//$start_time_1 = microtime(TRUE);
+//$pagelinks_in_redirects = array_intersect_key($pagelinks_array,$redirect_array);
+//echo end_time($start_time_1,"get pagelinks with redirect from_ids");
+//echo "Pagelinks with redirect from_ids: ".count($pagelinks_in_redirects)."\n";
+//$start_time_1 = microtime(TRUE);
+//file_put_contents("../../pagelinks_in_redirects.txt", print_r($pagelinks_no_redirects, TRUE));
+//echo end_time($start_time_1,"write pagelinks_in_redirects to file");
+//
+//$start_time_1 = microtime(TRUE);
+//$redirects_in_pagelinks = array_intersect_key($redirect_array,$pagelinks_array);
+//echo end_time($start_time_1,"get redirects with from_ids in pagelinks");
+//echo "Redirects with from_ids in pagelinks: ".count($redirects_in_pagelinks)."\n";
+//$start_time_1 = microtime(TRUE);
+//file_put_contents("../../redirects_in_pagelinks.txt", print_r($pagelinks_no_redirects, TRUE));
+//echo end_time($start_time_1,"write redirects_in_pagelinks to file");
+//
+//$start_time_1 = microtime(TRUE);
+//$pagelinks_redirects_merged =array_merge($pagelinks_in_redirects, $redirects_in_pagelinks);
+//echo end_time($start_time_1,"merge pagelinks redirect ids with redirect titles");
+//echo "Merged redirects with from_ids in pagelinks: ".count($pagelinks_redirects_merged)."\n";
+//$start_time_1 = microtime(TRUE);
+//file_put_contents("../../pagelinks_redirects_merged.txt", print_r($pagelinks_redirects_merged, TRUE));
+//echo end_time($start_time_1,"write pagelinks_redirects_merged to file");
+//
+//
+//$start_time_1 = microtime(TRUE);
+//$pagelinks_redirects_replaced = array_combine($pagelinks_redirects_merged, $pagelinks_in_redirects);
+//echo end_time($start_time_1,"replace pagelinks redirect ids with redirect titles");
+//$start_time_1 = microtime(TRUE);
+//file_put_contents("../../pagelinks_redirects_replaced.txt", print_r($pagelinks_redirects_replaced, TRUE));
+//echo end_time($start_time_1,"write pagelinks_redirects_replaced to file");
 
 
 function array_from_tsv($tsv_path){                                                         # Parses TSV(key.'\t'.val.'\n') into an assoc. array(key=>'val') using strtok and tab/newline as delimiters
@@ -90,7 +104,7 @@ function array_from_tsv_1D($tsv_path){                                          
 	while($tok !== FALSE){                                                                   # While a token exists, get the next full line
 		$key = strtok("\t");                                                             # Get the string to the leading tab (Page ID)
 		$val = $tok   = strtok("\n");                                                    # Get value; update the position in the string to the next newline
-		$output_array[$key]= "'" . $val . "'";                                              # Save values to the array
+		$output_array[$key]=  $val ;                                              # Save values to the array
 	}
 	return $output_array;
 }
