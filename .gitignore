@@ -59,3 +59,22 @@
 /redirect_array2.txt
 /720MB_page.sql
 /shell_output.txt
+/page_id_array.txt
+/pagelinks_titles_to_ids.txt
+/pagelinks_corrected_titles.txt
+/page_title_array.txt
+/pagelinks_redirect_titles.txt
+/pagelinks_keys_not_in_database.txt
+/pagelinks_titles_not_in_database.txt
+/pagelinks_corrected_title_ids.txt
+/pagelinks_ids_in_database.txt
+/page_title_id_array.txt
+/pagelinks_titles_in_database.txt
+/pagelinks_from_ids_not_in_database.txt
+/page_array missing id.txt
+/page_title_tsv.txt
+/pagelinks_id_tsv.txt
+/redirect_id_tsv.txt
+/redirect_title_tsv.txt
+/pagelinks_title_tsv.txt
+/page_id_tsv.txt
