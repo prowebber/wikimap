@@ -1,30 +1,84 @@
 <?php
 
-//set_time_limit(3600);                                                    # 60 minute running limit
+//set_time_limit(3600);                                                 # 60 minute running limit
 ini_set('memory_limit', '10048M');                              # 10 GB memory limit
 $output_file     = "../../pagelinks_final_TSV.txt";
 $start_time     = microtime(TRUE);
 
-$start_time_1 = microtime(TRUE);
-$page_array = array_from_tsv_1D("../../page_parsed.txt");
-echo end_time($start_time_1,"page_array creation");
-$start_time_1 = microtime(TRUE);
-file_put_contents("../../page_array.txt", print_r($page_array, TRUE));
-echo end_time($start_time_1,"write page_array to file");
+//create page_array
+//$start_time_1 = microtime(TRUE);
+//$page_array = array_from_tsv_1D_rev("../../page_parsed.txt");
+//echo end_time($start_time_1,"page_array creation");
+//echo "page_array: ".number_format(count($page_array))."\n";
+//$start_time_1 = microtime(TRUE);
+//file_put_contents("../../page_array.txt", print_r($page_array, TRUE));
+//echo end_time($start_time_1,"write page_array to file");
 
+//create redirect_array
 $start_time_1 = microtime(TRUE);
-$page_id_array=explode("\n",file_get_contents("../../page_id_tsv.txt"));
-$page_title_array=explode("\n",file_get_contents("../../page_title_tsv.txt"));
+$redirect_array = array_from_tsv_1D_rev("../../redirect_parsed.txt");
+echo end_time($start_time_1,"redirect_array creation");
+echo "redirect_array: ".number_format(count($redirect_array))."\n";
+$start_time_1 = microtime(TRUE);
+file_put_contents("../../redirect_array.txt", print_r($redirect_array, TRUE));
+echo end_time($start_time_1,"write redirect_array to file");
+
+echo end_time($start_time,"Total");
+
+function array_from_tsv($tsv_path){                                                         # Parses TSV(key.'\t'.val.'\n') into an assoc. array(key=>'val') using strtok and tab/newline as delimiters
+	$tsv_str = file_get_contents($tsv_path, TRUE);                            # Convert the redirect_parsed tsv to a string
+	$tok = strtok($tsv_str, "\n");                                                    # Split the string by token (new line)
+	while($tok !== FALSE){                                                                   # While a token exists, get the next full line
+		$key = strtok("\t");                                                             # Get the string to the leading tab (Page ID)
+		$val = $tok   = strtok("\n");                                                    # Get value; update the position in the string to the next newline
+		$output_array[$key][] =  $val;                                              # Save values to the array
+	}
+	return $output_array;
+}
+function array_from_tsv_rev($tsv_path){                                                         # Parses TSV(val.'\t'.key.'\n') into an assoc. array(key=>'val') using strtok and tab/newline as delimiters
+	$tsv_str = file_get_contents($tsv_path, TRUE);                            # Convert the redirect_parsed tsv to a string
+	$tok = strtok($tsv_str, "\n");                                                    # Split the string by token (new line)
+	while($tok !== FALSE){                                                                   # While a token exists, get the next full line
+		$val = strtok("\t");                                                             # Get the string to the leading tab (Page ID)
+		$key = $tok   = strtok("\n");                                                    # Get value; update the position in the string to the next newline
+		$output_array[$key][] =  $val;                                              # Save values to the array
+	}
+	return $output_array;
+}
+function array_from_tsv_1D($tsv_path){                                                         # Parses TSV(key.'\t'.val.'\n') into an assoc. array(key=>'val') using strtok and tab/newline as delimiters
+	$tsv_str = file_get_contents($tsv_path, TRUE);                            # Convert the redirect_parsed tsv to a string
+	$tok = strtok($tsv_str, "\n");                                                    # Split the string by token (new line)
+	while($tok !== FALSE){                                                                   # While a token exists, get the next full line
+		$key = strtok("\t");                                                             # Get the string to the leading tab (Page ID)
+		$val = $tok   = strtok("\n");                                                    # Get value; update the position in the string to the next newline
+		$output_array[$key]=  $val ;                                              # Save values to the array
+	}
+	return $output_array;
+}
+function array_from_tsv_1D_rev($tsv_path){                                                         # Parses TSV(val.'\t'.key.'\n') into an assoc. array(key=>'val') using strtok and tab/newline as delimiters
+	$tsv_str = file_get_contents($tsv_path, TRUE);                            # Convert the redirect_parsed tsv to a string
+	$tok = strtok($tsv_str, "\n");                                                    # Split the string by token (new line)
+	while($tok !== FALSE){                                                                   # While a token exists, get the next full line
+		$val = strtok("\t");                                                             # Get the string to the leading tab (Page ID)
+		$key = $tok   = strtok("\n");                                                    # Get value; update the position in the string to the next newline
+		$output_array[$key]=  $val ;                                              # Save values to the array
+	}
+	return $output_array;
+}
+
+//$start_time_1 = microtime(TRUE);
+//$page_id_array=explode("\n",file_get_contents("../../page_id_tsv.txt"));
+//$page_title_array=explode("\n",file_get_contents("../../page_title_tsv.txt"));
 
 //echo end_time($start_time_1,"page_title_array creation");
-file_put_contents("../../page_id_array.txt", print_r($page_id_array, TRUE));
-file_put_contents("../../page_title_array.txt", print_r($page_title_array, TRUE));
-
-echo "Page ids in page_parsed: ".count($page_array)."\n";
-echo "Page ids in page_id_array: ".count($page_id_array)."\n";
-echo "Page ids in page_title_array: ".count($page_title_array)."\n";
-$page_array_diff=array_diff($page_id_array,array_keys($page_array));
-file_put_contents("../../page_array missing id.txt", print_r($page_array_diff, TRUE));
+//file_put_contents("../../page_id_array.txt", print_r($page_id_array, TRUE));
+//file_put_contents("../../page_title_array.txt", print_r($page_title_array, TRUE));
+//
+//echo "Page ids in page_parsed: ".count($page_array)."\n";
+//echo "Page ids in page_id_array: ".count($page_id_array)."\n";
+//echo "Page ids in page_title_array: ".count($page_title_array)."\n";
+//$page_array_diff=array_diff($page_id_array,array_keys($page_array));
+//file_put_contents("../../page_array missing id.txt", print_r($page_array_diff, TRUE));
 
 //$start_time_1 = microtime(TRUE);
 //$redirect_array = array_from_tsv_1D("../../redirect_parsed.txt");
@@ -88,26 +142,7 @@ file_put_contents("../../page_array missing id.txt", print_r($page_array_diff, T
 //echo end_time($start_time_1,"write pagelinks_redirects_replaced to file");
 
 
-function array_from_tsv($tsv_path){                                                         # Parses TSV(key.'\t'.val.'\n') into an assoc. array(key=>'val') using strtok and tab/newline as delimiters
-	$tsv_str = file_get_contents($tsv_path, TRUE);                            # Convert the redirect_parsed tsv to a string
-	$tok = strtok($tsv_str, "\n");                                                    # Split the string by token (new line)
-	while($tok !== FALSE){                                                                   # While a token exists, get the next full line
-		$key = strtok("\t");                                                             # Get the string to the leading tab (Page ID)
-		$val = $tok   = strtok("\n");                                                    # Get value; update the position in the string to the next newline
-		$output_array[$key][] = "'" . $val . "'";                                              # Save values to the array
-	}
-	return $output_array;
-}
-function array_from_tsv_1D($tsv_path){                                                         # Parses TSV(key.'\t'.val.'\n') into an assoc. array(key=>'val') using strtok and tab/newline as delimiters
-	$tsv_str = file_get_contents($tsv_path, TRUE);                            # Convert the redirect_parsed tsv to a string
-	$tok = strtok($tsv_str, "\n");                                                    # Split the string by token (new line)
-	while($tok !== FALSE){                                                                   # While a token exists, get the next full line
-		$key = strtok("\t");                                                             # Get the string to the leading tab (Page ID)
-		$val = $tok   = strtok("\n");                                                    # Get value; update the position in the string to the next newline
-		$output_array[$key]=  $val ;                                              # Save values to the array
-	}
-	return $output_array;
-}
+
 //function page_array_no_redirects($redirect_array){
 //	file_put_contents("../../redirect_array.txt", print_r($redirect_array, TRUE));
 //

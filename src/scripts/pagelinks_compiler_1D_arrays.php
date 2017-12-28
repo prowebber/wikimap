@@ -6,77 +6,116 @@ ini_set('memory_limit', '10048M');                              # 10 GB memory l
 $start_time     = microtime(TRUE);
 
 $start_time_1 = microtime(TRUE);
-$page_id_array = array_from_tsv_1D("../../page_id_tsv.txt");
-$page_title_array = array_from_tsv_1D("../../page_title_tsv.txt");
-$pagelinks_id_array = array_from_tsv_1D("../../pagelinks_id_tsv.txt");
-$pagelinks_title_array = array_from_tsv_1D("../../pagelinks_title_tsv.txt");
-$redirect_id_array = array_from_tsv_1D("../../redirect_id_tsv.txt");
-$redirect_title_array = array_from_tsv_1D("../../redirect_title_tsv.txt");
+$page_ids = array_1D_from_tsv("../../page_id_tsv.txt");
+$page_titles = array_1D_from_tsv("../../page_title_tsv.txt");
+$redirect_ids = array_1D_from_tsv("../../redirect_id_tsv.txt");
+$redirect_titles = array_1D_from_tsv("../../redirect_title_tsv.txt");
 echo end_time($start_time_1,"array creation");
-//$redirect_ids_not_in_page=array_diff($redirect_id_array,$page_id_array);
-//echo "redirect ids not in page array: ".count($redirect_ids_not_in_page)."\n";
-//$redirect_titles_not_in_page=array_diff($redirect_title_array,$page_title_array);
-//echo "redirect titles not in page array: ".count($redirect_titles_not_in_page)."\n";
 
-//$pagelinks_titles_not_in_database=array_diff($pagelinks_title_array,$page_title_array,$redirect_title_array);
-//$pagelinks_titles_in_database=array_diff($pagelinks_title_array,$pagelinks_titles_not_in_database);
-//
-//echo "pagelinks titles not in redirect or page array: ".number_format(count($pagelinks_titles_not_in_database), 0,".","," )."\n";
-//echo "pagelinks titles in redirect or page array: ".number_format(count($pagelinks_titles_in_database), 0,".","," )."\n";
-
-
-//file_put_contents("../../pagelinks_titles_not_in_database.txt", print_r($pagelinks_titles_not_in_database, TRUE));
-//file_put_contents("../../pagelinks_titles_in_database.txt", print_r($pagelinks_titles_in_database, TRUE));
-//
-//$pagelinks_remaining_from_ids=array_intersect_key($page_id_array,$pagelinks_titles_in_database);
-//$pagelinks_from_ids_not_in_database=array_diff($pagelinks_remaining_from_ids,$page_id_array,$redirect_id_array);
-//$pagelinks_ids_in_database=array_diff($pagelinks_remaining_from_ids,$pagelinks_from_ids_not_in_database);
-//echo "pagelinks from ids not in redirect or page array: ".count($pagelinks_from_ids_not_in_database)."\n";
-//echo "pagelinks from ids in redirect or page array: ".count($pagelinks_ids_in_database)."\n";
-//
-//file_put_contents("../../pagelinks_from_ids_not_in_database.txt", print_r($pagelinks_from_ids_not_in_database, TRUE));
-//file_put_contents("../../pagelinks_ids_in_database.txt", print_r($pagelinks_ids_in_database, TRUE));
-
+// Remove redirect_titles not in page_titles (since there would be no correct_id for them)
 $start_time_1 = microtime(TRUE);
-$page_title_id_array=array_combine($page_title_array,$page_id_array);
-echo end_time($start_time_1,"page_title_id_array creation");
-file_put_contents("../../page_title_id_array.txt", print_r($page_title_id_array, TRUE));
-echo "page_title_id_array: ".count($page_title_id_array)."\n";
+$redirect_titles=array_diff_key($redirect_titles,array_diff($redirect_titles,$page_titles));
+echo end_time($start_time_1,"redirect_titles creation");
+echo "redirect_titles: ".number_format(count($redirect_titles))."\n";
+
+// Combine page_ids and page_titles to make pages(page_title => page_id)
+$start_time_1 = microtime(TRUE);
+foreach($page_ids as $k => $v){
+	$pages["'".$page_titles[$k]."'"]="'".$v."'";
+}
+echo end_time($start_time_1,"pages creation");
+//file_put_contents("../../pages.txt", print_r($pages, TRUE));
+echo "pages: ".number_format(count($pages))."\n";
+
+// Create redirects(from_id => correct_id) to use for pagelinks
+$start_time_1 = microtime(TRUE);
+foreach($redirect_titles as $k => $v){
+	$redirects["'".$redirect_ids[$k]."'"]=$pages["'".$v."'"];
+}
+echo end_time($start_time_1,"redirects creation");
+//file_put_contents("../../redirects.txt", print_r($redirects, TRUE));
+
+// drop old 1D arrays to free memory
+unset($page_ids,$page_titles,$redirect_ids,$redirect_titles);
+
+//$pagelinks_ids = array_1D_from_tsv("../../pagelinks_id_tsv.txt");
+//$pagelinks_titles = array_1D_from_tsv("../../pagelinks_title_tsv.txt");
 
 
-//$pagelinks_titles_to_ids=array_intersect($page_title_array,$pagelinks_title_array);
+// So, time to convert pagelinks(ids) to pagelinks(correct_from_ids) and pagelinks(titles) to pagelinks(correct_to_id) using redirects and page tables from earlier
+// Create pagelinks
+$start_time_1 = microtime(TRUE);
+$pagelinks=array_from_tsv_rev("../../pagelinks_parsed.txt");
+echo end_time($start_time_1,"pagelinks creation");
+file_put_contents("../../pagelinks.txt", print_r($pagelinks, TRUE));
+echo "pagelinks: ".number_format(count($pagelinks,COUNT_RECURSIVE ))."\n";
 
-//$pagelinks_titles_to_ids=array_intersect_key($page_id_array,array_intersect($pagelinks_titles_in_database,$page_title_array));
-//file_put_contents("../../pagelinks_titles_to_ids.txt", print_r($pagelinks_titles_to_ids, TRUE));
-//echo "pagelinks_titles_to_ids: ".number_format(count($pagelinks_titles_to_ids), 0,".","," )."\n";
+// Remove pagelinks_titles not in pages
+$start_time_1 = microtime(TRUE);
+$pagelinks=array_intersect_key($pagelinks,$pages);
+echo end_time($start_time_1,"pagelinks extra removed");
+file_put_contents("../../pagelinks_extra_titles_removed.txt", print_r($pagelinks, TRUE));
+echo "pagelinks: ".number_format(count($pagelinks,COUNT_RECURSIVE))."\n";
 
+// Replace redirect from_ids using redirects
+$start_time_1 = microtime(TRUE);
+$pagelinks=array_replace_recursive(array_intersect($pagelinks,array_keys($redirects)),$redirects);
+echo end_time($start_time_1,"pagelinks redirects replaced");
+file_put_contents("../../pagelinks_redirects_replaced.txt", print_r($pagelinks, TRUE));
+echo "pagelinks redirects replaced: ".number_format(count($pagelinks,COUNT_RECURSIVE))."\n";
+
+//// Replace titles with correct_ids using pages
 //$start_time_1 = microtime(TRUE);
-//$pagelinks_corrected_titles=array_replace($pagelinks_titles_in_database,array_intersect_key($pagelinks_titles_in_database,$redirect_title_array));
-//echo end_time($start_time_1,"pagelinks title correction");
-//file_put_contents("../../pagelinks_corrected_titles.txt", print_r($pagelinks_corrected_titles, TRUE));
-//echo "pagelinks_corrected_titles: ".count($pagelinks_corrected_titles)."\n";
-
-//$start_time_1 = microtime(TRUE);
-//$pagelinks_corrected_title_ids=array_intersect($pagelinks_corrected_titles,$page_title_array);
-//file_put_contents("../../pagelinks_corrected_title_ids.txt", print_r($pagelinks_corrected_title_ids, TRUE));
-//
-//$pagelinks_titles_to_ids=array_intersect($pagelinks_corrected_titles,$pagelinks_corrected_title_ids);
-//echo end_time($start_time_1,"pagelinks title to id conversion");
-//file_put_contents("../../pagelinks_titles_to_ids.txt", print_r($pagelinks_titles_to_ids, TRUE));
-
-//$pagelinks_titles_not_in_database=array_diff(array_diff($pagelinks_title_array,$page_title_array),$redirect_title_array);
-//echo "pagelinks titles not in redirect or page array: ".count($pagelinks_titles_not_in_database)."\n";
-//file_put_contents("../../pagelinks_titles_not_in_database.txt", print_r($pagelinks_titles_not_in_database, TRUE));
-
-//$page_array_diff=array_diff($page_id_array,array_keys($page_array));
-//file_put_contents("../../page_array missing id.txt", print_r($page_array_diff, TRUE));
+//$pagelinks=array_combine(array_replace(array_keys($pagelinks),$pages),array_values($pagelinks));
+//echo end_time($start_time_1,"pagelinks titles replaced");
+//file_put_contents("../../pagelinks_titles_replaced.txt", print_r($pagelinks, TRUE));
+//echo "pagelinks titles replaced: ".number_format(count($pagelinks,COUNT_RECURSIVE))."\n";
 
 echo end_time($start_time,"Total");
 
-
-function array_from_tsv_1D($tsv_path){                                                         # Parses TSV by newline
+function array_1D_from_tsv($tsv_path){                                                         # Parses TSV by newline
 	$tsv_str = file_get_contents($tsv_path, TRUE);                            # Get tsv as string
 	return explode("\n",$tsv_str);                                                  # Parese by newline
+}
+function array_from_tsv($tsv_path){                                                         # Parses TSV(key.'\t'.val.'\n') into an assoc. array(key=>'val') using strtok and tab/newline as delimiters
+	$tsv_str = file_get_contents($tsv_path, TRUE);                            # Convert the redirect_parsed tsv to a string
+	$tok = strtok($tsv_str, "\n");                                                    # Split the string by token (new line)
+	while($tok !== FALSE){                                                                   # While a token exists, get the next full line
+		$key = strtok("\t");                                                             # Get the string to the leading tab (Page ID)
+		$val = $tok   = strtok("\n");                                                    # Get value; update the position in the string to the next newline
+		$output_array["'".$key."'"][] =  "'".$val."'";                                              # Save values to the array
+	}
+	return $output_array;
+}
+function array_from_tsv_rev($tsv_path){                                                         # Parses TSV(val.'\t'.key.'\n') into an assoc. array(key=>'val') using strtok and tab/newline as delimiters
+	$tsv_str = file_get_contents($tsv_path, TRUE);                            # Convert the redirect_parsed tsv to a string
+	$tok = strtok($tsv_str, "\n");                                                    # Split the string by token (new line)
+	while($tok !== FALSE){                                                                   # While a token exists, get the next full line
+		$val = strtok("\t");                                                             # Get the string to the leading tab (Page ID)
+		$key = $tok   = strtok("\n");                                                    # Get value; update the position in the string to the next newline
+		$output_array["'".$key."'"][] =  "'".$val."'";                                              # Save values to the array
+	}
+	return $output_array;
+}
+function array_from_tsv_1D($tsv_path){                                                         # Parses TSV(key.'\t'.val.'\n') into an assoc. array(key=>'val') using strtok and tab/newline as delimiters
+	$tsv_str = file_get_contents($tsv_path, TRUE);                            # Convert the redirect_parsed tsv to a string
+	$tok = strtok($tsv_str, "\n");                                                    # Split the string by token (new line)
+	while($tok !== FALSE){                                                                   # While a token exists, get the next full line
+		$key = strtok("\t");                                                             # Get the string to the leading tab (Page ID)
+		$val = $tok   = strtok("\n");                                                    # Get value; update the position in the string to the next newline
+		$output_array["'".$key."'"]=  "'".$val."'" ;                                              # Save values to the array
+	}
+	return $output_array;
+}
+function array_from_tsv_1D_rev($tsv_path){                                                         # Parses TSV(val.'\t'.key.'\n') into an assoc. array(key=>'val') using strtok and tab/newline as delimiters
+	$tsv_str = file_get_contents($tsv_path, TRUE);                            # Convert the redirect_parsed tsv to a string
+	$tok = strtok($tsv_str, "\n");                                                    # Split the string by token (new line)
+	while($tok !== FALSE){                                                                   # While a token exists, get the next full line
+		$val = strtok("\t");                                                             # Get the string to the leading tab (Page ID)
+		$key = $tok   = strtok("\n");                                                    # Get value; update the position in the string to the next newline
+		$output_array["'".$key."'"]=  "'".$val."'" ;                                              # Save values to the array
+	}
+	return $output_array;
 }
 
 
