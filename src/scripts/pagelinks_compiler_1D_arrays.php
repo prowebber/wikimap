@@ -15,10 +15,10 @@ $pagelinks_titles = array_1D_from_tsv("../../pagelinks_title_tsv.txt");
 echo end_time($start_time_1,"array creation");
 
 // Remove redirect_titles not in page_titles (since there would be no correct_id for them)
-//$start_time_1 = microtime(TRUE);
-//$redirect_titles=array_diff_key($redirect_titles,array_diff($redirect_titles,$page_titles));
-//echo end_time($start_time_1,"redirect_titles creation");
-//echo "redirect_titles: ".number_format(count($redirect_titles))."\n";
+$start_time_1 = microtime(TRUE);
+$redirect_titles=array_diff_key($redirect_titles,array_diff($redirect_titles,$page_titles));
+echo end_time($start_time_1,"redirect_titles creation");
+echo "redirect_titles: ".number_format(count($redirect_titles))."\n";
 
 // Combine page_ids and page_titles to make pages(page_title => page_id)
 $start_time_1 = microtime(TRUE);
@@ -26,7 +26,7 @@ foreach($page_ids as $k => $v){
 	$pages["'".$page_titles[$k]."'"]="'".$v."'";
 }
 echo end_time($start_time_1,"pages creation");
-//file_put_contents("../../pages.txt", print_r($pages, TRUE));
+file_put_contents("../../pages.txt", print_r($pages, TRUE));
 echo "pages: ".number_format(count($pages))."\n";
 
 // Create redirects(from_id => correct_id) to use for pagelinks
@@ -35,7 +35,7 @@ foreach($redirect_titles as $k => $v){
 	$redirects["'".$redirect_ids[$k]."'"]=$pages["'".$v."'"];
 }
 echo end_time($start_time_1,"redirects creation");
-//file_put_contents("../../redirects.txt", print_r($redirects, TRUE));
+file_put_contents("../../redirects.txt", print_r($redirects, TRUE));
 
 // Merge page_ids with redirects to give corrected_pages(from_id=>corrected_id)
 $start_time_1 = microtime(TRUE);
@@ -46,20 +46,19 @@ echo end_time($start_time_1,"pages creation");
 //file_put_contents("../../pages.txt", print_r($pages, TRUE));
 echo "pages: ".number_format(count($pages))."\n";
 
-
 // Remove pagelinks_titles not found in page_titles
 $pagelinks_titles_in_page=array_diff_key($pagelinks_titles,array_diff($pagelinks_titles,$page_titles));
 echo "pagelinks_titles_in_page: ".number_format(count($pagelinks_titles_in_page))."\n";
-//file_put_contents("../../pagelinks_titles_in_page.txt", print_r($pagelinks_titles_in_page, TRUE));
+file_put_contents("../../pagelinks_titles_in_page.txt", print_r($pagelinks_titles_in_page, TRUE));
 
-// Create pagelinks(from_id => to_correct_id)
-$start_time_1 = microtime(TRUE);
-foreach($pagelinks_titles_in_page as $k => $v){
-	$pagelinks[$pages["'".$v."'"]][]=$redirects["'".$pagelinks_ids[$k]."'"];
-}
-echo end_time($start_time_1,"pagelinks creation");
-file_put_contents("../../pagelinks.txt", print_r($pagelinks, TRUE));
-echo "pagelinks: ".number_format(count($pagelinks,COUNT_RECURSIVE))."\n";
+//// Create pagelinks(from_id => to_correct_id)
+//$start_time_1 = microtime(TRUE);
+//foreach($pagelinks_titles_in_page as $k => $v){
+//	$pagelinks[$pages["'".$v."'"]][]=$redirects["'".$pagelinks_ids[$k]."'"];
+//}
+//echo end_time($start_time_1,"pagelinks creation");
+//file_put_contents("../../pagelinks.txt", print_r($pagelinks, TRUE));
+//echo "pagelinks: ".number_format(count($pagelinks,COUNT_RECURSIVE))."\n";
 
 
 
