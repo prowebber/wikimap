@@ -24,6 +24,8 @@ function databaseRequest(user_input){
 	//form_data.push({name: 'server_class', value: 'fetchT0Data'});
 	form_data.push({name: 'server_class', value: 'fetchMultiData'});
 	ajaxFetch(form_data).done(function (data) {						// Call the Ajax function and wait for it to finish
+
+		console.log('Data:\n' + data);
 		var parsed_data = JSON.parse(data);							// Parse the JSON data
 
 		/* Get the data from the request */

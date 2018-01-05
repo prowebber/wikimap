@@ -78,3 +78,14 @@
 /redirect_title_tsv.txt
 /pagelinks_title_tsv.txt
 /page_id_tsv.txt
+/pagelinks_titles.txt
+/pagelinks_titles_in_page.txt
+/redirect_correct_ids.txt
+/pages.txt
+/pagelinks_titles_extra.txt
+/pagelinks_to_ids.txt
+/redirected_page_ids.txt
+/redirects.txt
+/pagelinks_ids.txt
+/pagelinks_extra_titles_removed.txt
+/pagelinks.txt
