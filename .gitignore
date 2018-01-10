@@ -94,3 +94,12 @@ pagelinks_shared_links.txt
 /pagelinks_titles_in_page.txt
 /pagelinks_titles_extra.txt
 /pagelinks_to_ids.txt
+/pages_rev.txt
+/final_pagelinks_decoded.txt
+/total_links.txt
+/total_found_links.txt
+/final_arr.txt
+/total_unfound_links.txt
+/not_found_page_ids.txt
+/final_pagelinks.txt
+/corrected_pages.txt
