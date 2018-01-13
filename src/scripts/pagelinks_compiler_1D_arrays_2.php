@@ -26,68 +26,70 @@ $redirect_ids = array_1D_from_tsv("../../redirect_id_tsv.txt");
 $redirect_titles = array_1D_from_tsv("../../redirect_title_tsv.txt");
 echo end_time($start_time_1,"array creation");
 
-//// Remove redirect_titles not in page_titles (since there would be no correct_id for them)
-//$start_time_1 = microtime(TRUE);
-//$redirect_titles=array_diff($redirect_titles,array_diff($redirect_titles,$page_titles));
-//echo end_time($start_time_1,"redirect_titles creation");
-////echo "redirect_titles: ".number_format(count($redirect_titles))."\n";
-//
-//// Combine page_ids and page_titles to make pages(page_title => page_id)
-//$start_time_1 = microtime(TRUE);
-//foreach($page_ids as $k => $v){
-//	$pages[$page_titles[$k]]=$v;
-//}
-//echo end_time($start_time_1,"pages creation");
-//$pages_rev=array_flip($pages);
-////file_put_contents("../../pages_rev.txt", print_r($pages_rev, TRUE));
-//
-////echo "pages: ".number_format(count($pages))."\n";
-//
-//// Create redirects(from_id => correct_id) to use for pagelinks
-//$start_time_1 = microtime(TRUE);
-//foreach($redirect_titles as $k => $v){
-//	$redirects[$redirect_ids[$k]]=$pages[$v];
+// Remove redirect_titles not in page_titles (since there would be no correct_id for them)
+$start_time_1 = microtime(TRUE);
+$redirect_titles=array_diff($redirect_titles,array_diff($redirect_titles,$page_titles));
+echo end_time($start_time_1,"redirect_titles creation");
+//echo "redirect_titles: ".number_format(count($redirect_titles))."\n";
+
+// Combine page_ids and page_titles to make pages(page_title => page_id)
+$start_time_1 = microtime(TRUE);
+foreach($page_ids as $k => $v){
+	$pages[$page_titles[$k]]=$v;
+}
+
+$pages_rev=array_flip($pages);
+
+//file_put_contents("../../pages_rev.txt", print_r($pages_rev, TRUE));
+
+//echo "pages: ".number_format(count($pages))."\n";
+
+// Create redirects(from_id => correct_id) to use for pagelinks
+$start_time_1 = microtime(TRUE);
+foreach($redirect_titles as $k => $v){
+	$redirects[$redirect_ids[$k]]=$pages[$v];
 //	$pages[$v] = $redirect_ids[$k];
-//}
-//echo end_time($start_time_1,"redirects creation");
-//unset($redirect_titles, $redirect_ids);
+}
+echo end_time($start_time_1,"redirects creation");
+unset($redirect_titles, $redirect_ids);
 //file_put_contents("../../redirects.txt", print_r($redirects, TRUE));
 
-//// Replace pages(title,id) with redirects(from_id, correct_id) to create correct_pages(title, correct_id)
-//$start_time_1 = microtime(TRUE);
-//foreach(redirects)
-//$page_ids_temp=array_combine($page_ids,$page_ids);
-//$replaced_page_ids=array_replace($page_ids_temp, array_diff_key($redirects,array_diff_key($redirects,$page_ids_temp)));
-////echo "replaced_page_ids: ".number_format(count($replaced_page_ids))."\n";
-//
-//foreach($pages as $k => $v){
-//	$corrected_pages[$k] = $replaced_page_ids[$v];
-//}
-//echo end_time($start_time_1,"corrected_pages creation");
-//file_put_contents("../../corrected_pages.txt", print_r($corrected_pages, TRUE));
-//echo "corrected_pages: ".number_format(count($corrected_pages))."\n";
-//unset($page_ids_temp,$replaced_page_ids);
+// Replace pages(title,id) with redirects(from_id, correct_id) to create correct_pages(title, correct_id)
+$start_time_1 = microtime(TRUE);
+$page_ids_temp=array_combine($page_ids,$page_ids);
+$replaced_page_ids=array_replace($page_ids_temp, array_diff_key($redirects,array_diff_key($redirects,$page_ids_temp)));
+//echo "replaced_page_ids: ".number_format(count($replaced_page_ids))."\n";
 
+foreach($pages as $k => $v){
+	$corrected_pages[$k] = $replaced_page_ids[$v];
+}
+echo end_time($start_time_1,"corrected_pages creation");
+//file_put_contents("../../corrected_pages.txt", print_r($corrected_pages, TRUE));
+echo "corrected_pages: ".number_format(count($corrected_pages))."\n";
+unset($page_ids_temp,$replaced_page_ids);
 $pagelinks_ids = array_1D_from_tsv("../../pagelinks_id_tsv.txt");
 $pagelinks_titles = array_1D_from_tsv("../../pagelinks_title_tsv.txt");
-foreach($page_ids as $k=>$v){
-	$page[$v]=$page_titles[$k];
-}
-foreach($redirect_ids as $k=>$v){
-	$redirect[$v]=$redirect_titles[$k];
-}
-foreach($pagelinks_ids as $k=>$v){
-	if(!isset($page[$v]) && !isset($redirect[$v])){
-		$not_found_page_ids[$v]=1;
-	}
-}
-file_put_contents("../../not_found_page_ids.txt", print_r($not_found_page_ids, TRUE));
+//$pagelinks_ids_not_found=array_diff($pagelinks_ids,$page_ids,$redirect_ids);
+//file_put_contents("../../pagelinks_ids_not_found.txt", print_r($pagelinks_ids_not_found, TRUE));
+
+//foreach($page_ids as $k=>$v){
+//	$page[$v]=$page_titles[$k];
+//}
+//foreach($redirect_ids as $k=>$v){
+//	$redirect[$v]=$redirect_titles[$k];
+//}
+//foreach($pagelinks_ids as $k=>$v){
+//	if(!isset($page[$v]) && !isset($redirect[$v])){
+//		$not_found_page_ids[$v]=1;
+//	}
+//}
+//file_put_contents("../../not_found_page_ids.txt", print_r($not_found_page_ids, TRUE));
 
 // Remove pagelinks_titles not found in page_titles
 $pagelinks_titles_in_page=array_diff_key($pagelinks_titles,array_diff($pagelinks_titles,$page_titles));
-//echo "pagelinks_titles_in_page: ".number_format(count($pagelinks_titles_in_page))."\n";
+echo "pagelinks_titles_in_page: ".number_format(count($pagelinks_titles_in_page))."\n";
 //file_put_contents("../../pagelinks_titles_in_page.txt", print_r($pagelinks_titles_in_page, TRUE));
-$corrected_pages=$pages;
+//$corrected_pages=$pages;
 // Replace pagelinks_ids with redirect_ids if found and every pagelinks_title with correct_id
 $pagelinks_count=0;
 $start_time_1 = microtime(TRUE);
@@ -104,32 +106,30 @@ foreach($pagelinks_titles_in_page as $k => $v){
 	$pagelinks_count++;
 	$pagelinks_count++;
 }
-//echo end_time($start_time_1,"final_pagelinks creation");
-//unset($pagelinks_ids,$corrected_pages,$redirects,$pagelinks_titles_in_page,$pagelinks_titles);
-//foreach($final_pagelinks as $t0 => $t1_arr){
-//	if(isset($pages_rev[$t0])){
-//		$total_found_links[$pages_rev[$t0]]=count($t1_arr);
-//	} else {
-//		$total_unfound_links[$t0]=count($t1_arr);
-//	}
-//}
-//asort($total_found_links,SORT_NUMERIC);
-//asort($total_unfound_links,SORT_NUMERIC);
-//
-//file_put_contents("../../total_found_links.txt", print_r($total_found_links,true));
-//file_put_contents("../../total_unfound_links.txt", print_r($total_unfound_links,true));
+echo end_time($start_time_1,"final_pagelinks creation");
+unset($pagelinks_ids,$corrected_pages,$redirects,$pagelinks_titles_in_page,$pagelinks_titles);
+foreach($final_pagelinks as $t0 => $t1_arr){
+	if(isset($pages_rev[$t0])){
+		$total_found_links[$pages_rev[$t0]]=count($t1_arr);
+	} else {
+		$total_unfound_links[$t0]=count($t1_arr);
+	}
+}
+asort($total_found_links,SORT_NUMERIC);
+asort($total_unfound_links,SORT_NUMERIC);
 
+file_put_contents("../../total_found_links.txt", print_r($total_found_links,true));
+file_put_contents("../../total_unfound_links.txt", print_r($total_unfound_links,true));
 
-//$start_time_1 = microtime(TRUE);
-//foreach($final_pagelinks as $t0 => $t1_arr){
-//	ksort($final_pagelinks[$t0],SORT_NUMERIC);
-////	$final_pagelinks[$t0]=$t1_arr;
-//}
-//echo end_time($start_time_1,"final_pagelinks t1 sort");
-//
-//$start_time_1 = microtime(TRUE);
-//ksort($final_pagelinks,SORT_NUMERIC);
-//echo end_time($start_time_1,"final_pagelinks t0 sort");
+$start_time_1 = microtime(TRUE);
+foreach($final_pagelinks as $t0 => $t1_arr){
+	ksort($final_pagelinks[$t0],SORT_NUMERIC);
+}
+echo end_time($start_time_1,"final_pagelinks t1 sort");
+
+$start_time_1 = microtime(TRUE);
+ksort($final_pagelinks,SORT_NUMERIC);
+echo end_time($start_time_1,"final_pagelinks t0 sort");
 
 //file_put_contents("../../final_pagelinks.txt", json_encode($final_pagelinks));
 //echo "final_pagelinks: ".number_format($pagelinks_count)."\n";
