@@ -10,3 +10,6 @@
 .idea/*
 /redirect.sql
 720MB_page.sql
+src/scripts/aoc/
+src/scripts/example.db
+src/scripts/php-test.php
