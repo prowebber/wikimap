@@ -11,13 +11,6 @@ $base_uri = str_replace("\src\scripts\master.php", '', $_SERVER['PHP_SELF']) . "
 define('BASE_URI', $base_uri);
 define('TEMP_FILE', "C:\\Users\\steve\\Dropbox\\tablet\\temp\\");
 
-#echo $base_uri;
-#echo "<pre>".print_r($_SERVER, true)."</pre>";
-
-#echo 'Test';
-#echo "Starting";
-#shell_exec('C:/Users/steve/Dropbox/server/desktop/client_server/datapeak/public_html/wikimap/src/shell/download-file.sh');
-
 
 class Master{
 	public function __construct(){
