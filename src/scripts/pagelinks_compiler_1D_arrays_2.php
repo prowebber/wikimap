@@ -141,7 +141,6 @@ echo end_time($start_time_1,"array creation");
 //		file_put_contents("../../celsius_array.txt", print_r($celsius_array, TRUE));
 //		exit;
 //      Build pages_rev array to be used to get titles
-// A change
 		$redirects=array_combine($redirect_ids,$redirect_titles);
 		foreach($page_ids as $k => $v){
 			if(isset($redirects[$v])){
