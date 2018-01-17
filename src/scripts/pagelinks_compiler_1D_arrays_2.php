@@ -58,6 +58,7 @@ $pagelinks_titles = array_1D_from_tsv("../../pagelinks_title_tsv.txt");
 //$pagelinks_ids=array_diff_key($pagelinks_ids,$pagelinks_ids_not_found);
 //echo "pagelinks_found_from_ids: ".number_format(count($pagelinks_ids))."\n";
 //$pagelinks_titles=array_diff_key($pagelinks_titles,$pagelinks_ids_not_found);
+
 // Remove pagelinks_titles not found in page_titles (since there will be no correct_id to replace them with)
 $start_time_1 = microtime(TRUE);
 $pagelinks_titles_in_page = array_diff_key($pagelinks_titles,array_diff($pagelinks_titles,$page_titles));
@@ -86,7 +87,7 @@ unset($pagelinks_ids,$corrected_pages,$redirects,$pagelinks_titles_in_page,$page
 
 // count of t1s for each t0 and put into $total_found_links if a page title exists for the t0, otherwise put it in $total_unfound_links
 $pages_rev = array_flip($pages);
-unset($pages, $corrected_pages);
+unset($pages);
 foreach($final_pagelinks as $t0 => $t1_arr){
 	if(isset($pages_rev[$t0])){
 		$total_found_links[$pages_rev[$t0]]=count($t1_arr);
@@ -94,10 +95,6 @@ foreach($final_pagelinks as $t0 => $t1_arr){
 		$total_unfound_links[$t0]=count($t1_arr);
 	}
 }
-arsort($total_found_links,SORT_NUMERIC);
-arsort($total_unfound_links,SORT_NUMERIC);
-file_put_contents("../../total_found_links.txt", print_r($total_found_links,true));
-file_put_contents("../../total_unfound_links.txt", print_r($total_unfound_links,true));
 
 // Add $t0 to $omit_t1s if t1 count exceeds $max_links
 $max_links = 10000;
@@ -118,6 +115,21 @@ foreach($final_pagelinks as $t0 => $t1_arr){
 }
 echo end_time($start_time_1,"remove omitted t1s");
 echo "final_pagelinks omitted: ".number_format(count($final_pagelinks,COUNT_RECURSIVE))."\n";
+
+
+// count of t1s for each t0 and put into $total_found_links if a page title exists for the t0, otherwise put it in $total_unfound_links
+unset($pages, $corrected_pages);
+foreach($final_pagelinks as $t0 => $t1_arr){
+	if(isset($pages_rev[$t0])){
+		$total_found_links[$pages_rev[$t0]]=count($t1_arr);
+	} else {
+		$total_unfound_links[$t0]=count($t1_arr);
+	}
+}
+arsort($total_found_links,SORT_NUMERIC);
+arsort($total_unfound_links,SORT_NUMERIC);
+file_put_contents("../../total_found_links.txt", print_r($total_found_links,true));
+file_put_contents("../../total_unfound_links.txt", print_r($total_unfound_links,true));
 
 $start_time_1 = microtime(TRUE);
 foreach($final_pagelinks as $t0 => $t1_arr){
