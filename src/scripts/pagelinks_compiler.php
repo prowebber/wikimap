@@ -1,60 +1,64 @@
 <?php
 
 //set_time_limit(3600);                                                    # 60 minute running limit
-ini_set('memory_limit', '10048M');                              # 10 GB memory limit
+ini_set('memory_limit', '15048M');                              # 10 GB memory limit
 //$output_file     = "../../pagelinks_final_TSV.txt";
 $start_time     = microtime(TRUE);
 
-// Create initial 1D arrays array(n => value) from page and redirect TSVs
-$start_time_1 = microtime(TRUE);
-$page_ids = array_1D_from_tsv("../../page_id_tsv.txt");
-$page_titles = array_1D_from_tsv("../../page_title_tsv.txt");
-$redirect_ids = array_1D_from_tsv("../../redirect_id_tsv.txt");
-$redirect_titles = array_1D_from_tsv("../../redirect_title_tsv.txt");
-echo end_time($start_time_1,"array creation");
-
-// Remove redirect_titles not in page_titles (since there would be no correct_id for them)
-$start_time_1 = microtime(TRUE);
-$redirect_titles=array_diff($redirect_titles,array_diff($redirect_titles,$page_titles));
-echo end_time($start_time_1,"redirect_titles creation");
-echo "redirect_titles: ".number_format(count($redirect_titles))."\n";
-
-// Combine page_ids and page_titles to make pages(page_title => page_id)
-$start_time_1 = microtime(TRUE);
-$pages = array_combine($page_titles,$page_ids);
-echo end_time($start_time_1,"pages creation");
-echo "pages: ".number_format(count($pages))."\n";
-
-// Create redirects(from_id => correct_id) to use for pagelinks using redirect_titles (correct) and pages
-$start_time_1 = microtime(TRUE);
-foreach($redirect_titles as $k => $v){
-	$redirects[$redirect_ids[$k]]=$pages[$v];
-}
-echo end_time($start_time_1,"redirects creation");
-unset($redirect_titles);                 # Clean memory of redirect 1D arrays since not needed
-
-// Replace pages(title,id) with redirects(from_id, correct_id) to create correct_pages(title, correct_id)
-$start_time_1 = microtime(TRUE);
-foreach($page_ids as $k => $v){
-	if(isset($redirects[$v])){
-		$corrected_pages[$page_titles[$k]] = $redirects[$v];
-	} else {
-		$corrected_pages[$page_titles[$k]] = $v;
-	}
-}
-echo end_time($start_time_1,"corrected_pages creation");
-
-$pagelinks_ids = array_1D_from_tsv("../../pagelinks_id_tsv.txt");
-$pagelinks_titles = array_1D_from_tsv("../../pagelinks_title_tsv.txt");
-
-
-//$redirects=array_combine($redirect_ids,$redirect_titles);
-//$pages_rev=array_combine($page_ids,$page_titles);
-//foreach($pagelinks_ids as $k => $v){
-//	if(!isset($pages_rev[$v]) && !isset($redirects[$v])){
-//		$not_found_pagelinks_ids[$v]=1;
+//// Create initial 1D arrays array(n => value) from page and redirect TSVs
+//$start_time_1 = microtime(TRUE);
+//$page_ids = array_1D_from_tsv("../../page_id_tsv.txt");
+//$page_titles = array_1D_from_tsv("../../page_title_tsv.txt");
+//$redirect_ids = array_1D_from_tsv("../../redirect_id_tsv.txt");
+//$redirect_titles = array_1D_from_tsv("../../redirect_title_tsv.txt");
+//echo end_time($start_time_1,"array creation");
+//
+//// Remove redirect_titles not in page_titles (since there would be no correct_id for them)
+//$start_time_1 = microtime(TRUE);
+//$redirect_titles=array_diff($redirect_titles,array_diff($redirect_titles,$page_titles));
+//echo end_time($start_time_1,"redirect_titles creation");
+//echo "redirect_titles: ".number_format(count($redirect_titles))."\n";
+//
+//// Combine page_ids and page_titles to make pages(page_title => page_id)
+//$start_time_1 = microtime(TRUE);
+//$pages = array_combine($page_titles,$page_ids);
+//echo end_time($start_time_1,"pages creation");
+//echo "pages: ".number_format(count($pages))."\n";
+//
+//// Create redirects(from_id => correct_id) to use for pagelinks using redirect_titles (correct) and pages
+//$start_time_1 = microtime(TRUE);
+//foreach($redirect_titles as $k => $v){
+//	$redirects[$redirect_ids[$k]]=$pages[$v];
+//}
+//echo end_time($start_time_1,"redirects creation");
+//unset($redirect_titles);                 # Clean memory of redirect 1D arrays since not needed
+//
+//// Replace pages(title,id) with redirects(from_id, correct_id) to create corrected_pages(title, correct_id)
+//$start_time_1 = microtime(TRUE);
+//foreach($page_ids as $k => $v){
+//	if(isset($redirects[$v])){
+//		$corrected_pages[$page_titles[$k]] = $redirects[$v];
+//	} else {
+//		$corrected_pages[$page_titles[$k]] = $v;
 //	}
 //}
+//echo end_time($start_time_1,"corrected_pages creation");
+
+$pagelinks_ids = array_1D_from_tsv("../../pagelinks_id_new_tsv.txt");
+//$pagelinks_titles = array_1D_from_tsv("../../pagelinks_title_new_tsv.txt");
+// build array of unique pagelinks_ids
+exit;
+$pagelinks_ids_unique = array_unique($pagelinks_ids);
+echo "pagelinks_ids_unique: ".number_format(count($pagelinks_ids_unique))."\n";
+exit;
+//$redirects=array_combine($redirect_ids,$redirect_titles);
+$pages_rev = array_combine($page_ids,$page_titles);
+foreach($pagelinks_ids as $k => $v){
+	if(!isset($pages_rev[$v]) && !isset($redirects[$v])){
+		$not_found_pagelinks_ids[$v]=1;
+	}
+}
+
 //$pagelinks_ids=array_diff_key($pagelinks_ids,$pagelinks_ids_not_found);
 //echo "pagelinks_found_from_ids: ".number_format(count($pagelinks_ids))."\n";
 //$pagelinks_titles=array_diff_key($pagelinks_titles,$pagelinks_ids_not_found);
@@ -235,7 +239,7 @@ function hash_map_diff($a, $b) {
 
 function array_1D_from_tsv($tsv_path){                                                         # Parses TSV by newline
 	$tsv_str = file_get_contents($tsv_path, TRUE);                            # Get tsv as string
-	return explode("\n",$tsv_str);                                                  # Parese by newline
+	return explode("\n",$tsv_str);                                                  # Parse by newline
 }
 function array_from_tsv($tsv_path){                                                         # Parses TSV(key.'\t'.val.'\n') into an assoc. array(key=>'val') using strtok and tab/newline as delimiters
 	$tsv_str = file_get_contents($tsv_path, TRUE);                            # Convert the redirect_parsed tsv to a string
