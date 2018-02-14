@@ -7,9 +7,6 @@ function ajaxFetch(form_data){
 	});
 }
 
-
-
-
 function closeWikiPreviewWindow() {
 	$("aside.pageinfo").hide();								// Hide the wiki preview
 	$("div#3d-graph canvas").css({'width':'100%'});			// Make sure the canvas stays the full screen width
@@ -93,9 +90,11 @@ function showGraph(json_response){
 }
 // colors links between visited nodes a color else a default color
 function colorLinks(nodes, links){
+	console.log('link coloring');
 	links.forEach(function(link){
 		if (link.source.visited && link.target.visited) {
 			link.color=0x00ff00;
+			// link.color=0xff0000;
 			link.opacity=1;
 			// link.lineWidth=10;
 		} else {
