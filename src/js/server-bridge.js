@@ -70,7 +70,7 @@ function showGraph(json_response){
 			$wikiView.css({'display':'none'});															// Make the wikipedia preview visible and slide it into the page
 			return;
 		}
-
+		Graph.camera.position = node.position;
 		/* Control Wikipedia Page Preview*/
 		$wikiView.animate({"right":"0px"}, "slow").css({'display':'inline-block'});						// Make the wikipedia preview visible and slide it into the page
 		$wikiView.html("<iframe src='https://en.m.wikipedia.org/wiki/" + node.name + "'><iframe>");		// Load Wikipedia page into a element on the screen
