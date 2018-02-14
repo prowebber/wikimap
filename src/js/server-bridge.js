@@ -15,6 +15,8 @@ function closeWikiPreviewWindow() {
 
 var max_shared_links;
 var min_shared_links;
+var clicked_node_position_x;
+var clicked_node_position_y;
 function databaseRequest(user_input){
 	var form_data = [];
 	form_data.push({name: 'user_input', value: user_input});
@@ -55,6 +57,7 @@ function databaseRequest(user_input){
 }
 strength_scale = 3;
 function showGraph(json_response){
+	// clicked_node_position_x = clicked_node_position_y = 0;
 	console.log('Min shared links: ' +  window.min_shared_links);
 	console.log('Max shared links: ' +  window.max_shared_links);
 	const Graph = ForceGraph3D()
@@ -70,7 +73,9 @@ function showGraph(json_response){
 			$wikiView.css({'display':'none'});															// Make the wikipedia preview visible and slide it into the page
 			return;
 		}
-		Graph.camera.position = node.position;
+		clicked_node_position_x = node.x;
+		clicked_node_position_y = node.y;
+		// Graph.camera.position = node.position;
 		/* Control Wikipedia Page Preview*/
 		$wikiView.animate({"right":"0px"}, "slow").css({'display':'inline-block'});						// Make the wikipedia preview visible and slide it into the page
 		$wikiView.html("<iframe src='https://en.m.wikipedia.org/wiki/" + node.name + "'><iframe>");		// Load Wikipedia page into a element on the screen
