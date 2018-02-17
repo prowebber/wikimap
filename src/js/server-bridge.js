@@ -12,17 +12,10 @@ function closeWikiPreviewWindow() {
 	$("div#3d-graph canvas").css({'width':'100%'});			// Make sure the canvas stays the full screen width
 }
 
-
-var max_shared_links;
-var min_shared_links;
-var freeze_graph;
-var frozen_layout;
-var sim_type;
 function databaseRequest(user_input){
-	freeze_graph = false;
+	v.freeze_graph = false;
 	var form_data = [];
 	form_data.push({name: 'user_input', value: user_input});
-	//form_data.push({name: 'server_class', value: 'fetchT0Data'});
 	form_data.push({name: 'server_class', value: 'fetchMultiData'});
 	ajaxFetch(form_data).done(function (data) {						// Call the Ajax function and wait for it to finish
 
@@ -34,8 +27,8 @@ function databaseRequest(user_input){
 		var matched_page_title = parsed_data.target_page_title;
 		var json_response = parsed_data.results;
 		var execution_time = parsed_data.execution_time;
-		window.max_shared_links = parsed_data.max_shared_links;
-		window.min_shared_links = parsed_data.min_shared_links;
+		v.max_shared_links = parsed_data.max_shared_links;
+		v.min_shared_links = parsed_data.min_shared_links;
 
 		console.log('JSON:\n' + JSON.stringify(json_response));
 
@@ -57,16 +50,15 @@ function databaseRequest(user_input){
 		showGraph(json_response);
 	});
 }
-strength_scale = 3;
 function showGraph(json_response){
-	console.log('Min shared links: ' +  window.min_shared_links);
-	console.log('Max shared links: ' +  window.max_shared_links);
+	console.log('Min shared links: ' +  v.min_shared_links);
+	console.log('Max shared links: ' +  v.max_shared_links);
 	const Graph = ForceGraph3D()
 	(document.getElementById('3d-graph'))
 		.graphData(json_response)
 		.onNodeClick(colorNode);
 	function colorNode(node){
-		freeze_graph = true;
+		v.freeze_graph = true;
 		let { nodes, links } = Graph.graphData();
 		colorOthers(nodes);
 		var $wikiView = $("aside.pageinfo");															// Define the Wikipedia page preview
