@@ -2,9 +2,8 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/src/node_modules/3d-force-graph/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/src/node_modules/3d-force-graph/example" />
-      <excludeFolder url="file://$MODULE_DIR$/src/node_modules/3d-force-graph/src" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/parallel-20171122" />
       <excludeFolder url="file://$MODULE_DIR$/src/node_modules/accessor-fn" />
       <excludeFolder url="file://$MODULE_DIR$/src/node_modules/d3-binarytree" />
       <excludeFolder url="file://$MODULE_DIR$/src/node_modules/d3-collection" />
