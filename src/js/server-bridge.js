@@ -15,7 +15,11 @@ function closeWikiPreviewWindow() {
 
 var max_shared_links;
 var min_shared_links;
+var freeze_graph;
+var frozen_layout;
+var sim_type;
 function databaseRequest(user_input){
+	freeze_graph = false;
 	var form_data = [];
 	form_data.push({name: 'user_input', value: user_input});
 	//form_data.push({name: 'server_class', value: 'fetchT0Data'});
@@ -62,6 +66,7 @@ function showGraph(json_response){
 		.graphData(json_response)
 		.onNodeClick(colorNode);
 	function colorNode(node){
+		freeze_graph = true;
 		let { nodes, links } = Graph.graphData();
 		colorOthers(nodes);
 		var $wikiView = $("aside.pageinfo");															// Define the Wikipedia page preview
@@ -85,7 +90,6 @@ function showGraph(json_response){
 		node.visited = !node.visited; // toggle visited
 		colorLinks(nodes, links);
 		Graph.cooldownTicks(0);
-		Graph.graphData({ nodes, links });
 	}
 }
 // colors links between visited nodes a color else a default color
