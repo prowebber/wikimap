@@ -112,3 +112,39 @@
 /pagelinks_id_10MB_tsv.txt
 /pagelinks_raw_1.txt
 /pagelinks_id_530MB_tsv.txt
+ src/node_modules/3d-force-graph/LICENSE
+        src/node_modules/3d-force-graph/README.md
+        src/node_modules/3d-force-graph/example/
+        src/node_modules/3d-force-graph/package.json
+        src/node_modules/3d-force-graph/rollup.config.js
+        src/node_modules/3d-force-graph/src/
+        src/node_modules/3d-force-graph/yarn.lock
+        src/node_modules/accessor-fn/
+        src/node_modules/d3-binarytree/
+        src/node_modules/d3-collection/
+        src/node_modules/d3-color/
+        src/node_modules/d3-dispatch/
+        src/node_modules/d3-force-3d/
+        src/node_modules/d3-interpolate/
+        src/node_modules/d3-octree/
+        src/node_modules/d3-quadtree/
+        src/node_modules/d3-scale-chromatic/
+        src/node_modules/d3-timer/
+        src/node_modules/debounce/
+        src/node_modules/jquery-param/
+        src/node_modules/kapsule/
+        src/node_modules/ngraph.events/
+        src/node_modules/ngraph.expose/
+        src/node_modules/ngraph.forcelayout/
+        src/node_modules/ngraph.forcelayout3d/
+        src/node_modules/ngraph.graph/
+        src/node_modules/ngraph.merge/
+        src/node_modules/ngraph.physics.primitives/
+        src/node_modules/ngraph.physics.simulator/
+        src/node_modules/ngraph.quadtreebh/
+        src/node_modules/ngraph.quadtreebh3d/
+        src/node_modules/ngraph.random/
+        src/node_modules/pinkyswear/
+        src/node_modules/qwest/
+        src/node_modules/three-trackballcontrols/
+        src/node_modules/three/
