@@ -4,5 +4,8 @@ var v = {
 	'freeze_graph' 		: null,
 	'frozen_layout' 	: null,
 	'sim_type' 			: null,
-	'strength_scale'	: 3
+	'strength_scale'	: 3,
+	'clicked_node_x'	: null,
+	'clicked_node_y'	: null,
+	'clicked_node_z'	: null
 };
