@@ -5,7 +5,8 @@ var v = {
 	'frozen_layout' 	: null,
 	'sim_type' 			: null,
 	'strength_scale'	: 3,
-	'clicked_node_x'	: null,
-	'clicked_node_y'	: null,
-	'clicked_node_z'	: null
+	'update_camera'		: null,
+	'clicked_node_x'	: 0,
+	'clicked_node_y'	: 0,
+	'clicked_node_z'	: 0
 };

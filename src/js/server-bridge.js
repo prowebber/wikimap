@@ -59,6 +59,9 @@ function showGraph(json_response){
 		.onNodeClick(colorNode);
 	function colorNode(node){
 		v.freeze_graph = true;
+		v.clicked_node_x = node.x;
+		v.clicked_node_y = node.y;
+		v.clicked_node_z = node.z;
 		let { nodes, links } = Graph.graphData();
 		colorOthers(nodes);
 		var $wikiView = $("aside.pageinfo");															// Define the Wikipedia page preview
