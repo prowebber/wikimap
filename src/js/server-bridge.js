@@ -62,6 +62,7 @@ function showGraph(json_response){
 		v.clicked_node_x = node.x;
 		v.clicked_node_y = node.y;
 		v.clicked_node_z = node.z;
+		console.log('node name:' + node.name);
 		let { nodes, links } = Graph.graphData();
 		colorOthers(nodes);
 		var $wikiView = $("aside.pageinfo");															// Define the Wikipedia page preview
@@ -107,6 +108,7 @@ function colorLinks(nodes, links){
 // color all nodes but the current one (must come before visited node coloring)
 function colorOthers(nodes){
 	nodes.forEach(function(node){
+		console.log('Node ' + node.name + ' x:' + node.x + ' y:' + node.y);
 		if (node.visited) {
 			node.color=0x00ff00;
 			node.opacity =1;

@@ -83,6 +83,12 @@ table.results tr td:nth-child(1){
     font-size:18px !important;
 }
 
+.node-label {
+    position: absolute !important;
+    color: lavender;
+    font-size:18px !important;
+}
+
 
 section.wiki-header{
     background-color:#fff;
