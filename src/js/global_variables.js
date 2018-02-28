@@ -8,5 +8,6 @@ var v = {
 	'update_camera'		: null,
 	'clicked_node_x'	: 0,
 	'clicked_node_y'	: 0,
-	'clicked_node_z'	: 0
+	'clicked_node_z'	: 0,
+	'node_labels' : []
 };
