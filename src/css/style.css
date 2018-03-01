@@ -84,11 +84,16 @@ table.results tr td:nth-child(1){
 }
 
 .node-label {
-    position: absolute !important;
-    color: lavender;
-    font-size:18px !important;
-}
+     position: absolute !important;
+     color: lavender;
+     font-size: 18px !important;
+ }
 
+div.nodetest{
+    color:#fff;
+    display:inline-block;
+    position:absolute;
+}
 
 section.wiki-header{
     background-color:#fff;

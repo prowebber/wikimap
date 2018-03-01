@@ -121,7 +121,20 @@ function colorOthers(nodes){
 	console.log('node x: ' + nodes[0].x); // get x coordinate of node (to be used for heat map color scale)
 };
 
+var finalNode = null;
 
+var $canvas = $('#3d-graph');
+function showWikimapLabels(){
+	$('div.nodetest').remove();
+
+	finalNode.forEach(function (node) {
+		console.log("Count: " + node.name + " x:" + node.x);
+		var node_top = (node.y * 1) + 100;
+		var node_left = (node.x * 1) + 100;
+
+		$('#3d-graph').append("<div class='nodetest' style='top:" + node_top + "px;left:" + node_left + "px;'>x</div>");
+	});
+}
 
 $(function() {
 	// When the user clicks on the search bar, make it more visible
