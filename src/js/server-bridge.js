@@ -30,7 +30,7 @@ function databaseRequest(user_input){
 		v.max_shared_links = parsed_data.max_shared_links;
 		v.min_shared_links = parsed_data.min_shared_links;
 
-		console.log('JSON:\n' + JSON.stringify(json_response));
+		// console.log('JSON:\n' + JSON.stringify(json_response));
 
 		/* Show the raw JSON results to the user */
 		$('#results_text').val( JSON.stringify(json_response) );			// Display JSON results in the HTML textarea container
@@ -106,7 +106,20 @@ function colorLinks(nodes, links){
 
 // color all nodes but the current one (must come before visited node coloring)
 function colorOthers(nodes){
+	console.log('heree');
+
+
+
 	nodes.forEach(function(node){
+
+		console.log("node:" + node.name + " X:" + node.x + " Y:" + node.y);
+
+
+
+
+
+
+
 		if (node.visited) {
 			node.color=0x00ff00;
 			node.opacity =1;
@@ -118,6 +131,23 @@ function colorOthers(nodes){
 	nodes[0].color=0xffffff;
 	console.log('node x: ' + nodes[0].x); // get x coordinate of node (to be used for heat map color scale)
 };
+
+
+var finalNode = null;
+
+var $canvas = $('#3d-graph');
+function showWikimapLabels(){
+    $('div.nodetest').remove();
+
+    finalNode.forEach(function (node) {
+		console.log("Count: " + node.name + " x:" + node.x);
+        var node_top = (node.y * 1) + 100;
+        var node_left = (node.x * 1) + 100;
+
+        $('#3d-graph').append("<div class='nodetest' style='top:" + node_top + "px;left:" + node_left + "px;'>x</div>");
+    });
+}
+
 
 
 

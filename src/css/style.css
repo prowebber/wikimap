@@ -123,3 +123,9 @@ span.close{
     right: 410px;
     color: #fff;
 }
+
+div.nodetest{
+    color:#fff;
+    display:inline-block;
+    position:absolute;
+}
