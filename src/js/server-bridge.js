@@ -127,12 +127,11 @@ var $canvas = $('#3d-graph');
 function showWikimapLabels(){
 	$('div.nodetest').remove();
 
-	finalNode.forEach(function (node) {
-		console.log("Count: " + node.name + " x:" + node.x);
-		var node_top = (node.y * 1) + 100;
-		var node_left = (node.x * 1) + 100;
+	finalNode.forEach(function (node,i) {
+		var node_top = v.node_labels[i][0];
+		var node_left = v.node_labels[i][1];
 
-		$('#3d-graph').append("<div class='nodetest' style='top:" + node_top + "px;left:" + node_left + "px;'>x</div>");
+		$('#3d-graph').append("<div class='nodetest' style='top:" + node_top + "px;left:" + node_left + "px;'>" + node.name + "</div>");
 	});
 }
 
