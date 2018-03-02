@@ -59,15 +59,16 @@ function showGraph(json_response){
 		.onNodeClick(colorNode);
 	function colorNode(node){
 		v.freeze_graph = true;
+		console.log(v.node_labels);
+		console.log('node.x: ' + node.x + ' node.pageX: ' + node.pageX);
+		console.log('node.y: ' + node.y + ' node.pageY: ' + node.pageY);
 		v.clicked_node_x = node.x;
 		v.clicked_node_y = node.y;
 		v.clicked_node_z = node.z;
-		console.log('node name:' + node.name);
 		let { nodes, links } = Graph.graphData();
 		colorOthers(nodes);
 		var $wikiView = $("aside.pageinfo");															// Define the Wikipedia page preview
 		if (!node) {
-			console.log('attempted to hide node');
 			$wikiView.css({'display':'none'});															// Make the wikipedia preview visible and slide it into the page
 			return;
 		}
@@ -90,7 +91,6 @@ function showGraph(json_response){
 }
 // colors links between visited nodes a color else a default color
 function colorLinks(nodes, links){
-	console.log('link coloring');
 	links.forEach(function(link){
 		if (link.source.visited && link.target.visited) {
 			link.color=0x00ff00;
@@ -108,7 +108,6 @@ function colorLinks(nodes, links){
 // color all nodes but the current one (must come before visited node coloring)
 function colorOthers(nodes){
 	nodes.forEach(function(node){
-		console.log('Node ' + node.name + ' x:' + node.x + ' y:' + node.y);
 		if (node.visited) {
 			node.color=0x00ff00;
 			node.opacity =1;
@@ -118,7 +117,6 @@ function colorOthers(nodes){
 		};
 	});
 	nodes[0].color=0xffffff;
-	console.log('node x: ' + nodes[0].x); // get x coordinate of node (to be used for heat map color scale)
 };
 
 var finalNode = null;
@@ -128,10 +126,10 @@ function showWikimapLabels(){
 	$('div.nodetest').remove();
 
 	finalNode.forEach(function (node,i) {
-		var node_top = v.node_labels[i][0];
-		var node_left = v.node_labels[i][1];
-
-		$('#3d-graph').append("<div class='nodetest' style='top:" + node_top + "px;left:" + node_left + "px;'>" + node.name + "</div>");
+		var node_top = v.node_labels[i].x, node_left = v.node_labels[i].y;
+		// var node_label = node.name;
+		var node_label = '+';
+		$('#3d-graph').append("<div class='nodetest' style='top:" + node_top + "px;left:" + node_left + "px;'>" + node_label + "</div>");
 	});
 }
 
