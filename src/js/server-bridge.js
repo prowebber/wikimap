@@ -127,8 +127,8 @@ function showWikimapLabels(){
 
 	finalNode.forEach(function (node,i) {
 		var node_top = v.node_labels[i].x, node_left = v.node_labels[i].y;
-		// var node_label = node.name;
-		var node_label = '+';
+		var node_label = node.name;
+		// var node_label = '+';
 		$('#3d-graph').append("<div class='nodetest' style='top:" + node_top + "px;left:" + node_left + "px;'>" + node_label + "</div>");
 	});
 }
