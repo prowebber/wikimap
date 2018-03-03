@@ -127,16 +127,21 @@ function showWikimapLabels(){
 	$('div.nodetest').remove();
 
 	finalNode.forEach(function (node,i) {
-		var min_font_size = 5;
+		var min_font_size = 10;
 		var max_font_size = 20;
+		var min_opacity = 0.2;
+		var max_opacity = 1;
 		var max_z = Math.max.apply(Math, v.z_array);
 		var min_z = Math.min.apply(Math, v.z_array);
+		var z_scale = v.z_array[i]/(max_z - min_z);
+		// var node_label_opacity = 0.8;
 		// var node_font_size = 18;
-		var node_font_size = v.z_array[i]/(max_z - min_z)*(max_font_size-min_font_size) + min_font_size;
+		var node_font_size = z_scale*(max_font_size-min_font_size) + min_font_size;
+		var node_label_opacity = z_scale*(max_opacity-min_opacity) + min_opacity;
 		var node_top = v.node_labels[i].x, node_left = v.node_labels[i].y;
 		var node_label = node.name;
 		// var node_label = '+';
-		$('#3d-graph').append("<div class='nodetest' style='font-size:" + node_font_size + "px;top:" + node_top + "px;left:" + node_left + "px;'>" + node_label + "</div>");
+		$('#3d-graph').append("<div class='nodetest' style='opacity: " + node_label_opacity + ";font-size:" + node_font_size + "px;top:" + node_top + "px;left:" + node_left + "px;'>" + node_label + "</div>");
 	});
 }
 
