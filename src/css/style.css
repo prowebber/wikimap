@@ -86,7 +86,6 @@ table.results tr td:nth-child(1){
 .node-label {
      position: absolute !important;
      color: lavender;
-     font-size: 18px !important;
  }
 
 div.nodetest{

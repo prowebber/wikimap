@@ -120,16 +120,23 @@ function colorOthers(nodes){
 };
 
 var finalNode = null;
+var background_color = 0x000011;
 
 var $canvas = $('#3d-graph');
 function showWikimapLabels(){
 	$('div.nodetest').remove();
 
 	finalNode.forEach(function (node,i) {
+		var min_font_size = 5;
+		var max_font_size = 20;
+		var max_z = Math.max.apply(Math, v.z_array);
+		var min_z = Math.min.apply(Math, v.z_array);
+		// var node_font_size = 18;
+		var node_font_size = v.z_array[i]/(max_z - min_z)*(max_font_size-min_font_size) + min_font_size;
 		var node_top = v.node_labels[i].x, node_left = v.node_labels[i].y;
 		var node_label = node.name;
 		// var node_label = '+';
-		$('#3d-graph').append("<div class='nodetest' style='top:" + node_top + "px;left:" + node_left + "px;'>" + node_label + "</div>");
+		$('#3d-graph').append("<div class='nodetest' style='font-size:" + node_font_size + "px;top:" + node_top + "px;left:" + node_left + "px;'>" + node_label + "</div>");
 	});
 }
 
