@@ -125,7 +125,6 @@ var background_color = 0x000011;
 var $canvas = $('#3d-graph');
 function showWikimapLabels(){
 	$('div.nodetest').remove();
-
 	finalNode.forEach(function (node,i) {
 		var min_font_size = 10;
 		var max_font_size = 20;
