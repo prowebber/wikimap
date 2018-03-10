@@ -12,6 +12,16 @@ function closeWikiPreviewWindow() {
 	$("div#3d-graph canvas").css({'width':'100%'});			// Make sure the canvas stays the full screen width
 }
 
+function offlineRequest(){
+	v.freeze_graph = false;
+	var parsed_data = JSON.parse(default_json);							// Parse the JSON data
+
+	v.max_shared_links = 0.3376082077588971;
+	v.min_shared_links = 0.0014883958282391214;
+
+	showGraph(parsed_data);
+}
+
 function databaseRequest(user_input){
 	v.freeze_graph = false;
 	var form_data = [];
@@ -29,7 +39,7 @@ function databaseRequest(user_input){
 		v.max_shared_links = parsed_data.max_shared_links;
 		v.min_shared_links = parsed_data.min_shared_links;
 
-		console.log('JSON:\n' + JSON.stringify(json_response));
+		console.log('JSON:\n' + json_response);
 
 		/* Show the raw JSON results to the user */
 		$('#results_text').val( JSON.stringify(json_response) );			// Display JSON results in the HTML textarea container
@@ -164,7 +174,8 @@ $(function() {
 		$('header #user_input').addClass('dark');								// Make the text easier to read when faded
 
 		var user_input = $('#user_input').val();
-		databaseRequest(user_input);
+		// databaseRequest(user_input);
+		offlineRequest();
 
 		/* Fade the search bar after n seconds, unless the user is interacting with it */
 		var typingTimer;													// Keeps track of the time (in ms) after someone has been typing
