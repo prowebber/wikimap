@@ -174,8 +174,8 @@ $(function() {
 		$('header #user_input').addClass('dark');								// Make the text easier to read when faded
 
 		var user_input = $('#user_input').val();
-		// databaseRequest(user_input);
-		offlineRequest();
+		databaseRequest(user_input);
+		// offlineRequest();
 
 		/* Fade the search bar after n seconds, unless the user is interacting with it */
 		var typingTimer;													// Keeps track of the time (in ms) after someone has been typing
