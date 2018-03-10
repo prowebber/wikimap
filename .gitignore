@@ -149,4 +149,9 @@ src/node_modules/qwest/
 src/node_modules/three-trackballcontrols/
 src/node_modules/three/
 src/node_modules/3d-force-graph/LICENSE
-
+src/node_modules/3d-force-graph/node_modules/
+src/scripts/aoc/
+src/node_modules/3d-force-graph/package-lock.json
+atest/
+src/scripts/example.db
+src/scripts/php-test.php

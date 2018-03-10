@@ -19,7 +19,6 @@ function databaseRequest(user_input){
 	form_data.push({name: 'server_class', value: 'fetchMultiData'});
 	ajaxFetch(form_data).done(function (data) {						// Call the Ajax function and wait for it to finish
 
-		console.log('Data:\n' + data);
 		var parsed_data = JSON.parse(data);							// Parse the JSON data
 
 		/* Get the data from the request */
@@ -51,8 +50,6 @@ function databaseRequest(user_input){
 	});
 }
 function showGraph(json_response){
-	console.log('Min shared links: ' +  v.min_shared_links);
-	console.log('Max shared links: ' +  v.max_shared_links);
 	const Graph = ForceGraph3D()
 	(document.getElementById('3d-graph'))
 		.graphData(json_response)
@@ -124,8 +121,12 @@ var background_color = 0x000011;
 
 var $canvas = $('#3d-graph');
 function showWikimapLabels(){
+
+	console.log("Nodes refreshed");
+
 	$('div.nodetest').remove();
 	finalNode.forEach(function (node,i) {
+		 // console.log("memory leak")
 		var min_font_size = 10;
 		var max_font_size = 20;
 		var min_opacity = 0.2;
