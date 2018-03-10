@@ -10,5 +10,13 @@ var v = {
 	'clicked_node_y'	: 0,
 	'clicked_node_z'	: 0,
 	'node_labels' : [],
-	'z_array' : []
+	'z_array' : [],
+	'state':{
+		'camera':{
+			'position': null,
+			'prev_position': null
+		}
+	},
+	'position_sum': 0,
+	'last_position_sum': 0
 };

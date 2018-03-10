@@ -19,7 +19,6 @@ function databaseRequest(user_input){
 	form_data.push({name: 'server_class', value: 'fetchMultiData'});
 	ajaxFetch(form_data).done(function (data) {						// Call the Ajax function and wait for it to finish
 
-		console.log('Data:\n' + data);
 		var parsed_data = JSON.parse(data);							// Parse the JSON data
 
 		/* Get the data from the request */
@@ -51,8 +50,6 @@ function databaseRequest(user_input){
 	});
 }
 function showGraph(json_response){
-	console.log('Min shared links: ' +  v.min_shared_links);
-	console.log('Max shared links: ' +  v.max_shared_links);
 	const Graph = ForceGraph3D()
 	(document.getElementById('3d-graph'))
 		.graphData(json_response)
@@ -124,8 +121,29 @@ var background_color = 0x000011;
 
 var $canvas = $('#3d-graph');
 function showWikimapLabels(){
+	//console.log("Updated -- " + "X: " + v.state.camera.position.x + " Y: " + v.state.camera.position.y + " Z: " + v.state.camera.position.z);
+	//console.log("Updated -- " + " sum: " + v.position_sum + " last sum: " + v.node_labels);
+	console.log("MEMORY LEAK");
+	// If the camera position has not changed
+	// if(v.state.camera.position.x === v.state.camera.prev_position.x
+	// 	&& v.state.camera.position.y === v.state.camera.prev_position.y
+	// 	&& v.state.camera.position.z === v.state.camera.prev_position.z){
+	// 	console.log("Not Updated -- " + "X: " + v.state.camera.position.x + " Y: " + v.state.camera.position.y + " Z: " + v.state.camera.position.z);
+	// 	return;
+	// }
+
+	// if(v.state.camera.position === v.state.camera.prev_position){
+	// 	console.log("Not Updated -- " + "X: " + v.state.camera.position.x + " Y: " + v.state.camera.position.y + " Z: " + v.state.camera.position.z);
+	// 	return;
+	// }
+	// else{
+	// 	console.log("Updated -- " + "X: " + v.state.camera.position.x + " Y: " + v.state.camera.position.y + " Z: " + v.state.camera.position.z);
+	// }
+
+
 	$('div.nodetest').remove();
 	finalNode.forEach(function (node,i) {
+		 // console.log("memory leak")
 		var min_font_size = 10;
 		var max_font_size = 20;
 		var min_opacity = 0.2;
