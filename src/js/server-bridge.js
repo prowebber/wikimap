@@ -121,25 +121,8 @@ var background_color = 0x000011;
 
 var $canvas = $('#3d-graph');
 function showWikimapLabels(){
-	//console.log("Updated -- " + "X: " + v.state.camera.position.x + " Y: " + v.state.camera.position.y + " Z: " + v.state.camera.position.z);
-	//console.log("Updated -- " + " sum: " + v.position_sum + " last sum: " + v.node_labels);
-	console.log("MEMORY LEAK");
-	// If the camera position has not changed
-	// if(v.state.camera.position.x === v.state.camera.prev_position.x
-	// 	&& v.state.camera.position.y === v.state.camera.prev_position.y
-	// 	&& v.state.camera.position.z === v.state.camera.prev_position.z){
-	// 	console.log("Not Updated -- " + "X: " + v.state.camera.position.x + " Y: " + v.state.camera.position.y + " Z: " + v.state.camera.position.z);
-	// 	return;
-	// }
 
-	// if(v.state.camera.position === v.state.camera.prev_position){
-	// 	console.log("Not Updated -- " + "X: " + v.state.camera.position.x + " Y: " + v.state.camera.position.y + " Z: " + v.state.camera.position.z);
-	// 	return;
-	// }
-	// else{
-	// 	console.log("Updated -- " + "X: " + v.state.camera.position.x + " Y: " + v.state.camera.position.y + " Z: " + v.state.camera.position.z);
-	// }
-
+	console.log("Nodes refreshed");
 
 	$('div.nodetest').remove();
 	finalNode.forEach(function (node,i) {

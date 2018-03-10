@@ -13,8 +13,7 @@ var v = {
 	'z_array' : [],
 	'state':{
 		'camera':{
-			'position': null,
-			'prev_position': null
+			'position': null
 		}
 	},
 	'position_sum': 0,
