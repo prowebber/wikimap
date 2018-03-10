@@ -7,23 +7,19 @@ function ajaxFetch(form_data){
 	});
 }
 
-
-
-
 function closeWikiPreviewWindow() {
 	$("aside.pageinfo").hide();								// Hide the wiki preview
 	$("div#3d-graph canvas").css({'width':'100%'});			// Make sure the canvas stays the full screen width
 }
 
-
-var max_shared_links;
-var min_shared_links;
 function databaseRequest(user_input){
+	v.freeze_graph = false;
 	var form_data = [];
 	form_data.push({name: 'user_input', value: user_input});
-	//form_data.push({name: 'server_class', value: 'fetchT0Data'});
 	form_data.push({name: 'server_class', value: 'fetchMultiData'});
 	ajaxFetch(form_data).done(function (data) {						// Call the Ajax function and wait for it to finish
+
+		console.log('Data:\n' + data);
 		var parsed_data = JSON.parse(data);							// Parse the JSON data
 
 		/* Get the data from the request */
@@ -31,8 +27,8 @@ function databaseRequest(user_input){
 		var matched_page_title = parsed_data.target_page_title;
 		var json_response = parsed_data.results;
 		var execution_time = parsed_data.execution_time;
-		window.max_shared_links = parsed_data.max_shared_links;
-		window.min_shared_links = parsed_data.min_shared_links;
+		v.max_shared_links = parsed_data.max_shared_links;
+		v.min_shared_links = parsed_data.min_shared_links;
 
 		console.log('JSON:\n' + JSON.stringify(json_response));
 
@@ -54,20 +50,25 @@ function databaseRequest(user_input){
 		showGraph(json_response);
 	});
 }
-strength_scale = 3;
 function showGraph(json_response){
-	console.log('Min shared links: ' +  window.min_shared_links);
-	console.log('Max shared links: ' +  window.max_shared_links);
+	console.log('Min shared links: ' +  v.min_shared_links);
+	console.log('Max shared links: ' +  v.max_shared_links);
 	const Graph = ForceGraph3D()
 	(document.getElementById('3d-graph'))
 		.graphData(json_response)
 		.onNodeClick(colorNode);
 	function colorNode(node){
+		v.freeze_graph = true;
+		console.log(v.node_labels);
+		console.log('node.x: ' + node.x + ' node.pageX: ' + node.pageX);
+		console.log('node.y: ' + node.y + ' node.pageY: ' + node.pageY);
+		v.clicked_node_x = node.x;
+		v.clicked_node_y = node.y;
+		v.clicked_node_z = node.z;
 		let { nodes, links } = Graph.graphData();
 		colorOthers(nodes);
 		var $wikiView = $("aside.pageinfo");															// Define the Wikipedia page preview
 		if (!node) {
-			console.log('attempted to hide node');
 			$wikiView.css({'display':'none'});															// Make the wikipedia preview visible and slide it into the page
 			return;
 		}
@@ -86,7 +87,6 @@ function showGraph(json_response){
 		node.visited = !node.visited; // toggle visited
 		colorLinks(nodes, links);
 		Graph.cooldownTicks(0);
-		Graph.graphData({ nodes, links });
 	}
 }
 // colors links between visited nodes a color else a default color
@@ -94,6 +94,7 @@ function colorLinks(nodes, links){
 	links.forEach(function(link){
 		if (link.source.visited && link.target.visited) {
 			link.color=0x00ff00;
+			// link.color=0xff0000;
 			link.opacity=1;
 			// link.lineWidth=10;
 		} else {
@@ -116,10 +117,32 @@ function colorOthers(nodes){
 		};
 	});
 	nodes[0].color=0xffffff;
-	console.log('node x: ' + nodes[0].x); // get x coordinate of node (to be used for heat map color scale)
 };
 
+var finalNode = null;
+var background_color = 0x000011;
 
+var $canvas = $('#3d-graph');
+function showWikimapLabels(){
+	$('div.nodetest').remove();
+	finalNode.forEach(function (node,i) {
+		var min_font_size = 10;
+		var max_font_size = 20;
+		var min_opacity = 0.2;
+		var max_opacity = 1;
+		var max_z = Math.max.apply(Math, v.z_array);
+		var min_z = Math.min.apply(Math, v.z_array);
+		var z_scale = v.z_array[i]/(max_z - min_z);
+		// var node_label_opacity = 0.8;
+		// var node_font_size = 18;
+		var node_font_size = z_scale*(max_font_size-min_font_size) + min_font_size;
+		var node_label_opacity = z_scale*(max_opacity-min_opacity) + min_opacity;
+		var node_top = v.node_labels[i].x, node_left = v.node_labels[i].y;
+		var node_label = node.name;
+		// var node_label = '+';
+		$('#3d-graph').append("<div class='nodetest' style='opacity: " + node_label_opacity + ";font-size:" + node_font_size + "px;top:" + node_top + "px;left:" + node_left + "px;'>" + node_label + "</div>");
+	});
+}
 
 $(function() {
 	// When the user clicks on the search bar, make it more visible
