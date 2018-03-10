@@ -155,3 +155,4 @@ src/node_modules/3d-force-graph/package-lock.json
 atest/
 src/scripts/example.db
 src/scripts/php-test.php
+.idea/wikimap.iml
