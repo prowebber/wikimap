@@ -22,6 +22,7 @@ function offlineRequest(){
 	showGraph(parsed_data);
 }
 
+
 function databaseRequest(user_input){
 	v.freeze_graph = false;
 	var form_data = [];
