@@ -16,7 +16,7 @@ var v = {
 			'position': null
 		}
 	},
-	'show_GCS_triad': false,
+	'show_GCS_triad': true,
 	'position_sum': 0,
 	'last_position_sum': 0
 };
