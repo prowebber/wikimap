@@ -156,3 +156,5 @@ atest/
 src/scripts/example.db
 src/scripts/php-test.php
 .idea/wikimap.iml
+/node_modules/
+/parallel-20171122/
