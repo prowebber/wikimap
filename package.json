@@ -22,7 +22,8 @@
     "uglifyjs": "^2.4.11"
   },
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "rollup-plugin-inject": "^2.0.0"
   },
   "scripts": {
     "build": "rollup -c",
