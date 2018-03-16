@@ -56705,7 +56705,7 @@ var app = Kapsule({
 		infoElem.className = 'graph-info-msg';
 		infoElem.textContent = '';
 		state.forceGraph.onLoading(function () {
-			infoElem.textContent = 'Loading...';
+			infoElem.textContent = 'wait for it...';
 		});
 		state.forceGraph.onFinishLoading(function () {
 			infoElem.textContent = '';
