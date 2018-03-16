@@ -11,6 +11,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "gulp-minify": "^2.1.0",
     "postcss-nested": "^3.0.0",
     "postcss-simple-vars": "^4.1.0",
     "rollup": "^0.56.5",
@@ -20,7 +21,9 @@
     "rollup-plugin-postcss": "^1.3.4",
     "uglifyjs": "^2.4.11"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  },
   "scripts": {
     "build": "rollup -c",
     "final": "rollup -c && uglifyjs output.js -o output.min.js -c -m"
