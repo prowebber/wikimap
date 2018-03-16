@@ -56618,7 +56618,7 @@ var app = Kapsule({
 		width: { default: window.innerWidth },
 		height: { default: window.innerHeight },
 		backgroundColor: {
-			default: '#ff0000',
+			default: '#000000',
 			onChange: function onChange(bckgColor, state) {
 				var alpha = tinycolor(bckgColor).getAlpha();
 				state.renderer.setClearColor(new three$2.Color(bckgColor), alpha);
@@ -56836,7 +56836,7 @@ var app = Kapsule({
 
 		// Populate scene
 		state.scene.add(state.forceGraph);
-		state.scene.fog = new three$2.FogExp2(0xffffff, 0.0020);
+		state.scene.fog = new three$2.FogExp2(0x000000, 0.0020);
 		state.scene.add(new three$2.AmbientLight(0xbbbbbb));
 		state.scene.add(new three$2.DirectionalLight(0xffffff, 0.6));
 
