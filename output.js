@@ -56592,7 +56592,8 @@ var three$2 = window.THREE ? window.THREE // Prefer consumption from global THRE
 	Raycaster: Raycaster,
 	Vector2: Vector2,
 	Vector3: Vector3,
-	Color: Color
+	Color: Color,
+	FogExp2: FogExp2
 };
 //
 
@@ -56617,7 +56618,7 @@ var app = Kapsule({
 		width: { default: window.innerWidth },
 		height: { default: window.innerHeight },
 		backgroundColor: {
-			default: '#000011',
+			default: '#ff0000',
 			onChange: function onChange(bckgColor, state) {
 				var alpha = tinycolor(bckgColor).getAlpha();
 				state.renderer.setClearColor(new three$2.Color(bckgColor), alpha);
@@ -56663,7 +56664,6 @@ var app = Kapsule({
 				if (x !== undefined) state.camera.position.x = x;
 				if (y !== undefined) state.camera.position.y = y;
 				if (z !== undefined) state.camera.position.z = z;
-
 				state.tbControls.target = lookAt ? new three$2.Vector3(lookAt.x, lookAt.y, lookAt.z) : state.forceGraph.position;
 
 				return this;
@@ -56836,6 +56836,7 @@ var app = Kapsule({
 
 		// Populate scene
 		state.scene.add(state.forceGraph);
+		state.scene.fog = new three$2.FogExp2(0xffffff, 0.0020);
 		state.scene.add(new three$2.AmbientLight(0xbbbbbb));
 		state.scene.add(new three$2.DirectionalLight(0xffffff, 0.6));
 
