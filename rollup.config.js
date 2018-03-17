@@ -16,7 +16,8 @@ export default {
 		format: 'umd',
 		name: 'ForceGraph3D',
 		source: true,
-		banner: `// Version ${name} - Shit`
+		banner: `// Version ${name} - Shit`,
+		globals: { vars: 'vars' }
 	},
 	plugins: [
 		postCss({
