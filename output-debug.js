@@ -1,11 +1,9 @@
 // Version wikimap - Shit
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('serverBridge')) :
-	typeof define === 'function' && define.amd ? define(['serverBridge'], factory) :
-	(global.ForceGraph3D = factory(global.serverBridge));
-}(this, (function (serverBridge) { 'use strict';
-
-serverBridge = serverBridge && serverBridge.hasOwnProperty('default') ? serverBridge['default'] : serverBridge;
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.ForceGraph3D = factory());
+}(this, (function () { 'use strict';
 
 // Polyfills
 
