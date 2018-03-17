@@ -10,13 +10,15 @@ import { name } from './package.json';
 
 
 export default {
-	input: 'index.js',
+	input: 'index-old.js',
 	output: {
 		file: 'output.js',
 		format: 'umd',
 		name: 'ForceGraph3D',
 		source: true,
 		banner: `// Version ${name} - Shit`
+		// external: ['jquery'],
+		// globals: {jquery: '$'}
 	},
 	plugins: [
 		postCss({

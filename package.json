@@ -2,7 +2,7 @@
   "name": "wikimap",
   "version": "1.0.0",
   "description": "wikimap",
-  "main": "./index.js",
+  "main": "./index-old.js",
   "dependencies": {
     "3d-force-graph": "^1.28.4",
     "babel": "^6.23.0",
