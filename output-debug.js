@@ -55842,7 +55842,7 @@ var ForceGraph = Kapsule({
       if (state.engineRunning) {
         layoutTick();
       }
-      updatePhotons();
+      // updatePhotons();
 
       return this;
 
@@ -55857,6 +55857,7 @@ var ForceGraph = Kapsule({
 
         // Update nodes position
         state.graphData.nodes.forEach(function (node) {
+        	console.log(node);
           var obj = node.__threeObj;
           if (!obj) return;
 
@@ -56541,232 +56542,6 @@ Kapsule({
     state.navInfo.style.display = state.showNavInfo ? null : 'none';
   }
 
-});
-
-var v = {
-	'default_json': '{"nodes":[{"id":"308","name":"Aristotle","color":16777215},{"id":199503,"name":"Biblioth\xE8que nationale de France","color":255},{"id":1130,"name":"Avicenna","color":255},{"id":4163,"name":"Bertrand Russell","color":255},{"id":2030,"name":"Augustine of Hippo","color":255},{"id":3198808,"name":"Biblioteca Nacional de Espa\xF1a","color":255},{"id":3354,"name":"Berlin","color":255},{"id":5407,"name":"California","color":255},{"id":3343,"name":"Belgium","color":255},{"id":47836,"name":"Averroes","color":255},{"id":2171,"name":"Anti-realism","color":255},{"id":146607,"name":"Al-Ghazali","color":255},{"id":3408,"name":"Baruch Spinoza","color":255},{"id":4552,"name":"Bernard of Clairvaux","color":255},{"id":3225,"name":"Athanasius of Alexandria","color":255},{"id":1370,"name":"Ambrose","color":255},{"id":1573,"name":"Albertus Magnus","color":255},{"id":914,"name":"Author","color":255},{"id":18951905,"name":"Argentina","color":255},{"id":3383,"name":"Brazil","color":255},{"id":844,"name":"Amsterdam","color":255},{"id":624,"name":"Alaska","color":255},{"id":303,"name":"Alabama","color":255},{"id":3392,"name":"British Columbia","color":255},{"id":4689264,"name":"Australia","color":255},{"id":5042916,"name":"Canada","color":255},{"id":3415,"name":"Bulgaria","color":255},{"id":26964606,"name":"Austria","color":255},{"id":12,"name":"Anarchism","color":255},{"id":272065,"name":"Al-Kindi","color":255},{"id":175040,"name":"Al-Farabi","color":255},{"id":700,"name":"Arthur Schopenhauer","color":255},{"id":4041,"name":"Bede","color":255}],"links":[{"source":"308","target":199503,"val":0.004475159430856937,"color":65535},{"source":"308","target":1130,"val":0.09576502732240437,"color":65535},{"source":"308","target":4163,"val":0.09044702202528346,"color":65535},{"source":"308","target":2030,"val":0.07340766088972293,"color":65535},{"source":199503,"target":3198808,"val":0.04477854530678586,"color":65535},{"source":199503,"target":3354,"val":0.024116009280742458,"color":65535},{"source":199503,"target":5407,"val":0.015341764528756399,"color":65535},{"source":199503,"target":3343,"val":0.011886227308291118,"color":65535},{"source":1130,"target":47836,"val":0.2197334845477743,"color":65535},{"source":1130,"target":2171,"val":0.18929321203638907,"color":65535},{"source":1130,"target":146607,"val":0.15083281924737815,"color":65535},{"source":4163,"target":3408,"val":0.15773889636608346,"color":65535},{"source":4163,"target":2030,"val":0.07987421383647798,"color":65535},{"source":4163,"target":1130,"val":0.10344081367669336,"color":65535},{"source":2030,"target":4552,"val":0.22637931034482758,"color":65535},{"source":2030,"target":3225,"val":0.21776359973136333,"color":65535},{"source":2030,"target":1370,"val":0.2283894449499545,"color":65535},{"source":2030,"target":1573,"val":0.21527001862197392,"color":65535},{"source":3198808,"target":3354,"val":0.005378341560072891,"color":65535},{"source":3198808,"target":914,"val":0.004415137614678899,"color":65535},{"source":3198808,"target":18951905,"val":0.0014883958282391214,"color":65535},{"source":3354,"target":3343,"val":0.02711047368630732,"color":65535},{"source":3354,"target":3383,"val":0.01506489202238643,"color":65535},{"source":3354,"target":844,"val":0.039770735830773354,"color":65535},{"source":5407,"target":624,"val":0.03192096365173288,"color":65535},{"source":5407,"target":303,"val":0.027754677754677756,"color":65535},{"source":5407,"target":3392,"val":0.02456140350877193,"color":65535},{"source":3343,"target":4689264,"val":0.07517138599105812,"color":65535},{"source":3343,"target":5042916,"val":0.05829663198655348,"color":65535},{"source":3343,"target":3415,"val":0.10956736166062457,"color":65535},{"source":3343,"target":26964606,"val":0.07055785655957802,"color":65535},{"source":47836,"target":308,"val":0.08800729594163247,"color":65535},{"source":47836,"target":4163,"val":0.12061855670103093,"color":65535},{"source":47836,"target":2030,"val":0.07216103304215724,"color":65535},{"source":2171,"target":4163,"val":0.13734039240112114,"color":65535},{"source":2171,"target":308,"val":0.07360406091370558,"color":65535},{"source":2171,"target":12,"val":0.09489916963226572,"color":65535},{"source":146607,"target":272065,"val":0.16016640665626625,"color":65535},{"source":146607,"target":47836,"val":0.11075569772091164,"color":65535},{"source":146607,"target":175040,"val":0.1682360326428123,"color":65535},{"source":3408,"target":2030,"val":0.11429131542834739,"color":65535},{"source":3408,"target":308,"val":0.08637355784222014,"color":65535},{"source":3408,"target":700,"val":0.14478764478764478,"color":65535},{"source":4552,"target":3225,"val":0.33042394014962595,"color":65535},{"source":4552,"target":1370,"val":0.3045928430543815,"color":65535},{"source":4552,"target":4041,"val":0.2552884615384615,"color":65535},{"source":3225,"target":1370,"val":0.29095816464237517,"color":65535},{"source":3225,"target":4041,"val":0.24189063948100092,"color":65535},{"source":1370,"target":4041,"val":0.27341115434500646,"color":65535},{"source":1573,"target":1370,"val":0.3376082077588971,"color":65535},{"source":1573,"target":4552,"val":0.30315420560747663,"color":65535},{"source":1573,"target":4041,"val":0.2766756032171582,"color":65535}]}',
-	'max_shared_links': 1,
-	'min_shared_links': null,
-	'freeze_graph': null,
-	'frozen_layout': null,
-	'sim_type': null,
-	'strength_scale': 3,
-	'update_camera': null,
-	'clicked_node_x': 0,
-	'clicked_node_y': 0,
-	'clicked_node_z': 0,
-	'node_labels': [],
-	'z_array': [],
-	'state': {
-		'camera': {
-			'position': null
-		}
-	},
-	'show_GCS_triad': true,
-	'position_sum': 0,
-	'last_position_sum': 0,
-	'page_subject_id': null,
-	'sub_category_id': null
-};
-
-serverBridge({
-	ajaxFetch: function ajaxFetch(form_data) {
-		return $.ajax({
-			method: "POST",
-			data: form_data,
-			url: '/wikimap/src/scripts/wikilinks.php',
-			dataType: 'text'
-		});
-	},
-
-	closeWikiPreviewWindow: function closeWikiPreviewWindow() {
-		$("aside.pageinfo").hide(); // Hide the wiki preview
-		$("div#3d-graph canvas").css({ 'width': '100%' }); // Make sure the canvas stays the full screen width
-	},
-
-	offlineRequest: function offlineRequest() {
-		globals.v.freeze_graph = false;
-		var parsed_data = JSON.parse(default_json); // Parse the JSON data
-
-		v.max_shared_links = 0.3376082077588971;
-		v.min_shared_links = 0.0014883958282391214;
-		showGraph(parsed_data);
-	},
-
-	databaseRequest: function databaseRequest(user_input) {
-		v.freeze_graph = false;
-		var form_data = [];
-		form_data.push({ name: 'user_input', value: user_input });
-		form_data.push({ name: 'server_class', value: 'fetchMultiData' });
-		ajaxFetch(form_data).done(function (data) {
-			// Call the Ajax function and wait for it to finish
-
-			var parsed_data = JSON.parse(data); // Parse the JSON data
-
-			/* Get the data from the request */
-			var matched_page_id = parsed_data.target_page_id;
-			var matched_page_title = parsed_data.target_page_title;
-			var json_response = parsed_data.results;
-			var execution_time = parsed_data.execution_time;
-			v.max_shared_links = parsed_data.max_shared_links;
-			v.min_shared_links = parsed_data.min_shared_links;
-
-			console.log('JSON:\n' + json_response);
-
-			/* Show the raw JSON results to the user */
-			// $('#results_text').val(JSON.stringify(json_response));			// Display JSON results in the HTML textarea container
-			// $('#matched_page_id').html(matched_page_id);
-			// $('#matched_page_title').html(matched_page_title);
-
-			// Output data to the console for debugging
-			console.log('Matched Page ID: ' + matched_page_id);
-			console.log('Matched Page Title: ' + matched_page_title);
-			console.log('Execution Times:\n' + execution_time);
-			console.log('Converted Node:\n' + parsed_data.converted_node);
-
-			/**
-    * Initiate Shit
-    */
-			// const Graph = ForceGraph3D()
-			showGraph(json_response);
-		});
-	},
-	showGraph: function showGraph(json_response) {
-		var Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(json_response).onNodeClick(colorNode);
-
-		function colorNode(node) {
-			v.freeze_graph = true;
-			console.log(v.node_labels);
-			console.log('node.x: ' + node.x + ' node.pageX: ' + node.pageX);
-			console.log('node.y: ' + node.y + ' node.pageY: ' + node.pageY);
-			v.clicked_node_x = node.x;
-			v.clicked_node_y = node.y;
-			v.clicked_node_z = node.z;
-
-			var _Graph$graphData = Graph.graphData(),
-			    nodes = _Graph$graphData.nodes,
-			    links = _Graph$graphData.links;
-
-			colorOthers(nodes);
-			var $wikiView = $("aside.pageinfo"); // Define the Wikipedia page preview
-			if (!node) {
-				$wikiView.css({ 'display': 'none' }); // Make the wikipedia preview visible and slide it into the page
-				return;
-			}
-
-			/* Control Wikipedia Page Preview*/
-			$wikiView.animate({ "right": "0px" }, "slow").css({ 'display': 'inline-block' }); // Make the wikipedia preview visible and slide it into the page
-			$wikiView.html("<iframe src='https://en.m.wikipedia.org/wiki/" + node.name + "'><iframe>"); // Load Wikipedia page into a element on the screen
-
-			// Make sure the nav tips are not displayed
-			$('div.graph-nav-info').hide();
-			// sets current node color and opacity
-			if (!node.visited) {
-				node.color = 0xff00ff;
-				node.opacity = 1;
-			}
-			node.visited = !node.visited; // toggle visited
-			colorLinks(nodes, links);
-			Graph.cooldownTicks(0);
-		}
-	},
-	// colors links between visited nodes a color else a default color
-	colorLinks: function colorLinks(nodes, links) {
-		links.forEach(function (link) {
-			if (link.source.visited && link.target.visited) {
-				link.color = 0x00ff00;
-				// link.color=0xff0000;
-				link.opacity = 1;
-				// link.lineWidth=10;
-			} else {
-				link.color = 0x00ffff;
-				link.opacity = 0.2;
-				// link.lineWidth=1;
-			}
-		});
-	},
-
-	// color all nodes but the current one (must come before visited node coloring)
-	colorOthers: function colorOthers(nodes) {
-		nodes.forEach(function (node) {
-			if (node.visited) {
-				node.color = 0x00ff00;
-				node.opacity = 1;
-			} else {
-				node.color = 0x0000ff;
-				node.opacity = 1;
-			}
-		});
-		nodes[0].color = 0xffffff;
-	},
-
-	finalNode: null,
-	background_color: 0x000011,
-
-	$canvas: $('#3d-graph'),
-	showWikimapLabels: function showWikimapLabels() {
-
-		console.log("Nodes refreshed");
-
-		$('div.nodetest').remove();
-		finalNode.forEach(function (node, i) {
-			var min_font_size = 15;
-			var max_font_size = 20;
-			var min_opacity = 0.6;
-			var max_opacity = 1;
-			var max_z = Math.max.apply(Math, v.z_array);
-			var min_z = Math.min.apply(Math, v.z_array);
-			var z_scale = v.z_array[i] / (max_z - min_z);
-			// let node_label_opacity = 1;
-			// let node_font_size = 20;
-			var node_font_size = z_scale * (max_font_size - min_font_size) + min_font_size;
-			var node_label_opacity = z_scale * (max_opacity - min_opacity) + min_opacity;
-			var node_top = v.node_labels[i].x,
-			    node_left = v.node_labels[i].y;
-			// let node_label = node.name;
-			var node_label = '+';
-			$('#3d-graph').append("<div class='nodetest' style='opacity: " + node_label_opacity + ";font-size:" + node_font_size + "px;top:" + node_top + "px;left:" + node_left + "px;'>" + node_label + "</div>");
-		});
-	},
-
-	submit_deal: $(function () {
-		// When the user clicks on the search bar, make it more visible
-		$('header').on('click', '#user_input', function (e) {
-			$(this).fadeTo("fast", 1);
-			$(this).removeClass('dark'); // Make the text easier to read when background is white
-		});
-
-		function doneTyping() {
-			// When the user is done typing
-			$('header #user_input').fadeTo("fast", .33); // Fade the searchbar
-			$('header #user_input').addClass('dark'); // Make the text easier to read when faded
-		}
-
-		$("form").submit(function (e) {
-			e.preventDefault(); // Prevent POST data from displaying in the URL
-			$('header #user_input').fadeTo("fast", .33); // Fade the searchbar
-			$('header #user_input').addClass('dark'); // Make the text easier to read when faded
-
-			var user_input = $('#user_input').val();
-			databaseRequest(user_input);
-			// offlineRequest();
-
-			/* Fade the search bar after n seconds, unless the user is interacting with it */
-			var typingTimer = void 0; // Keeps track of the time (in ms) after someone has been typing
-			var doneTypingTime = 2000; // Time in ms when you consider someone to be done typing
-
-			$('#user_input').keyup(function () {
-				// When someone types in the search box
-				clearTimeout(typingTimer); // Reset the typing time
-				typingTimer = setTimeout(doneTyping, doneTypingTime); // Check to see if the done typing time has been reached, if so - call the function
-			});
-
-			$('#user_input').keydown(function () {
-				// When someone hits a key in the search box
-				clearTimeout(typingTimer); // Reset the typing time
-			});
-		});
-	})
 });
 
 var jquery = createCommonjsModule(function (module) {
@@ -67124,6 +66899,231 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 });
+
+var v = {
+	'default_json': '{"nodes":[{"id":"308","name":"Aristotle","color":16777215},{"id":199503,"name":"Biblioth\xE8que nationale de France","color":255},{"id":1130,"name":"Avicenna","color":255},{"id":4163,"name":"Bertrand Russell","color":255},{"id":2030,"name":"Augustine of Hippo","color":255},{"id":3198808,"name":"Biblioteca Nacional de Espa\xF1a","color":255},{"id":3354,"name":"Berlin","color":255},{"id":5407,"name":"California","color":255},{"id":3343,"name":"Belgium","color":255},{"id":47836,"name":"Averroes","color":255},{"id":2171,"name":"Anti-realism","color":255},{"id":146607,"name":"Al-Ghazali","color":255},{"id":3408,"name":"Baruch Spinoza","color":255},{"id":4552,"name":"Bernard of Clairvaux","color":255},{"id":3225,"name":"Athanasius of Alexandria","color":255},{"id":1370,"name":"Ambrose","color":255},{"id":1573,"name":"Albertus Magnus","color":255},{"id":914,"name":"Author","color":255},{"id":18951905,"name":"Argentina","color":255},{"id":3383,"name":"Brazil","color":255},{"id":844,"name":"Amsterdam","color":255},{"id":624,"name":"Alaska","color":255},{"id":303,"name":"Alabama","color":255},{"id":3392,"name":"British Columbia","color":255},{"id":4689264,"name":"Australia","color":255},{"id":5042916,"name":"Canada","color":255},{"id":3415,"name":"Bulgaria","color":255},{"id":26964606,"name":"Austria","color":255},{"id":12,"name":"Anarchism","color":255},{"id":272065,"name":"Al-Kindi","color":255},{"id":175040,"name":"Al-Farabi","color":255},{"id":700,"name":"Arthur Schopenhauer","color":255},{"id":4041,"name":"Bede","color":255}],"links":[{"source":"308","target":199503,"val":0.004475159430856937,"color":65535},{"source":"308","target":1130,"val":0.09576502732240437,"color":65535},{"source":"308","target":4163,"val":0.09044702202528346,"color":65535},{"source":"308","target":2030,"val":0.07340766088972293,"color":65535},{"source":199503,"target":3198808,"val":0.04477854530678586,"color":65535},{"source":199503,"target":3354,"val":0.024116009280742458,"color":65535},{"source":199503,"target":5407,"val":0.015341764528756399,"color":65535},{"source":199503,"target":3343,"val":0.011886227308291118,"color":65535},{"source":1130,"target":47836,"val":0.2197334845477743,"color":65535},{"source":1130,"target":2171,"val":0.18929321203638907,"color":65535},{"source":1130,"target":146607,"val":0.15083281924737815,"color":65535},{"source":4163,"target":3408,"val":0.15773889636608346,"color":65535},{"source":4163,"target":2030,"val":0.07987421383647798,"color":65535},{"source":4163,"target":1130,"val":0.10344081367669336,"color":65535},{"source":2030,"target":4552,"val":0.22637931034482758,"color":65535},{"source":2030,"target":3225,"val":0.21776359973136333,"color":65535},{"source":2030,"target":1370,"val":0.2283894449499545,"color":65535},{"source":2030,"target":1573,"val":0.21527001862197392,"color":65535},{"source":3198808,"target":3354,"val":0.005378341560072891,"color":65535},{"source":3198808,"target":914,"val":0.004415137614678899,"color":65535},{"source":3198808,"target":18951905,"val":0.0014883958282391214,"color":65535},{"source":3354,"target":3343,"val":0.02711047368630732,"color":65535},{"source":3354,"target":3383,"val":0.01506489202238643,"color":65535},{"source":3354,"target":844,"val":0.039770735830773354,"color":65535},{"source":5407,"target":624,"val":0.03192096365173288,"color":65535},{"source":5407,"target":303,"val":0.027754677754677756,"color":65535},{"source":5407,"target":3392,"val":0.02456140350877193,"color":65535},{"source":3343,"target":4689264,"val":0.07517138599105812,"color":65535},{"source":3343,"target":5042916,"val":0.05829663198655348,"color":65535},{"source":3343,"target":3415,"val":0.10956736166062457,"color":65535},{"source":3343,"target":26964606,"val":0.07055785655957802,"color":65535},{"source":47836,"target":308,"val":0.08800729594163247,"color":65535},{"source":47836,"target":4163,"val":0.12061855670103093,"color":65535},{"source":47836,"target":2030,"val":0.07216103304215724,"color":65535},{"source":2171,"target":4163,"val":0.13734039240112114,"color":65535},{"source":2171,"target":308,"val":0.07360406091370558,"color":65535},{"source":2171,"target":12,"val":0.09489916963226572,"color":65535},{"source":146607,"target":272065,"val":0.16016640665626625,"color":65535},{"source":146607,"target":47836,"val":0.11075569772091164,"color":65535},{"source":146607,"target":175040,"val":0.1682360326428123,"color":65535},{"source":3408,"target":2030,"val":0.11429131542834739,"color":65535},{"source":3408,"target":308,"val":0.08637355784222014,"color":65535},{"source":3408,"target":700,"val":0.14478764478764478,"color":65535},{"source":4552,"target":3225,"val":0.33042394014962595,"color":65535},{"source":4552,"target":1370,"val":0.3045928430543815,"color":65535},{"source":4552,"target":4041,"val":0.2552884615384615,"color":65535},{"source":3225,"target":1370,"val":0.29095816464237517,"color":65535},{"source":3225,"target":4041,"val":0.24189063948100092,"color":65535},{"source":1370,"target":4041,"val":0.27341115434500646,"color":65535},{"source":1573,"target":1370,"val":0.3376082077588971,"color":65535},{"source":1573,"target":4552,"val":0.30315420560747663,"color":65535},{"source":1573,"target":4041,"val":0.2766756032171582,"color":65535}]}',
+	'max_shared_links': 1,
+	'min_shared_links': null,
+	'freeze_graph': null,
+	'freeze_graph_penis': null,
+	'frozen_layout': null,
+	'sim_type': null,
+	'strength_scale': 3,
+	'update_camera': null,
+	'clicked_node_x': 0,
+	'clicked_node_y': 0,
+	'clicked_node_z': 0,
+	'node_labels': [],
+	'z_array': [],
+	'state': {
+		'camera': {
+			'position': null
+		}
+	},
+	'show_GCS_triad': true,
+	'position_sum': 0,
+	'last_position_sum': 0,
+	'page_subject_id': null,
+	'sub_category_id': null
+};
+
+var test_function ={
+	ajaxFetch: function ajaxFetch(form_data) {
+		return $.ajax({
+			method: "POST",
+			data: form_data,
+			url: '/wikimap/src/scripts/wikilinks.php',
+			dataType: 'text'
+		});
+	},
+	closeWikiPreviewWindow: function closeWikiPreviewWindow() {
+		$("aside.pageinfo").hide(); // Hide the wiki preview
+		$("div#3d-graph canvas").css({ 'width': '100%' }); // Make sure the canvas stays the full screen width
+	},
+
+	offlineRequest: function offlineRequest() {
+		globals.v.freeze_graph_penis = false;
+		var parsed_data = JSON.parse(default_json); // Parse the JSON data
+
+		v.max_shared_links = 0.3376082077588971;
+		v.min_shared_links = 0.0014883958282391214;
+		test_function.showGraph(parsed_data);
+	},
+	databaseRequest: function databaseRequest(user_input) {
+		v.freeze_graph = false;
+		var form_data = [];
+		form_data.push({ name: 'user_input', value: user_input });
+		form_data.push({ name: 'server_class', value: 'fetchMultiData' });
+		test_function.ajaxFetch(form_data).done(function (data) {
+			// Call the Ajax function and wait for it to finish
+
+			var parsed_data = JSON.parse(data); // Parse the JSON data
+
+			/* Get the data from the request */
+			var matched_page_id = parsed_data.target_page_id;
+			var matched_page_title = parsed_data.target_page_title;
+			var json_response = parsed_data.results;
+			var execution_time = parsed_data.execution_time;
+			v.max_shared_links = parsed_data.max_shared_links;
+			v.min_shared_links = parsed_data.min_shared_links;
+
+			console.log('JSON:\n' + json_response);
+
+			/* Show the raw JSON results to the user */
+			// $('#results_text').val(JSON.stringify(json_response));			// Display JSON results in the HTML textarea container
+			// $('#matched_page_id').html(matched_page_id);
+			// $('#matched_page_title').html(matched_page_title);
+
+			// Output data to the console for debugging
+			console.log('Matched Page ID: ' + matched_page_id);
+			console.log('Matched Page Title: ' + matched_page_title);
+			console.log('Execution Times:\n' + execution_time);
+			console.log('Converted Node:\n' + parsed_data.converted_node);
+
+			/**
+    * Initiate Shit
+    */
+			// const Graph = ForceGraph3D()
+			test_function.showGraph(json_response);
+		});
+	},
+	showGraph: function showGraph(json_response) {
+		var Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(json_response).onNodeClick(colorNode);
+
+		function colorNode(node) {
+			v.freeze_graph = true;
+			console.log(v.node_labels);
+			console.log('node.x: ' + node.x + ' node.pageX: ' + node.pageX);
+			console.log('node.y: ' + node.y + ' node.pageY: ' + node.pageY);
+			v.clicked_node_x = node.x;
+			v.clicked_node_y = node.y;
+			v.clicked_node_z = node.z;
+
+			var _Graph$graphData = Graph.graphData(),
+			    nodes = _Graph$graphData.nodes,
+			    links = _Graph$graphData.links;
+
+			colorOthers(nodes);
+			var $wikiView = $("aside.pageinfo"); // Define the Wikipedia page preview
+			if (!node) {
+				$wikiView.css({ 'display': 'none' }); // Make the wikipedia preview visible and slide it into the page
+				return;
+			}
+
+			/* Control Wikipedia Page Preview*/
+			$wikiView.animate({ "right": "0px" }, "slow").css({ 'display': 'inline-block' }); // Make the wikipedia preview visible and slide it into the page
+			$wikiView.html("<iframe src='https://en.m.wikipedia.org/wiki/" + node.name + "'><iframe>"); // Load Wikipedia page into a element on the screen
+
+			// Make sure the nav tips are not displayed
+			$('div.graph-nav-info').hide();
+			// sets current node color and opacity
+			if (!node.visited) {
+				node.color = 0xff00ff;
+				node.opacity = 1;
+			}
+			node.visited = !node.visited; // toggle visited
+			test_function.colorLinks(nodes, links);
+			Graph.cooldownTicks(0);
+		}
+	},
+	// colors links between visited nodes a color else a default color
+	colorLinks: function colorLinks(nodes, links) {
+		links.forEach(function (link) {
+			if (link.source.visited && link.target.visited) {
+				link.color = 0x00ff00;
+				// link.color=0xff0000;
+				link.opacity = 1;
+				// link.lineWidth=10;
+			} else {
+				link.color = 0x00ffff;
+				link.opacity = 0.2;
+				// link.lineWidth=1;
+			}
+		});
+	},
+
+	// color all nodes but the current one (must come before visited node coloring)
+	colorOthers: function colorOthers(nodes) {
+		nodes.forEach(function (node) {
+			if (node.visited) {
+				node.color = 0x00ff00;
+				node.opacity = 1;
+			} else {
+				node.color = 0x0000ff;
+				node.opacity = 1;
+			}
+		});
+		nodes[0].color = 0xffffff;
+	},
+
+	finalNode: null,
+	background_color: 0x000011,
+
+	$canvas: $('#3d-graph'),
+	showWikimapLabels: function showWikimapLabels() {
+
+		console.log("Nodes refreshed");
+
+		$('div.nodetest').remove();
+		finalNode.forEach(function (node, i) {
+			var min_font_size = 15;
+			var max_font_size = 20;
+			var min_opacity = 0.6;
+			var max_opacity = 1;
+			var max_z = Math.max.apply(Math, v.z_array);
+			var min_z = Math.min.apply(Math, v.z_array);
+			var z_scale = v.z_array[i] / (max_z - min_z);
+			// let node_label_opacity = 1;
+			// let node_font_size = 20;
+			var node_font_size = z_scale * (max_font_size - min_font_size) + min_font_size;
+			var node_label_opacity = z_scale * (max_opacity - min_opacity) + min_opacity;
+			var node_top = v.node_labels[i].x,
+			    node_left = v.node_labels[i].y;
+			// let node_label = node.name;
+			var node_label = '+';
+			$('#3d-graph').append("<div class='nodetest' style='opacity: " + node_label_opacity + ";font-size:" + node_font_size + "px;top:" + node_top + "px;left:" + node_left + "px;'>" + node_label + "</div>");
+		});
+	},
+
+	submit_deal: $(function () {
+		// When the user clicks on the search bar, make it more visible
+		$('header').on('click', '#user_input', function (e) {
+			$(this).fadeTo("fast", 1);
+			$(this).removeClass('dark'); // Make the text easier to read when background is white
+		});
+
+		function doneTyping() {
+			// When the user is done typing
+			$('header #user_input').fadeTo("fast", .33); // Fade the searchbar
+			$('header #user_input').addClass('dark'); // Make the text easier to read when faded
+		}
+
+		$("form").submit(function (e) {
+			e.preventDefault(); // Prevent POST data from displaying in the URL
+			$('header #user_input').fadeTo("fast", .33); // Fade the searchbar
+			$('header #user_input').addClass('dark'); // Make the text easier to read when faded
+
+			var user_input = $('#user_input').val();
+			test_function.databaseRequest(user_input);
+			// offlineRequest();
+
+			/* Fade the search bar after n seconds, unless the user is interacting with it */
+			var typingTimer = void 0; // Keeps track of the time (in ms) after someone has been typing
+			var doneTypingTime = 2000; // Time in ms when you consider someone to be done typing
+
+			$('#user_input').keyup(function () {
+				// When someone types in the search box
+				clearTimeout(typingTimer); // Reset the typing time
+				typingTimer = setTimeout(doneTyping, doneTypingTime); // Check to see if the done typing time has been reached, if so - call the function
+			});
+
+			$('#user_input').keydown(function () {
+				// When someone hits a key in the search box
+				clearTimeout(typingTimer); // Reset the typing time
+			});
+		});
+	})
+};
 
 var defineProperty = function (obj, key, value) {
   if (key in obj) {
