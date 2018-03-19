@@ -67061,16 +67061,21 @@ function showWikimapLabels(nodes) {
 		var node_label_opacity = z_scale * (max_opacity - min_opacity) + min_opacity;
 		var node_top = v.node_labels[i].x,
 		    node_left = v.node_labels[i].y;
-		// let node_label = node.name;
-		var node_label = '+';
+		var node_label = node.name;
+		// let node_label = '+';
 		$('#3d-graph').append("<div class='nodetest' style='opacity: " + node_label_opacity + ";font-size:" + node_font_size + "px;top:" + node_top + "px;left:" + node_left + "px;'>" + node_label + "</div>");
 	});
 }
-$(function submit_deal() {
+$(function () {
 	// When the user clicks on the search bar, make it more visible
 	$('header').on('click', '#user_input', function (e) {
 		$(this).fadeTo("fast", 1);
 		$(this).removeClass('dark'); // Make the text easier to read when background is white
+	});
+
+	// When the user clicks on the node canvas, close the wikipedia perview
+	$('div#3d-graph').on('click', 'canvas', function (e) {
+		$("aside.pageinfo").hide();
 	});
 
 	function doneTyping() {
@@ -67417,7 +67422,7 @@ var app = Kapsule({
 			if (state.enablePointerInteraction) {
 				// Update tooltip and trigger onHover events
 				raycaster.linePrecision = state.linkHoverPrecision;
-				console.log('memory leak');
+				// console.log('memory leak');
 				// IIFE
 				if (state.onFrame) state.onFrame();
 				v.node_labels = [];
