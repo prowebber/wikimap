@@ -11,7 +11,9 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
     "gulp-minify": "^2.1.0",
+    "gulp-sourcemaps": "^2.6.4",
     "jquery": "^3.3.1",
     "postcss-nested": "^3.0.0",
     "postcss-simple-vars": "^4.1.0",
@@ -25,7 +27,9 @@
     "uglifyjs": "^2.4.11"
   },
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "babel-core": "^6.26.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1"
   },
   "scripts": {
     "build": "rollup -c",
