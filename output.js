@@ -67042,7 +67042,30 @@ function colorOthers(nodes) {
 }
 
 $canvas: $('#3d-graph');
+function showWikimapLabels(nodes) {
 
+	console.log("Nodes refreshed");
+
+	$('div.nodetest').remove();
+	nodes.forEach(function (node, i) {
+		var min_font_size = 15;
+		var max_font_size = 20;
+		var min_opacity = 0.6;
+		var max_opacity = 1;
+		var max_z = Math.max.apply(Math, v.z_array);
+		var min_z = Math.min.apply(Math, v.z_array);
+		var z_scale = v.z_array[i] / (max_z - min_z);
+		// let node_label_opacity = 1;
+		// let node_font_size = 20;
+		var node_font_size = z_scale * (max_font_size - min_font_size) + min_font_size;
+		var node_label_opacity = z_scale * (max_opacity - min_opacity) + min_opacity;
+		var node_top = v.node_labels[i].x,
+		    node_left = v.node_labels[i].y;
+		// let node_label = node.name;
+		var node_label = '+';
+		$('#3d-graph').append("<div class='nodetest' style='opacity: " + node_label_opacity + ";font-size:" + node_font_size + "px;top:" + node_top + "px;left:" + node_left + "px;'>" + node_label + "</div>");
+	});
+}
 $(function submit_deal() {
 	// When the user clicks on the search bar, make it more visible
 	$('header').on('click', '#user_input', function (e) {
@@ -67386,7 +67409,8 @@ var app = Kapsule({
 		state.scene.add(new three$2.DirectionalLight(0xffffff, 0.6));
 
 		//
-
+		var matrix_axis_flip = new Matrix4();
+		matrix_axis_flip.set(-1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 		// Kick-off renderer
 		(function animate() {
 			// IIFE
@@ -67402,7 +67426,7 @@ var app = Kapsule({
 					var pos = new three$2.Vector3(node.x, node.y, node.z);
 					// var vector = pos.project(state.camera);
 					var mat = new Matrix4();
-					var vector = pos.applyMatrix4(mat.multiplyMatrices(state.Camera.projectionMatrix, state.Camera.matrixWorldInverse));
+					var vector = pos.applyMatrix4(mat.multiplyMatrices(state.camera.projectionMatrix, state.camera.matrixWorldInverse));
 					// var vector = pos.applyMatrix4(state.camera.projectionMatrix);
 					vector.applyMatrix4(matrix_axis_flip);
 					// vector.transformDirection(matrix_axis_flip);
