@@ -9,7 +9,7 @@ gulp.task('default', function() {
 });
 
 gulp.task('compress', function() {
-	gulp.src('./output.js')
+	gulp.src('./index.js')
 		.pipe(sourcemaps.init())
 			.pipe(babel())
 			.pipe(minify({
