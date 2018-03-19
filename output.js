@@ -67132,9 +67132,11 @@ var three$2 = window.THREE ? window.THREE // Prefer consumption from global THRE
 	Raycaster: Raycaster,
 	Vector2: Vector2,
 	Vector3: Vector3,
+	Matrix4: Matrix4,
 	Color: Color,
 	FogExp2: FogExp2,
-	AxesHelper: AxesHelper
+	AxesHelper: AxesHelper,
+	Camera: Camera
 };
 //
 
@@ -67391,6 +67393,30 @@ var app = Kapsule({
 			if (state.enablePointerInteraction) {
 				// Update tooltip and trigger onHover events
 				raycaster.linePrecision = state.linkHoverPrecision;
+				console.log('memory leak');
+				// IIFE
+				if (state.onFrame) state.onFrame();
+				v.node_labels = [];
+				v.z_array = [];
+				state.graphData.nodes.forEach(function (node) {
+					var pos = new three$2.Vector3(node.x, node.y, node.z);
+					// var vector = pos.project(state.camera);
+					var mat = new Matrix4();
+					var vector = pos.applyMatrix4(mat.multiplyMatrices(state.Camera.projectionMatrix, state.Camera.matrixWorldInverse));
+					// var vector = pos.applyMatrix4(state.camera.projectionMatrix);
+					vector.applyMatrix4(matrix_axis_flip);
+					// vector.transformDirection(matrix_axis_flip);
+					vector.x = (1 + vector.x) * state.width / 2;
+					vector.y = (1 - vector.y) * state.height / 2;
+					v.z_array.push(node.z);
+					v.node_labels.push(vector);
+				});
+				v.position_sum = state.camera.position.x + state.camera.position.y + state.camera.position.z;
+				if (v.position_sum != v.last_position_sum) {
+					showWikimapLabels(state.graphData.nodes);
+				}
+				v.last_position_sum = v.position_sum;
+				v.state.camera.position = state.camera.position;
 
 				raycaster.setFromCamera(mousePos, state.camera);
 				var intersects = raycaster.intersectObjects(state.forceGraph.children).filter(function (o) {
