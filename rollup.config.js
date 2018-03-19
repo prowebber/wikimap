@@ -15,7 +15,7 @@ export default {
 		file: 'output.js',
 		format: 'umd',
 		name: 'ForceGraph3D',
-		sourcemap: true,
+		// sourcemap: true,
 		banner: `// Version ${name} - Shit`,
 	},
 	plugins: [
