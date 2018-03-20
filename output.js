@@ -67419,6 +67419,7 @@ var app = Kapsule({
 
 		state.renderer.setSize(state.width, state.height);
 		state.camera.far = 20000;
+		state.camera.up = new Vector3(0, -1, 0);
 
 		// Populate scene
 		state.scene.add(state.forceGraph);
@@ -67453,10 +67454,10 @@ var app = Kapsule({
 					// var pos = node.getWorldPosition();
 					// var nodeObj = new Object3D();
 					// nodeObj = state.scene.getObjectById(node.id);
-					// // var vector = pos.project(state.camera);
-					var mat = new Matrix4();
-					var vector = pos.applyMatrix4(mat.multiplyMatrices(state.camera.projectionMatrix, state.camera.matrixWorldInverse));
-					vector.applyMatrix4(matrix_axis_flip);
+					var vector = pos.project(state.camera);
+					// var mat = new Matrix4();
+					// var vector = pos.applyMatrix4(mat.multiplyMatrices(state.camera.projectionMatrix, state.camera.matrixWorldInverse));
+					// vector.applyMatrix4(matrix_axis_flip);
 					// // var vector = pos.applyMatrix4(state.camera.projectionMatrix);
 
 					// var vector = new Vector3();
