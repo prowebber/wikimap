@@ -56819,8 +56819,8 @@ function showWikimapLabels(nodes) {
 		var node_label_opacity = z_scale * (max_opacity - min_opacity) + min_opacity;
 		var node_top = v.node_labels[i].x,
 		    node_left = v.node_labels[i].y;
-		var node_label = node.name;
-		// let node_label = '+';
+		// let node_label = node.name;
+		var node_label = '+';
 		$('#3d-graph').append("<div class='nodetest' style='opacity: " + node_label_opacity + ";font-size:" + node_font_size + "px;top:" + node_top + "px;left:" + node_left + "px;'>" + node_label + "</div>");
 	});
 }
@@ -67441,7 +67441,9 @@ var app = Kapsule({
 				v.z_array = [];
 				state.graphData.nodes.forEach(function (node) {
 					// state.scene.updateMatrixWorld();
-					var pos = new Vector3(node.x, node.y, node.z);
+					var node_obj = node.__threeObj;
+					// var pos = new Vector3(node.position.x,node.position.y, node.position.z);
+					var pos = new Vector3(node_obj.position.x, node_obj.position.y, node_obj.position.z);
 					// var pos = new Vector3();
 					// console.log(node.__threeObj);
 					// node.getWorldPosition(pos);
