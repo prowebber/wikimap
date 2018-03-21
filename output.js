@@ -56669,7 +56669,7 @@ var v = {
 			'position': null
 		}
 	},
-	'show_GCS_triad': true,
+	'show_GCS_triad': false,
 	'position_sum': 0,
 	'last_position_sum': 0,
 	'page_subject_id': null,
@@ -56823,8 +56823,8 @@ function showWikimapLabels(nodes) {
 		var node_label_opacity = z_scale * (max_opacity - min_opacity) + min_opacity;
 		var node_top = v.node_labels[i].x,
 		    node_left = v.node_labels[i].y;
-		// let node_label = node.name;
-		var node_label = '+';
+		var node_label = node.name;
+		// let node_label = '+';
 		$('#3d-graph').append("<div class='nodetest' style='opacity: " + node_label_opacity + ";font-size:" + node_font_size + "px;top:" + node_top + "px;left:" + node_left + "px;'>" + node_label + "</div>");
 	});
 }
@@ -67419,7 +67419,7 @@ var app = Kapsule({
 
 		state.renderer.setSize(state.width, state.height);
 		state.camera.far = 20000;
-		state.camera.up = new Vector3(0, -1, 0);
+		// state.camera.up = new Vector3(0,-1,0)
 
 		// Populate scene
 		state.scene.add(state.forceGraph);
