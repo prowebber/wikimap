@@ -56728,12 +56728,6 @@ function databaseRequest(user_input) {
 }
 function showGraph(json_response) {
 	var Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(json_response).onNodeClick(colorNode);
-	// .nodeThreeObject(node => {
-	// 		const sprite = new SpriteText(node.id);
-	// 		sprite.color = node.color;
-	// 		sprite.textHeight = 8;
-	// 		return sprite;
-	// });
 
 	function colorNode(node) {
 		v.freeze_graph = true;
@@ -56809,7 +56803,9 @@ function showWikimapLabels(nodes) {
 	$('div.nodetest').remove();
 	nodes.forEach(function (node, i) {
 		// var node_sprite = new Sprite();
-
+		// const sprite = new SpriteText(node.id);
+		// sprite.color = node.color;
+		// sprite.textHeight = 8;
 		var min_font_size = 15;
 		var max_font_size = 20;
 		var min_opacity = 0.6;
