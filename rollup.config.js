@@ -13,6 +13,7 @@ export default {
 	input: 'index.js',
 	output: {
 		file: 'output.js',
+		globals: {THREE: 'three'},
 		format: 'umd',
 		name: 'ForceGraph3D',
 		// sourcemap: true,
