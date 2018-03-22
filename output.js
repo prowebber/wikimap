@@ -56676,6 +56676,164 @@ var v = {
 	'sub_category_id': null
 };
 
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+var inherits = function (subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+};
+
+var possibleConstructorReturn = function (self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
+};
+
+var _class = function (_THREE$Sprite) {
+  inherits(_class, _THREE$Sprite);
+
+  function _class() {
+    var text = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+    var textHeight = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 10;
+    var color = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'rgba(255, 255, 255, 1)';
+    classCallCheck(this, _class);
+
+    var _this = possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, new THREE.SpriteMaterial({ map: new THREE.Texture() })));
+
+    _this._text = text;
+    _this._textHeight = textHeight;
+    _this._color = color;
+
+    _this._fontFace = 'Arial';
+    _this._fontSize = 90; // defines text resolution
+
+    _this._canvas = document.createElement('canvas');
+    _this._texture = _this.material.map;
+    _this._texture.minFilter = THREE.LinearFilter;
+
+    _this._genCanvas();
+    return _this;
+  }
+
+  createClass(_class, [{
+    key: '_genCanvas',
+    value: function _genCanvas() {
+      var canvas = this._canvas;
+      var ctx = canvas.getContext('2d');
+
+      var font = 'normal ' + this.fontSize + 'px ' + this.fontFace;
+
+      ctx.font = font;
+      var textWidth = ctx.measureText(this.text).width;
+      canvas.width = textWidth;
+      canvas.height = this.fontSize;
+
+      ctx.font = font;
+      ctx.fillStyle = this.color;
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(this.text, 0, canvas.height);
+
+      // Inject canvas into sprite
+      this._texture.image = canvas;
+      this._texture.needsUpdate = true;
+
+      this.scale.set(this.textHeight * canvas.width / canvas.height, this.textHeight);
+    }
+  }, {
+    key: 'clone',
+    value: function clone() {
+      return new this.constructor(this.text, this.textHeight, this.color).copy(this);
+    }
+  }, {
+    key: 'copy',
+    value: function copy(source) {
+      THREE.Sprite.prototype.copy.call(this, source);
+
+      this.color = source.color;
+      this.fontFace = source.fontFace;
+      this.fontSize = source.fontSize;
+
+      return this;
+    }
+  }, {
+    key: 'text',
+    get: function get$$1() {
+      return this._text;
+    },
+    set: function set$$1(text) {
+      this._text = text;this._genCanvas();
+    }
+  }, {
+    key: 'textHeight',
+    get: function get$$1() {
+      return this._textHeight;
+    },
+    set: function set$$1(textHeight) {
+      this._textHeight = textHeight;this._genCanvas();
+    }
+  }, {
+    key: 'color',
+    get: function get$$1() {
+      return this._color;
+    },
+    set: function set$$1(color) {
+      this._color = color;this._genCanvas();
+    }
+  }, {
+    key: 'fontFace',
+    get: function get$$1() {
+      return this._fontFace;
+    },
+    set: function set$$1(fontFace) {
+      this._fontFace = fontFace;this._genCanvas();
+    }
+  }, {
+    key: 'fontSize',
+    get: function get$$1() {
+      return this._fontSize;
+    },
+    set: function set$$1(fontSize) {
+      this._fontSize = fontSize;this._genCanvas();
+    }
+  }]);
+  return _class;
+}(THREE.Sprite);
+
 // import * as THREE from 'three'
 // var THREE = require('three');
 // import SpriteText from 'three-spritetext';
@@ -56727,13 +56885,12 @@ function databaseRequest(user_input) {
 	});
 }
 function showGraph(json_response) {
-	var Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(json_response).onNodeClick(colorNode);
-	// .nodeThreeObject(node => {
-	// 		const sprite = new SpriteText(node.id);
-	// 		sprite.color = node.color;
-	// 		sprite.textHeight = 8;
-	// 		return sprite;
-	// });
+	var Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(json_response).onNodeClick(colorNode).nodeThreeObject(function (node) {
+		var sprite = new _class(node.name);
+		sprite.color = 'teal';
+		sprite.textHeight = 8;
+		return sprite;
+	});
 
 	function colorNode(node) {
 		v.freeze_graph = true;
@@ -56809,7 +56966,9 @@ function showWikimapLabels(nodes) {
 	$('div.nodetest').remove();
 	nodes.forEach(function (node, i) {
 		// var node_sprite = new Sprite();
-
+		// const sprite = new SpriteText(node.id);
+		// sprite.color = node.color;
+		// sprite.textHeight = 8;
 		var min_font_size = 15;
 		var max_font_size = 20;
 		var min_opacity = 0.6;
@@ -56823,8 +56982,8 @@ function showWikimapLabels(nodes) {
 		var node_label_opacity = z_scale * (max_opacity - min_opacity) + min_opacity;
 		var node_top = v.node_labels[i].x,
 		    node_left = v.node_labels[i].y;
-		var node_label = node.name;
-		// let node_label = '+';
+		// let node_label = node.name;
+		var node_label = '+';
 		$('#3d-graph').append("<div class='nodetest' style='opacity: " + node_label_opacity + ";font-size:" + node_font_size + "px;top:" + node_top + "px;left:" + node_left + "px;'>" + node_label + "</div>");
 	});
 }
@@ -66602,13 +66761,13 @@ function autoColorObjects(objects, colorByAccessor, colorField) {
   });
 }
 
-var classCallCheck = function (instance, Constructor) {
+var classCallCheck$1 = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
   }
 };
 
-var inherits = function (subClass, superClass) {
+var inherits$1 = function (subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
     throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
   }
@@ -66624,7 +66783,7 @@ var inherits = function (subClass, superClass) {
   if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 };
 
-var possibleConstructorReturn = function (self, call) {
+var possibleConstructorReturn$1 = function (self, call) {
   if (!self) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
   }
@@ -67059,18 +67218,18 @@ function fromKapsule (kapsule) {
   var initKapsuleWithSelf = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
   var FromKapsule = function (_baseClass) {
-    inherits(FromKapsule, _baseClass);
+    inherits$1(FromKapsule, _baseClass);
 
     function FromKapsule() {
       var _ref;
 
-      classCallCheck(this, FromKapsule);
+      classCallCheck$1(this, FromKapsule);
 
       for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
 
-      var _this = possibleConstructorReturn(this, (_ref = FromKapsule.__proto__ || Object.getPrototypeOf(FromKapsule)).call.apply(_ref, [this].concat(args)));
+      var _this = possibleConstructorReturn$1(this, (_ref = FromKapsule.__proto__ || Object.getPrototypeOf(FromKapsule)).call.apply(_ref, [this].concat(args)));
 
       _this.__kapsuleInstance = kapsule().apply(undefined, [].concat(toConsumableArray(initKapsuleWithSelf ? [_this] : []), args));
       return _this;
@@ -67421,6 +67580,9 @@ var app = Kapsule({
 		state.camera.far = 20000;
 		// state.camera.up = new Vector3(0,-1,0)
 
+		// const Text = new SpriteText('Example text', 10);
+		// Text.color = 'orange';
+
 		// Populate scene
 		state.scene.add(state.forceGraph);
 		// Create Global coordiate System triad
@@ -67428,6 +67590,9 @@ var app = Kapsule({
 		state.scene.fog = new three$1.FogExp2(0x000000, 0.0015);
 		state.scene.add(new three$1.AmbientLight(0xbbbbbb));
 		state.scene.add(new three$1.DirectionalLight(0xffffff, 0.6));
+
+		state.scene.add(Text);
+		// state.scene.add(new SpriteText('My text'));
 
 		//
 		var matrix_axis_flip = new Matrix4();
@@ -67444,31 +67609,43 @@ var app = Kapsule({
 				v.node_labels = [];
 				v.z_array = [];
 				state.graphData.nodes.forEach(function (node) {
-					// state.scene.updateMatrixWorld();
-					var pos = new Vector3(node.x, node.y, node.z);
-					// var pos = new Vector3();
-					// console.log(node.__threeObj);
-					// node.getWorldPosition(pos);
-					var widthHalf = 0.5 * state.width;
-					var heightHalf = 0.5 * state.height;
-					// var pos = node.getWorldPosition();
-					// var nodeObj = new Object3D();
-					// nodeObj = state.scene.getObjectById(node.id);
-					var vector = pos.project(state.camera);
-					// var mat = new Matrix4();
-					// var vector = pos.applyMatrix4(mat.multiplyMatrices(state.camera.projectionMatrix, state.camera.matrixWorldInverse));
-					// vector.applyMatrix4(matrix_axis_flip);
-					// // var vector = pos.applyMatrix4(state.camera.projectionMatrix);
 
-					// var vector = new Vector3();
-					// nodeObj.updateMatrixWorld();
-					// vector.setFromMatrixPosition(nodeObj.matrixWorld);
-					// vector.project(state.camera);
-					// vector.transformDirection(matrix_axis_flip);
-					vector.x = vector.x * widthHalf + widthHalf;
-					vector.y = -(vector.y * heightHalf) + heightHalf;
-					v.z_array.push(node.z);
-					v.node_labels.push(vector);
+					// state.scene.updateMatrixWorld();
+					var node_obj = node.__threeObj;
+
+					if (node_obj) {
+						// var myScene = new THREE.Scene();
+						// myScene.add(myText);
+
+						var myText = new _class('My text');
+						state.scene.add(myText);
+
+						// var pos = new Vector3(node.position.x,node.position.y, node.position.z);
+						var pos = new Vector3(node_obj.position.x, node_obj.position.y, node_obj.position.z);
+						// var pos = new Vector3();
+						// console.log(node.__threeObj);
+						// node.getWorldPosition(pos);
+						var widthHalf = 0.5 * state.width;
+						var heightHalf = 0.5 * state.height;
+						// var pos = node.getWorldPosition();
+						// var nodeObj = new Object3D();
+						// nodeObj = state.scene.getObjectById(node.id);
+						var vector = pos.project(state.camera);
+						// var mat = new Matrix4();
+						// var vector = pos.applyMatrix4(mat.multiplyMatrices(state.camera.projectionMatrix, state.camera.matrixWorldInverse));
+						// vector.applyMatrix4(matrix_axis_flip);
+						// // var vector = pos.applyMatrix4(state.camera.projectionMatrix);
+
+						// var vector = new Vector3();
+						// nodeObj.updateMatrixWorld();
+						// vector.setFromMatrixPosition(nodeObj.matrixWorld);
+						// vector.project(state.camera);
+						// vector.transformDirection(matrix_axis_flip);
+						vector.x = vector.x * widthHalf + widthHalf;
+						vector.y = -(vector.y * heightHalf) + heightHalf;
+						v.z_array.push(node.z);
+						v.node_labels.push(vector);
+					}
 				});
 				v.position_sum = state.camera.position.x + state.camera.position.y + state.camera.position.z;
 				if (v.position_sum != v.last_position_sum) {
