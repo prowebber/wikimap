@@ -56834,179 +56834,270 @@ var _class = function (_THREE$Sprite) {
   return _class;
 }(THREE.Sprite);
 
-// import * as THREE from 'three'
-// import {Sprite} from 'three';
-// var THREE = require('three');
-// import SpriteText from 'three-spritetext';
-// export default {
-function ajaxFetch(form_data) {
-	return $.ajax({
-		method: "POST",
-		data: form_data,
-		url: '/wikimap/src/scripts/wikilinks.php',
-		dataType: 'text'
-	});
-}
-function databaseRequest(user_input) {
-	v.freeze_graph = false;
-	var form_data = [];
-	form_data.push({ name: 'user_input', value: user_input });
-	form_data.push({ name: 'server_class', value: 'fetchMultiData' });
-	ajaxFetch(form_data).done(function (data) {
-		// Call the Ajax function and wait for it to finish
+// /lib/custom.js
 
-		var parsed_data = JSON.parse(data); // Parse the JSON data
+/* JS Library for common functions */
+var l = {
+    'ajax': {
+        'post': function post(form_data, callback) {
+            var timeout = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 5000;
 
-		/* Get the data from the request */
-		var matched_page_id = parsed_data.target_page_id;
-		var matched_page_title = parsed_data.target_page_title;
-		var json_response = parsed_data.results;
-		var execution_time = parsed_data.execution_time;
-		v.max_shared_links = parsed_data.max_shared_links;
-		v.min_shared_links = parsed_data.min_shared_links;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", '/wikimap/src/scripts/wikilinks.php');
+            xhr.responseType = 'text';
+            xhr.timeout = timeout;
 
-		console.log('JSON:\n' + json_response);
+            /* If an error occurs */
+            xhr.onerror = function () {
+                console.log("AJAX Error");
+            };
 
-		/* Show the raw JSON results to the user */
-		// $('#results_text').val(JSON.stringify(json_response));			// Display JSON results in the HTML textarea container
-		// $('#matched_page_id').html(matched_page_id);
-		// $('#matched_page_title').html(matched_page_title);
+            /* When the request is loading */
+            xhr.onprogress = function () {
+                console.log("AJAX Loading");
+            };
 
-		// Output data to the console for debugging
-		console.log('Matched Page ID: ' + matched_page_id);
-		console.log('Matched Page Title: ' + matched_page_title);
-		console.log('Execution Times:\n' + execution_time);
-		console.log('Converted Node:\n' + parsed_data.converted_node);
+            /* If the request timed out */
+            xhr.ontimeout = function () {
+                console.log("Ajax timed out");
+            };
 
-		/**
-   * Initiate Shit
-   */
-		// const Graph = ForceGraph3D()
-		showGraph(json_response);
-	});
-}
-function showGraph(json_response) {
-	var Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(json_response).onNodeClick(colorNode).nodeThreeObject(function (node) {
-		var sprite = new _class(node.name);
-		sprite.color = 'teal';
-		sprite.textHeight = 8;
-		return sprite;
-	});
-	// Graph.stopAnimation();
+            /* When the request is completed */
+            xhr.onload = function () {
+                if (xhr.readyState === 4) {
+                    // If the request is completed
+                    console.log("Ajax Finished");
+                    callback(xhr.responseText);
+                } else {
+                    console.log("AJAX Error - don't know what");
+                }
+            };
 
+            xhr.send(form_data);
+        }
+    },
+    'id': {
+        /**
+         * Add a class to the specified ID
+         *
+         * @param id            The HTML tag ID
+         * @param className     The class to add
+         */
+        'addClass': function addClass(id, className) {
+            this.getDom(id).classList.add(className);
+        },
 
-	function colorNode(node) {
-		v.freeze_graph = true;
-		console.log(v.node_labels);
-		console.log('node.x: ' + node.x + ' node.pageX: ' + node.pageX);
-		console.log('node.y: ' + node.y + ' node.pageY: ' + node.pageY);
-		v.clicked_node_x = node.x;
-		v.clicked_node_y = node.y;
-		v.clicked_node_z = node.z;
+        /**
+         * Get the DOM of an element with the specified ID
+         *
+         * @param id                        The HTML tag ID to search for
+         * @returns {HTMLElement | null}    The element's DOM
+         */
+        'getDom': function getDom(id) {
+            return document.getElementById(id);
+        },
 
-		var _Graph$graphData = Graph.graphData(),
-		    nodes = _Graph$graphData.nodes,
-		    links = _Graph$graphData.links;
+        /**
+         * Hide an element from the screen
+         *
+         * @param id    The HTML tag ID
+         */
+        'hide': function hide(id) {
+            this.getDom(id).classList.add('hide'); // Add the 'hide' class
+        },
 
-		colorOthers(nodes);
-		var $wikiView = $("aside.pageinfo"); // Define the Wikipedia page preview
-		if (!node) {
-			$wikiView.css({ 'display': 'none' }); // Make the wikipedia preview visible and slide it into the page
-			return;
-		}
+        /**
+         * Remove a class from the specified ID
+         *
+         * @param id            The HTML tag ID to search for
+         * @param className     The class to remove
+         */
+        'removeClass': function removeClass(id, className) {
+            this.getDom(id).classList.remove(className);
+        },
 
-		/* Control Wikipedia Page Preview*/
-		$wikiView.animate({ "right": "0px" }, "slow").css({ 'display': 'inline-block' }); // Make the wikipedia preview visible and slide it into the page
-		$wikiView.html("<iframe src='https://en.m.wikipedia.org/wiki/" + node.name + "'><iframe>"); // Load Wikipedia page into a element on the screen
+        /**
+         * Show an element (if it was previously hidden)
+         *
+         * @param id        The specified HTML tag ID
+         */
+        'show': function show(id) {
+            this.getDom(id).classList.remove('hide'); // Remove the 'hide' class
+        },
 
-		// Make sure the nav tips are not displayed
-		$('div.graph-nav-info').hide();
-		// sets current node color and opacity
-		if (!node.visited) {
-			node.color = 0xff00ff;
-			node.opacity = 1;
-		}
-		node.visited = !node.visited; // toggle visited
-		colorLinks(nodes, links);
-		Graph.cooldownTicks(0);
-	}
-}
-// colors links between visited nodes a color else a default color
-function colorLinks(nodes, links) {
-	links.forEach(function (link) {
-		if (link.source.visited && link.target.visited) {
-			link.color = 0x00ff00;
-			// link.color=0xff0000;
-			link.opacity = 1;
-			// link.lineWidth=10;
-		} else {
-			link.color = 0x00ffff;
-			link.opacity = 0.2;
-			// link.lineWidth=1;
-		}
-	});
+        /**
+         * Update the HTML inside the element
+         *
+         * @param id                The HTML tag ID of the element
+         * @param htmlCode          The code to replace existing HTML with
+         */
+        'updateHtml': function updateHtml(id, htmlCode) {
+            /* Replace the HTML inside the matching element */
+            var target_container = this.getDom(id);
+            target_container.innerHTML = htmlCode;
+        }
+    }
+};
+
+/* Event Listeners */
+function events() {
+    window.addEventListener('click', wikiEvents); // Whenever someone submits a form
+    window.addEventListener('submit', wikiEvents); // Whenever someone submits a form
 }
 
-// color all nodes but the current one (must come before visited node coloring)
-function colorOthers(nodes) {
-	nodes.forEach(function (node) {
-		if (node.visited) {
-			node.color = 0x00ff00;
-			node.opacity = 1;
-		} else {
-			node.color = 0x0000ff;
-			node.opacity = 1;
-		}
-	});
-	nodes[0].color = 0xffffff;
+function wikiEvents(e) {
+    var data = {
+        'type': e.type,
+        'key': e.key,
+        'dom': {
+            'div': e.target.closest('div'),
+            'form': e.target.closest('form'),
+            'input': e.target.closest('input')
+        }
+    };
+
+    /* Submit Events */
+    if (e.type == 'submit') {
+        e.preventDefault(); // Prevent PHP from processing the form
+
+        var userInput = l.id.getDom('user_input').value; // Get the user's search text
+        databaseRequest(userInput); // Call the database function
+    }
+
+    /* Click Events */
+    else if (e.type == 'click') {
+
+            // If the user clicks on a DIV
+            if (data.dom.div) {
+                var div = data.dom.div;
+
+                if (div.id == '3d-graph') {
+                    // If the user clicks on the 3d-graph
+                    l.id.hide('wikipedia_preview'); // Hide the wikipedia preview
+                    l.id.removeClass('wikipedia_preview', 'show');
+                }
+            }
+        }
 }
 
-$canvas: $('#3d-graph');
+function databaseRequest(userInput) {
+    v.freeze_graph = false;
+    var form_data = new FormData();
+    form_data.append('user_input', userInput);
+    form_data.append('server_class', 'fetchMultiData'); // Specify the PHP class to call
 
-$(function () {
-	// When the user clicks on the search bar, make it more visible
-	$('header').on('click', '#user_input', function (e) {
-		$(this).fadeTo("fast", 1);
-		$(this).removeClass('dark'); // Make the text easier to read when background is white
-	});
+    l.ajax.post(form_data, function (data) {
+        var parsedData = JSON.parse(data);
 
-	// When the user clicks on the node canvas, close the wikipedia perview
-	$('div#3d-graph').on('click', 'canvas', function (e) {
-		$("aside.pageinfo").hide();
-	});
+        /* Get the data from the request */
+        var matchedPageId = parsedData.target_page_id;
+        var matchedPageTitle = parsedData.target_page_title;
+        var jsonResponse = parsedData.results;
+        var executionTime = parsedData.execution_time;
+        v.max_shared_links = parsedData.max_shared_links;
+        v.min_shared_links = parsedData.min_shared_links;
 
-	function doneTyping() {
-		// When the user is done typing
-		$('header #user_input').fadeTo("fast", .33); // Fade the searchbar
-		$('header #user_input').addClass('dark'); // Make the text easier to read when faded
-	}
+        // Output data to the console for debugging
+        console.log('JSON:\n' + jsonResponse);
+        console.log('Matched Page ID: ' + matchedPageId);
+        console.log('Matched Page Title: ' + matchedPageTitle);
+        console.log('Execution Times:\n' + executionTime);
+        console.log('Converted Node:\n' + parsedData.converted_node);
 
-	$("form").submit(function (e) {
-		e.preventDefault(); // Prevent POST data from displaying in the URL
-		$('header #user_input').fadeTo("fast", .33); // Fade the searchbar
-		$('header #user_input').addClass('dark'); // Make the text easier to read when faded
+        /* Load the graphic */
+        showGraph(jsonResponse);
+    });
+}
 
-		var user_input = $('#user_input').val();
-		databaseRequest(user_input);
-		// offlineRequest();
+/**
+ * Shows the graph data
+ *
+ * @param jsonResponse
+ */
+function showGraph(jsonResponse) {
+    var Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(jsonResponse).onNodeClick(colorNode).nodeThreeObject(function (node) {
+        var sprite = new _class(node.name);
+        sprite.color = 'teal';
+        sprite.textHeight = 8;
+        return sprite;
+    });
 
-		/* Fade the search bar after n seconds, unless the user is interacting with it */
-		var typingTimer = void 0; // Keeps track of the time (in ms) after someone has been typing
-		var doneTypingTime = 2000; // Time in ms when you consider someone to be done typing
+    function colorNode(node) {
+        v.freeze_graph = true;
+        v.clicked_node_x = node.x;
+        v.clicked_node_y = node.y;
+        v.clicked_node_z = node.z;
 
-		$('#user_input').keyup(function () {
-			// When someone types in the search box
-			clearTimeout(typingTimer); // Reset the typing time
-			typingTimer = setTimeout(doneTyping, doneTypingTime); // Check to see if the done typing time has been reached, if so - call the function
-		});
+        var _Graph$graphData = Graph.graphData(),
+            nodes = _Graph$graphData.nodes,
+            links = _Graph$graphData.links;
 
-		$('#user_input').keydown(function () {
-			// When someone hits a key in the search box
-			clearTimeout(typingTimer); // Reset the typing time
-		});
-	});
-});
-// };
+        colorOthers(nodes);
+
+        console.log('clicked featured');
+
+        // Define the Wikipedia page preview
+        if (!node) {
+            // If there is no node selected/clicked
+            l.id.hide('wikipedia_preview'); // Hide the wikipedia preview
+            l.id.removeClass('wikipedia_preview', 'show');
+            return;
+        }
+
+        /* Show the wikipedia preview */
+        l.id.show('wikipedia_preview'); // Show the wikipedia container
+        l.id.addClass('wikipedia_preview', 'show');
+        l.id.updateHtml('wikipedia_preview', "<iframe src='https://en.m.wikipedia.org/wiki/" + node.name + "'><iframe>");
+
+        // Make sure the nav tips are not displayed
+        // @todo $('div.graph-nav-info').hide();
+
+        // sets current node color and opacity
+        if (!node.visited) {
+            node.color = 0xff00ff;
+            node.opacity = 1;
+        }
+
+        node.visited = !node.visited; // toggle visited
+        colorLinks(nodes, links);
+        Graph.cooldownTicks(0);
+    }
+
+    /* color all nodes but the current one (must come before visited node coloring) */
+    function colorOthers(nodes) {
+        nodes.forEach(function (node) {
+            if (node.visited) {
+                node.color = 0x00ff00;
+                node.opacity = 1;
+            } else {
+                node.color = 0x0000ff;
+                node.opacity = 1;
+            }
+        });
+        nodes[0].color = 0xffffff;
+    }
+
+    /* colors links between visited nodes a color else a default color */
+    function colorLinks(nodes, links) {
+        links.forEach(function (link) {
+            if (link.source.visited && link.target.visited) {
+                link.color = 0x00ff00;
+                // link.color=0xff0000;
+                link.opacity = 1;
+                // link.lineWidth=10;
+            } else {
+                link.color = 0x00ffff;
+                link.opacity = 0.2;
+                // link.lineWidth=1;
+            }
+        });
+    }
+}
+
+function wikimap() {
+    console.log("Custom is running");
+    events(); // Start all of the event listeners
+}
 
 var tinycolor = createCommonjsModule(function (module) {
 // TinyColor v1.4.1
@@ -67298,6 +67389,8 @@ var toConsumableArray$1 = function (arr) {
   }
 };
 
+wikimap();
+
 var three$1 = window.THREE ? window.THREE // Prefer consumption from global THREE, if exists
 : {
 	WebGLRenderer: WebGLRenderer,
@@ -67425,7 +67518,7 @@ var app = Kapsule({
 		domNode.appendChild(infoElem = document.createElement('div'));
 		infoElem.className = 'graph-info-msg';
 		infoElem.textContent = '';
-		state.enableNodeDrag = false;
+		state.enableNodeDrag = false; // Prevents drag when clicking on a node
 		state.forceGraph.onLoading(function () {
 			infoElem.textContent = 'wait for it...';
 		});
@@ -67580,11 +67673,8 @@ var app = Kapsule({
 			if (state.enablePointerInteraction) {
 				// Update tooltip and trigger onHover events
 				raycaster.linePrecision = state.linkHoverPrecision;
-				// console.log('memory leak');
-				// IIFE
-				if (state.onFrame) state.onFrame();
-				v.node_labels = [];
-				v.z_array = [];
+
+				// if (state.onFrame) state.onFrame()
 				// state.graphData.nodes.forEach(function (node){
 				//
 				// 	// state.scene.updateMatrixWorld();
