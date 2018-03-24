@@ -56835,6 +56835,7 @@ var _class = function (_THREE$Sprite) {
 }(THREE.Sprite);
 
 // import * as THREE from 'three'
+// import {Sprite} from 'three';
 // var THREE = require('three');
 // import SpriteText from 'three-spritetext';
 // export default {
@@ -56891,6 +56892,8 @@ function showGraph(json_response) {
 		sprite.textHeight = 8;
 		return sprite;
 	});
+	// Graph.stopAnimation();
+
 
 	function colorNode(node) {
 		v.freeze_graph = true;
@@ -56959,34 +56962,7 @@ function colorOthers(nodes) {
 }
 
 $canvas: $('#3d-graph');
-function showWikimapLabels(nodes) {
 
-	console.log("Nodes refreshed");
-
-	$('div.nodetest').remove();
-	nodes.forEach(function (node, i) {
-		// var node_sprite = new Sprite();
-		// const sprite = new SpriteText(node.id);
-		// sprite.color = node.color;
-		// sprite.textHeight = 8;
-		var min_font_size = 15;
-		var max_font_size = 20;
-		var min_opacity = 0.6;
-		var max_opacity = 1;
-		var max_z = Math.max.apply(Math, v.z_array);
-		var min_z = Math.min.apply(Math, v.z_array);
-		var z_scale = v.z_array[i] / (max_z - min_z);
-		// let node_label_opacity = 1;
-		// let node_font_size = 20;
-		var node_font_size = z_scale * (max_font_size - min_font_size) + min_font_size;
-		var node_label_opacity = z_scale * (max_opacity - min_opacity) + min_opacity;
-		var node_top = v.node_labels[i].x,
-		    node_left = v.node_labels[i].y;
-		// let node_label = node.name;
-		var node_label = '+';
-		$('#3d-graph').append("<div class='nodetest' style='opacity: " + node_label_opacity + ";font-size:" + node_font_size + "px;top:" + node_top + "px;left:" + node_left + "px;'>" + node_label + "</div>");
-	});
-}
 $(function () {
 	// When the user clicks on the search bar, make it more visible
 	$('header').on('click', '#user_input', function (e) {
@@ -67449,6 +67425,7 @@ var app = Kapsule({
 		domNode.appendChild(infoElem = document.createElement('div'));
 		infoElem.className = 'graph-info-msg';
 		infoElem.textContent = '';
+		state.enableNodeDrag = false;
 		state.forceGraph.onLoading(function () {
 			infoElem.textContent = 'wait for it...';
 		});
@@ -67608,51 +67585,52 @@ var app = Kapsule({
 				if (state.onFrame) state.onFrame();
 				v.node_labels = [];
 				v.z_array = [];
-				state.graphData.nodes.forEach(function (node) {
-
-					// state.scene.updateMatrixWorld();
-					var node_obj = node.__threeObj;
-
-					if (node_obj) {
-						// var myScene = new THREE.Scene();
-						// myScene.add(myText);
-
-						var myText = new _class('My text');
-						state.scene.add(myText);
-
-						// var pos = new Vector3(node.position.x,node.position.y, node.position.z);
-						var pos = new Vector3(node_obj.position.x, node_obj.position.y, node_obj.position.z);
-						// var pos = new Vector3();
-						// console.log(node.__threeObj);
-						// node.getWorldPosition(pos);
-						var widthHalf = 0.5 * state.width;
-						var heightHalf = 0.5 * state.height;
-						// var pos = node.getWorldPosition();
-						// var nodeObj = new Object3D();
-						// nodeObj = state.scene.getObjectById(node.id);
-						var vector = pos.project(state.camera);
-						// var mat = new Matrix4();
-						// var vector = pos.applyMatrix4(mat.multiplyMatrices(state.camera.projectionMatrix, state.camera.matrixWorldInverse));
-						// vector.applyMatrix4(matrix_axis_flip);
-						// // var vector = pos.applyMatrix4(state.camera.projectionMatrix);
-
-						// var vector = new Vector3();
-						// nodeObj.updateMatrixWorld();
-						// vector.setFromMatrixPosition(nodeObj.matrixWorld);
-						// vector.project(state.camera);
-						// vector.transformDirection(matrix_axis_flip);
-						vector.x = vector.x * widthHalf + widthHalf;
-						vector.y = -(vector.y * heightHalf) + heightHalf;
-						v.z_array.push(node.z);
-						v.node_labels.push(vector);
-					}
-				});
-				v.position_sum = state.camera.position.x + state.camera.position.y + state.camera.position.z;
-				if (v.position_sum != v.last_position_sum) {
-					showWikimapLabels(state.graphData.nodes);
-				}
-				v.last_position_sum = v.position_sum;
-				v.state.camera.position = state.camera.position;
+				// state.graphData.nodes.forEach(function (node){
+				//
+				// 	// state.scene.updateMatrixWorld();
+				// 	var node_obj = node.__threeObj;
+				//
+				// 	if(node_obj){
+				// 		// var myScene = new THREE.Scene();
+				// 		// myScene.add(myText);
+				//
+				// 		var myText = new SpriteText('My text',);
+				// 		state.scene.add(myText);
+				//
+				// 		// var pos = new Vector3(node.position.x,node.position.y, node.position.z);
+				// 		var pos = new Vector3(node_obj.position.x,node_obj.position.y, node_obj.position.z);
+				// 		// var pos = new Vector3();
+				// 		// console.log(node.__threeObj);
+				// 		// node.getWorldPosition(pos);
+				// 		var widthHalf = 0.5 * state.width;
+				// 		var heightHalf = 0.5 * state.height;
+				// 		// var pos = node.getWorldPosition();
+				// 		// var nodeObj = new Object3D();
+				// 		// nodeObj = state.scene.getObjectById(node.id);
+				// 		var vector = pos.project(state.camera);
+				// 		// var mat = new Matrix4();
+				// 		// var vector = pos.applyMatrix4(mat.multiplyMatrices(state.camera.projectionMatrix, state.camera.matrixWorldInverse));
+				// 		// vector.applyMatrix4(matrix_axis_flip);
+				// 		// // var vector = pos.applyMatrix4(state.camera.projectionMatrix);
+				//
+				// 		// var vector = new Vector3();
+				// 		// nodeObj.updateMatrixWorld();
+				// 		// vector.setFromMatrixPosition(nodeObj.matrixWorld);
+				// 		// vector.project(state.camera);
+				// 		// vector.transformDirection(matrix_axis_flip);
+				// 		vector.x = ( vector.x * widthHalf ) + widthHalf;
+				// 		vector.y = - ( vector.y * heightHalf ) + heightHalf;
+				// 		v.z_array.push(node.z);
+				// 		v.node_labels.push(vector);
+				// 	}
+				//
+				// });
+				// v.position_sum = state.camera.position.x + state.camera.position.y + state.camera.position.z;
+				// if(v.position_sum != v.last_position_sum){
+				// 	showWikimapLabels(state.graphData.nodes);
+				// }
+				// v.last_position_sum = v.position_sum;
+				// v.state.camera.position = state.camera.position;
 
 				raycaster.setFromCamera(mousePos, state.camera);
 				var intersects = raycaster.intersectObjects(state.forceGraph.children).filter(function (o) {
