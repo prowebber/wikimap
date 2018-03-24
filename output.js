@@ -67317,11 +67317,8 @@ var three$1 = window.THREE ? window.THREE // Prefer consumption from global THRE
 	Sprite: Sprite,
 	Object3D: Object3D
 };
-//
 
 var CAMERA_DISTANCE2NODES_FACTOR = 150;
-
-//
 
 // Expose config from forceGraph
 var bindFG = linkKapsule('forceGraph', threeForcegraph);
