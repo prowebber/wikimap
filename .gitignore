@@ -4,5 +4,5 @@
 node_modules/
 src/node_modules/
 src/scripts/php-test.php
-/output.js
-/output.js.map
+output.js
+output.js.map
