@@ -22,7 +22,7 @@
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-postcss": "^1.4.0",
     "three": "^0.91.0",
-    "three-spritetext": "^1.0.3",
+    "three-spritetext": "^1.0.5",
     "uglifyjs": "^2.4.11"
   },
   "devDependencies": {
