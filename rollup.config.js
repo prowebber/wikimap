@@ -15,8 +15,8 @@ export default {
 		file: 'output.js',
 		format: 'umd',
 		name: 'ForceGraph3D',
-		source: true,
-		banner: `// Version ${name} - Shit`
+		// sourcemap: true,
+		banner: `// Version ${name} - Shit`,
 	},
 	plugins: [
 		postCss({
