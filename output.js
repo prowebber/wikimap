@@ -56886,12 +56886,13 @@ function databaseRequest(user_input) {
 	});
 }
 function showGraph(json_response) {
-	var Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(json_response).onNodeClick(colorNode).nodeThreeObject(function (node) {
-		var sprite = new _class(node.name);
-		sprite.color = 'teal';
-		sprite.textHeight = 8;
-		return sprite;
-	});
+	var Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(json_response).onNodeClick(colorNode);
+	// .nodeThreeObject(node => {
+	// 	const sprite = new SpriteText(node.name);
+	// 	sprite.color = 'teal';
+	// 	sprite.textHeight = 8;
+	// 	return sprite;
+	// });
 	// Graph.stopAnimation();
 
 
@@ -67550,6 +67551,7 @@ var app = Kapsule({
 		// Setup renderer, camera and controls
 		domNode.appendChild(state.renderer.domElement);
 		state.tbControls = new threeTrackballcontrols(state.camera, state.renderer.domElement);
+		state.tbControls.dynamicDampingFactor = 0.6;
 		state.tbControls.minDistance = 0.1;
 		state.tbControls.maxDistance = 20000;
 
@@ -67568,12 +67570,11 @@ var app = Kapsule({
 		state.scene.add(new three$1.AmbientLight(0xbbbbbb));
 		state.scene.add(new three$1.DirectionalLight(0xffffff, 0.6));
 
-		state.scene.add(Text);
-		// state.scene.add(new SpriteText('My text'));
-
-		//
-		var matrix_axis_flip = new Matrix4();
-		matrix_axis_flip.set(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		// var matrix_axis_flip = new Matrix4();
+		// matrix_axis_flip.set(  1,  0,  0,  0,
+		// 						0,  1,  0,  0,
+		// 						0,  0,  1,  0,
+		// 						0,  0,   0,  1);
 		// Kick-off renderer
 		(function animate() {
 			// IIFE
