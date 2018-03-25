@@ -2,5 +2,5 @@
 // import THREE from 'three';
 // import * as THREE from 'three';
 // global.THREE = require('three');
-import $ from 'jquery';
+// import $ from 'jquery';
 export { default } from "./lib/app.js";
