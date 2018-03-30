@@ -76,7 +76,16 @@ table.results tr td:nth-child(1){
 table.results tr td:nth-child(1){
     font-weight:700;
 }
-
+.graph-info-msg {
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    color: lavender;
+    opacity: 0.7;
+    font-size: 22px;
+    position: absolute;
+    font-family: Sans-serif;
+}
 .graph-tooltip {
     position: absolute !important;
     color: lavender;
