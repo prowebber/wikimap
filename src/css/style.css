@@ -81,10 +81,11 @@ table.results tr td:nth-child(1){
     position: absolute !important;
     color: lavender;
     font-size:18px !important;
-    top: 50%;
+    top: 90%;
     left: 50%;
     margin-right: -50%;
-    transform: translate(-50%, -50%)
+    transform: translate(-50%, -50%);
+    opacity: 0.5;
 }
 
 .graph-tooltip {
