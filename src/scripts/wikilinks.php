@@ -40,6 +40,7 @@ class Fetch_Ajax_Script_Multi{
 		$T0_pretty_page_title = $this->makeTitleReadable($T0_page_title);
 		$max_tiers      = 5;
 		$nodes_per_tier = 5;
+		$max_visible_nodes_per_tier    = 4;
 		$links_counter = $node_counter = $min_shared_links = $max_shared_links  = 0;    # Initialize int variables
 		$t0_array = $t1_array = $data = $history = array();                             # Initialize arrays
 		$t0_array[0] = $T0_page_id;
@@ -59,6 +60,7 @@ class Fetch_Ajax_Script_Multi{
 					foreach(array_keys($t1_array) as $t1){  #Loop through T1's
 						if (!isset($history[$t1][$t0])){        # Do not add link if the opposite has already been added
 							$history[$t0][$t1] = 1;
+							$data['links']['visible'] = ($t0['count'] <= $max_visible_nodes_per_tier);
 							$sc_val = $t1_array[$t1]['shared_connections']/($t1_array[$t1]['T0_total_connections']+$t1_array[$t1]['T1_total_connections']); # shared links weighted by total
 							$min_shared_links = (($sc_val < $min_shared_links or $min_shared_links == 0) ? $sc_val : $min_shared_links);
 							$max_shared_links = (($sc_val > $max_shared_links or $max_shared_links == 0) ? $sc_val : $max_shared_links);
@@ -66,7 +68,6 @@ class Fetch_Ajax_Script_Multi{
 							$data['links'][$links_counter]['target'] = $t1;
 							$data['links'][$links_counter]['val']    = $sc_val;
 							$data['links'][$links_counter]['color']    = $linkColor;
-							
 							$links_counter++;
 							if(!isset($history['nodes'][$t1])){        # Only add node if it doesn't already exist
 								$data['nodes'][$node_counter]['id']   = $t1;
