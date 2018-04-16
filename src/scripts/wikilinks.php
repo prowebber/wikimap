@@ -60,7 +60,7 @@ class Fetch_Ajax_Script_Multi{
 					foreach(array_keys($t1_array) as $t1){  #Loop through T1's
 						if (!isset($history[$t1][$t0])){        # Do not add link if the opposite has already been added
 							$history[$t0][$t1] = 1;
-							$data['links']['visible'] = ($t0['count'] <= $max_visible_nodes_per_tier);
+//							$data['links']['visible'] = ($t0['count'] <= $max_visible_nodes_per_tier);
 							$sc_val = $t1_array[$t1]['shared_connections']/($t1_array[$t1]['T0_total_connections']+$t1_array[$t1]['T1_total_connections']); # shared links weighted by total
 							$min_shared_links = (($sc_val < $min_shared_links or $min_shared_links == 0) ? $sc_val : $min_shared_links);
 							$max_shared_links = (($sc_val > $max_shared_links or $max_shared_links == 0) ? $sc_val : $max_shared_links);
