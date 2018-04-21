@@ -1,32 +1,24 @@
-// rollup.config.js
 import resolve from 'rollup-plugin-node-resolve';
 import commonJs from 'rollup-plugin-commonjs';
-import postCss from 'rollup-plugin-postcss';
-import postCssSimpleVars from 'postcss-simple-vars';
-import postCssNested from 'postcss-nested';
 import babel from 'rollup-plugin-babel';
-import { name } from './package.json';
-
-
+import { name, homepage, version } from './package.json';
 
 export default {
-	input: 'index.js',
-	output: {
-		file: 'output.js',
-		format: 'umd',
-		name: 'ForceGraph3D',
-		// sourcemap: true,
-		banner: `// Version ${name} - Shit`,
-	},
-	plugins: [
-		postCss({
-			plugins: [
-				postCssSimpleVars(),
-				postCssNested()
-			]
-		}),
-		babel({ exclude: 'node_modules/**' }),
-		resolve(),
-		commonJs()
-	]
+  external: ['three'],
+  input: 'index.js',
+  output: [
+    {
+      format: 'umd',
+      name: 'ThreeForceGraph',
+      globals: { three: 'THREE' },
+      file: `output.js`,
+      sourcemap: true,
+      banner: `Wikimap - Shit`
+    }
+  ],
+  plugins: [
+    resolve(),
+    commonJs(),
+    babel({ exclude: 'node_modules/**' })
+  ]
 };
