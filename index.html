@@ -1,35 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>WikiMap</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,400i,700|Source+Code+Pro:300,400,500"
-          rel="stylesheet">
-    <link rel='stylesheet' type='text/css' href='/wikimap/src/css/style.css'>
-    <link rel="icon" type="image/png" href="/wikimap/icon.png">
+  <style> body { margin: 0; } </style>
+
+  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script>-->
     <script src="/wikimap/src/js/three.min.js"></script>
-    <script src="/wikimap/output.js"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--<script src="//unpkg.com/three-trackballcontrols-web/dist/three-trackballcontrols.min.js"></script>-->
+    <!--<script src="/wikimap/node_modules/three-trackballcontrols"></script>-->
+  <script src="/wikimap/node_modules/three-forcegraph/dist/three-forcegraph.js"></script>
 </head>
+
 <body>
-<header class="wikimap-header">
-    <h1>WikiMap</h1>
-    <div>
-        <form>
-            <input type="text" id="user_input" placeholder="Page Title OR Wikipedia URL" required autocomplete="off">
-            <button>Go!</button>
-        </form>
-    </div>
-    <label for="slider" class="slider_label">Tiers</label>
-    <div class="slidecontainer">
-        <input type="range" min="1" max="10" value="4" class="slider" id="myRange">
-    </div>
-</header>
-<div id="3d-graph" style="graph-canvas"></div>
-<span class="close"><i class="material-icons">close</i></span>
-<section id="results" class="response-results">
-    <b>Raw JSON</b><br><textarea id="results_text"></textarea>
-</section>
-<aside class='pageinfo hide' id="wikipedia_preview"></aside>
+  <div id="3d-graph"></div>
+  <script src="/wikimap/lib/example.js"></script>
+  <!--<script>-->
+    <!--// Gen random data-->
+    <!--const N = 300;-->
+    <!--const gData = {-->
+      <!--nodes: [...Array(N).keys()].map(i => ({ id: i })),-->
+      <!--links: [...Array(N).keys()]-->
+        <!--.filter(id => id)-->
+        <!--.map(id => ({-->
+          <!--source: id,-->
+          <!--target: Math.round(Math.random() * (id-1))-->
+        <!--}))-->
+    <!--};-->
+
+    <!--const Graph = new ThreeForceGraph()-->
+      <!--.graphData(gData);-->
+
+    <!--// Setup renderer-->
+    <!--const renderer = new THREE.WebGLRenderer();-->
+    <!--renderer.setSize(window.innerWidth, window.innerHeight);-->
+    <!--document.getElementById('3d-graph').appendChild(renderer.domElement);-->
+
+    <!--// Setup scene-->
+    <!--const scene = new THREE.Scene();-->
+    <!--scene.add(Graph);-->
+    <!--scene.add(new THREE.AmbientLight(0xbbbbbb));-->
+
+    <!--// Setup camera-->
+    <!--const camera = new THREE.PerspectiveCamera();-->
+    <!--camera.aspect = window.innerWidth/window.innerHeight;-->
+    <!--camera.updateProjectionMatrix();-->
+    <!--camera.lookAt(Graph.position);-->
+    <!--camera.position.z = Math.cbrt(N) * 100;-->
+
+    <!--// Add camera controls-->
+    <!--const tbControls = new TrackballControls(camera, renderer.domElement);-->
+
+    <!--// Kick-off renderer-->
+    <!--(function animate() { // IIFE-->
+      <!--Graph.tickFrame();-->
+
+      <!--// Frame cycle-->
+      <!--tbControls.update();-->
+      <!--renderer.render(scene, camera);-->
+      <!--requestAnimationFrame(animate);-->
+    <!--})();-->
+  <!--</script>-->
 </body>
-</html>
