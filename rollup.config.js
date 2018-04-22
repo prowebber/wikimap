@@ -4,7 +4,7 @@ import babel from 'rollup-plugin-babel';
 import postCss from 'rollup-plugin-postcss';
 import postCssSimpleVars from 'postcss-simple-vars';
 import postCssNested from 'postcss-nested';
-import { name, homepage, version } from './package.json';
+import {name} from './package.json';
 
 export default {
   external: ['three'],
