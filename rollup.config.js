@@ -12,7 +12,7 @@ export default {
   output: [
     {
       format: 'umd',
-      name: 'ThreeForceGraph',
+      name: 'ForceGraph',
       globals: { three: 'THREE' },
       file: `output.js`,
       sourcemap: false,
