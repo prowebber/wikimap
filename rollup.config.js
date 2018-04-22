@@ -15,7 +15,7 @@ export default {
       name: 'ThreeForceGraph',
       globals: { three: 'THREE' },
       file: `output.js`,
-      sourcemap: true,
+      sourcemap: false,
       banner: `// Version ${name} - Shit`
     }
   ],
