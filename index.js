@@ -1,2 +1,6 @@
 import "./src/css/style.css";
-export { default } from "./lib/forcegraph-kapsule.js";
+import v from './lib/globals.js';
+import wikimap from './lib/custom.js';
+import theGraph from "./lib/three-forcegraph.js";
+v.Graph = theGraph;
+wikimap();
