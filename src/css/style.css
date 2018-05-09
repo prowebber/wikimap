@@ -26,6 +26,49 @@ header.wikimap-header div{
     padding:5px;
 }
 
+/* New Slider Stuff */
+section.slider{
+    display:inline-block;
+    width:100%;
+}
+section.slider b{
+    color: rgba(255, 255, 255, 0.25);
+    display:inline-block;
+    float:left;
+    margin-left:40px;
+    width:100px;
+}
+section.slider label input[type='range']{
+    background-color: rgba(255, 255, 255, 0.25);
+    -webkit-appearance: none;
+    width:610px; height:10px;
+}
+section.slider label input[type='range']:focus{
+    outline: none;
+}
+section.slider label input[type='range']::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.30);
+    cursor: pointer;
+    -webkit-box-shadow: 0px 0px 26px 0px rgba(0,184,230,1);
+    -moz-box-shadow: 0px 0px 26px 0px rgba(0,184,230,1);
+    box-shadow: 0px 0px 26px 0px rgba(0,184,230,1);
+}
+/*section.slider label input[type='range']::-webkit-slider-thumb{*/
+    /*-webkit-appearance: none;*/
+    /*appearance: none;*/
+    /*width: 25px;*/
+    /*height: 25px;*/
+    /*border-radius: 50%;*/
+    /*background: #4CAF50;*/
+    /*cursor: pointer;*/
+/*}*/
+
+
 /*slider stuff*/
 .slidecontainer {
     width: 25%; /* Width of the outside container */
@@ -35,7 +78,7 @@ header.wikimap-header div{
     color: #ffffff;
     font-size: 20px;
 }
-.slider {
+.slider_b {
     -webkit-appearance: none;
     width: 100%;
     height: 15px;
@@ -49,7 +92,7 @@ header.wikimap-header div{
 .label {
     .color: #ffffff;
 }
-.slider::-webkit-slider-thumb {
+.slider_b::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 25px;
@@ -60,7 +103,7 @@ header.wikimap-header div{
 }
 
 /* Mouse-over effects */
-.slider:hover {
+.slider_b:hover {
     opacity: 1; /* Fully shown on mouse-over */
 }
 
