@@ -40,7 +40,6 @@ class Fetch_Ajax_Script_Multi{
 	}
 	
 	
-	
 	public function fetchMultiData($post_data){
 		$user_input                 = $post_data['user_input'] ?? 'HTTP_404';    # Default to 'HTTP_404' if not found
 		$max_tiers                  = $post_data['max_tiers'] ?? 5;                 # Default to 5 tiers
@@ -51,7 +50,6 @@ class Fetch_Ajax_Script_Multi{
 		$T0_page_id                 = $target_data['page_id'];
 		$T0_page_title              = $target_data['page_title'];
 		$T0_pretty_page_title       = $this->makeTitleReadable($T0_page_title);
-//		$max_tiers                  = 5;
 		$nodes_per_tier             = 5;
 		$max_visible_nodes_per_tier = 4;
 		$links_counter              = $node_counter = $min_shared_links = $max_shared_links = 0;    # Initialize int variables
