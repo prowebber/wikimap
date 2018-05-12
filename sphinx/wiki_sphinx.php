@@ -32,7 +32,7 @@ class Sphinx_Shit{
 										WHERE
 											match('$keyword')
 										ORDER BY rank ASC
-										OPTION max_matches = 50, ranker=expr('sum(lcs*user_weight)*1000+bm25')
+										OPTION max_matches = 50, ranker = sph04
 									");
 		
 		$temp = array();
