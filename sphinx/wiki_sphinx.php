@@ -13,7 +13,7 @@ class Sphinx_Shit{
 	
 	
 	public function classConfig(){
-		$keyword   = "app";
+		$keyword   = "ninja turtles";
 		$sphinx_db = new \mysqli(SPHINX_DATABASE, NULL, NULL, NULL, '9306');
 		
 		// Sanitize input
@@ -32,10 +32,13 @@ class Sphinx_Shit{
 										WHERE
 											match('$keyword')
 										ORDER BY rank ASC
-										OPTION max_matches = 50, ranker = sph04
+										LIMIT 0,100
+										OPTION max_matches = 100, ranker=expr('sum(lcs*user_weight)*1000+bm25')
 									");
 		
 		$temp = array();
+		
+		echo "<pre>".print_r($result, true)."</pre>";
 		while($row = $result->fetch_assoc()){
 			$page_id     = $row['id'];
 			$sphinx_info = $row['pa'];
