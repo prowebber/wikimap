@@ -20,6 +20,9 @@ class Sphinx_Shit{
 		$keyword = $sphinx_db->real_escape_string($keyword);
 		
 		$data = array();
+		
+		$sphinx_start_time = microtime(TRUE);
+		
 		# More data on Sphinx Sorting
 		$result = $sphinx_db->query("	SELECT
 											id,
@@ -36,16 +39,20 @@ class Sphinx_Shit{
 		while($row = $result->fetch_assoc()){
 			$page_id     = $row['id'];
 			$sphinx_info = $row['pa'];
+			$sphinx_rank = $row['rank'];
 			
 			$parsed = explode(',', $sphinx_info);
 			
+			$temp[$page_id]['sphinx_rank']   = $sphinx_rank;
 			$temp[$page_id]['sphinx_values'] = $parsed;
 			
 			$data[$page_id] = $page_id;
 		}
 		
+		$sphinx_end_time = number_format((microtime(TRUE) - $sphinx_start_time), 6);
+		echo "<B>Total Sphinx Time:</B> $sphinx_end_time (microseconds)<br><br>";
 		
-		echo "<pre>".print_r($temp, true)."</pre>";
+		echo "<pre>" . print_r($temp, TRUE) . "</pre>";
 		
 		
 		if(!empty($data)){
