@@ -27,35 +27,30 @@ class Sphinx_Shit{
 		$result = $sphinx_db->query("	SELECT
 											id,
 											WEIGHT() AS rank,
-											PACKEDFACTORS() AS pa
+											PACKEDFACTORS({json=1}) AS pa
 										FROM page_index
 										WHERE
 											match('$keyword')
 										ORDER BY rank ASC
-										LIMIT 0,100
-										OPTION max_matches = 100, ranker=expr('sum(lcs*user_weight)*1000+bm25')
+										LIMIT 0,50
+										OPTION max_matches = 50, ranker=expr('sum(lcs*user_weight)*1000+bm25')
 									");
 		
-		$temp = array();
-		
-		echo "<pre>".print_r($result, true)."</pre>";
+		echo "Total Results: " . $result->num_rows . " <br>";
 		while($row = $result->fetch_assoc()){
 			$page_id     = $row['id'];
 			$sphinx_info = $row['pa'];
 			$sphinx_rank = $row['rank'];
 			
-			$parsed = explode(',', $sphinx_info);
-			
-			$temp[$page_id]['sphinx_rank']   = $sphinx_rank;
-			$temp[$page_id]['sphinx_values'] = $parsed;
-			
-			$data[$page_id] = $page_id;
+			$parsed                              = json_decode($sphinx_info, TRUE);
+			$data[$page_id]['page_title']        = NULL;
+			$data[$page_id]['total_connections'] = NULL;
+			$data[$page_id]['sphinx_rank']       = $sphinx_rank;
+			$data[$page_id]['sphinx_values']     = $parsed;
 		}
 		
 		$sphinx_end_time = number_format((microtime(TRUE) - $sphinx_start_time), 6);
-		echo "<B>Total Sphinx Time:</B> $sphinx_end_time (microseconds)<br><br>";
-		
-		echo "<pre>" . print_r($temp, TRUE) . "</pre>";
+		echo "<B>Total Sphinx Time:</B> $sphinx_end_time (microseconds)<hr>";
 		
 		
 		if(!empty($data)){
@@ -68,16 +63,7 @@ class Sphinx_Shit{
 	
 	
 	public function fetchPages($params){
-		$data = array();                                    # Array that contains the search results
-		
-		$page_list = array();
-		foreach($params as $page_id){                       # Loop through each page
-			$page_id = $this->db->cleanText($page_id);      # Sanitize the page ID to prevent SQL Injection
-			
-			$page_list[] = $page_id;                        # Create an array of all the pages
-		}
-		
-		$page_string = implode(',', $page_list);            # Create a comma-separated list of page IDs
+		$page_string = implode(',', array_keys($params));   # Create a comma-separated list of page IDs
 		
 		$result = $this->db->query("	SELECT
 												p.page_id,
@@ -93,11 +79,11 @@ class Sphinx_Shit{
 			$page_title        = $row['page_title'];
 			$total_connections = $row['total_connections'];
 			
-			$data[$page_id]['page_title']        = $page_title;
-			$data[$page_id]['total_connections'] = $total_connections;
+			$params[$page_id]['page_title']        = $page_title;
+			$params[$page_id]['total_connections'] = $total_connections;
 		}
 		
-		return $data;
+		return $params;
 	}
 }
 
