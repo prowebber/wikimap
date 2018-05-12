@@ -19,7 +19,7 @@ class Sphinx_Shit{
 		// Sanitize input
 		$keyword = $sphinx_db->real_escape_string($keyword);
 		
-		$data   = array();
+		$data = array();
 		# More data on Sphinx Sorting
 		$result = $sphinx_db->query("	SELECT
 											id,
@@ -29,24 +29,29 @@ class Sphinx_Shit{
 										WHERE
 											match('$keyword')
 										ORDER BY rank ASC
-										OPTION max_matches = 50, ranker=expr('sum(lcs)*1000+bm25')
+										OPTION max_matches = 50, ranker=expr('sum(lcs*user_weight)*1000+bm25')
 									");
 		
-		echo "<pre>".print_r($result, true)."</pre>";
-		
-		
+		$temp = array();
 		while($row = $result->fetch_assoc()){
-			echo "<pre>".print_r($row, true)."</pre>";
-			$page_id = $row['id'];
+			$page_id     = $row['id'];
+			$sphinx_info = $row['pa'];
+			
+			$parsed = explode(',', $sphinx_info);
+			
+			$temp[$page_id]['sphinx_values'] = $parsed;
 			
 			$data[$page_id] = $page_id;
 		}
 		
 		
+		echo "<pre>".print_r($temp, true)."</pre>";
+		
+		
 		if(!empty($data)){
 			$matches = $this->fetchPages($data);
 			
-			echo "<pre>".print_r($matches, true)."</pre>";
+			echo "<pre>" . print_r($matches, TRUE) . "</pre>";
 		}
 	}
 	
@@ -64,7 +69,7 @@ class Sphinx_Shit{
 		
 		$page_string = implode(',', $page_list);            # Create a comma-separated list of page IDs
 		
-		$result      = $this->db->query("	SELECT
+		$result = $this->db->query("	SELECT
 												p.page_id,
 												p.page_title,
 												p.total_connections
