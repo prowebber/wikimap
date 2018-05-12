@@ -2,6 +2,7 @@
 
 namespace datapeak\public_html\src\scripts;
 
+use datapeak\public_html\sphinx\Sphinx_Shit;
 use datapeak\server\classes\SQL_Database;
 
 include $_SERVER['DOCUMENT_ROOT'] . "/config.php";
@@ -38,6 +39,9 @@ class Fetch_Ajax_Script_Multi{
 		$class_name = $post_data['server_class'];       # Get the name of the class to be loaded
 		$this->$class_name($post_data);                 # Calls that function
 	}
+	
+	
+	
 	
 	
 	public function fetchMultiData($post_data){
