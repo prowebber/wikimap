@@ -33,7 +33,7 @@ class Sphinx_Shit{
 											match('$keyword')
 										ORDER BY rank ASC
 										LIMIT 0,50
-										OPTION max_matches = 50, ranker=expr('sum(lcs*user_weight)*1000+bm25')
+										OPTION max_matches = 50, ranker=expr('sum(min_gaps) / sum(query_word_count)')
 									");
 		
 		echo "Total Results: " . $result->num_rows . " <br>";
@@ -44,7 +44,7 @@ class Sphinx_Shit{
 			
 			$parsed                              = json_decode($sphinx_info, TRUE);
 			$data[$page_id]['page_title']        = NULL;
-			$data[$page_id]['total_connections'] = NULL;
+			$data[$page_id]['total_connections'] = 0;
 			$data[$page_id]['sphinx_rank']       = $sphinx_rank;
 			$data[$page_id]['sphinx_values']     = $parsed;
 		}
@@ -78,6 +78,8 @@ class Sphinx_Shit{
 			$page_id           = $row['page_id'];
 			$page_title        = $row['page_title'];
 			$total_connections = $row['total_connections'];
+			
+			$page_title = str_replace('_', ' ', $page_title);
 			
 			$params[$page_id]['page_title']        = $page_title;
 			$params[$page_id]['total_connections'] = $total_connections;
