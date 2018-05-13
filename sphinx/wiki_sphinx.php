@@ -13,8 +13,10 @@ class Sphinx_Shit{
 		$this->db = new SQL_Database(WIKIMAP_DB);
 	}
 	
+	
+	
 	public function classConfig($original_keyword){
-		$keyword = $original_keyword."*";                # Regex match anything after the user's last character
+		$keyword   = $original_keyword . "*";                # Regex match anything after the user's last character
 		$sphinx_db = new \mysqli('34.234.231.238', NULL, NULL, NULL, '9306');
 		
 		
@@ -53,18 +55,15 @@ class Sphinx_Shit{
 			$matches = $this->fetchPages($data, $original_keyword);
 			
 			/* Show the results */
-			
 			$html = "";
-			$html .= "<ul class='sphinx-search-results'>";
-			
-			
+			$html .= "<ul class='sphinx-search-results' id='sphinx_results_dropdown'>";
 			
 			krsort($matches);
 			
 			$counter = 0;
 			foreach(array_keys($matches) as $pct_match){
 				
-				foreach($matches[$pct_match] as $key=>$page_name){
+				foreach($matches[$pct_match] as $key => $page_name){
 					$html .= "<li>$page_name</li>";
 					$counter++;
 					
@@ -118,7 +117,7 @@ class Sphinx_Shit{
 		$weight_array = $this->get_weights($original_keyword, $title_array);
 		
 		return $weight_array;
-		
+
 //		return $params;
 	}
 	
@@ -126,11 +125,11 @@ class Sphinx_Shit{
 	
 	public function get_weights($search_term, $title_arr){
 		foreach($title_arr as $title){
-			$split_search_arr = explode(" ", $search_term);
-			$unmatched_chars = strlen(str_replace(' ','',str_ireplace($split_search_arr,'',$title)));
-			$title_chars = strlen(str_replace(' ','',$title));
-			$weight = ($title_chars-$unmatched_chars)/$title_chars;
-			$weight_arr[(string)$weight][]=$title;
+			$split_search_arr              = explode(" ", $search_term);
+			$unmatched_chars               = strlen(str_replace(' ', '', str_ireplace($split_search_arr, '', $title)));
+			$title_chars                   = strlen(str_replace(' ', '', $title));
+			$weight                        = ($title_chars - $unmatched_chars) / $title_chars;
+			$weight_arr[(string)$weight][] = $title;
 		}
 		return $weight_arr;
 	}
