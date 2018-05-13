@@ -15,7 +15,8 @@ class Sphinx_Shit{
 	
 	public function classConfig($original_keyword){
 		$keyword = $original_keyword."*";                # Regex match anything after the user's last character
-		$sphinx_db = new \mysqli(SPHINX_DATABASE, NULL, NULL, NULL, '9306');
+		$sphinx_db = new \mysqli('34.234.231.238', NULL, NULL, NULL, '9306');
+		
 		
 		// Sanitize input
 		$keyword = $sphinx_db->real_escape_string($keyword);
