@@ -26,10 +26,6 @@ header.wikimap-header div{
     padding:5px;
 }
 
-
-
-
-
 /* New Slider Stuff */
 section.slider{
     display:inline-block;
@@ -87,34 +83,6 @@ button{
     height: 30px;
     margin:-2px 0 0 10px;
 }
-
-section.response-results{
-    display:none;
-    font-family: 'Source Code Pro', monospace;
-    font-size:14px;
-    text-align: center;
-}
-textarea{
-    font-family: 'Source Code Pro', monospace;
-    font-size:14px;
-    margin:0 auto;
-    width:80%;
-    height:500px;
-}
-
-table.results{
-    float:left;
-    text-align: left;
-    font-family: 'Roboto Condensed', sans-serif;
-}
-table.results tr td:nth-child(1){
-    font-weight:300;
-}
-table.results tr td:nth-child(1){
-    font-weight:700;
-}
-
-
 
 div.nodetest{
     color:#fff;
