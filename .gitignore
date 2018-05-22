@@ -4,7 +4,7 @@
 node_modules/
 src/node_modules/
 src/scripts/php-test.php
-output.js
+src/js/output.js
 output-debug.js
 output.js.map
 parallel-20171122
