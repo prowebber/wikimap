@@ -14,7 +14,7 @@ export default {
       format: 'umd',
       name: 'ThreeForceGraph',
       globals: { three: 'THREE' },
-      file: `output.js`,
+      file: `./src/js/output.js`,
       sourcemap: false,
       banner: `// Version ${name} - Shit`
     }
