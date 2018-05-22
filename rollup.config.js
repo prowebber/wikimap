@@ -8,7 +8,7 @@ import {name} from './package.json';
 
 export default {
   external: ['three'],
-  input: 'index.js',
+  input: './lib/index.js',
   output: [
     {
       format: 'umd',
