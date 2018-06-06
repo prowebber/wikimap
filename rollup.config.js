@@ -7,7 +7,7 @@ import postCssNested from 'postcss-nested';
 import {name} from './package.json';
 
 export default {
-  external: ['three'],
+  // external: ['three'],
   input: './lib/index.js',
   output: [
     {
