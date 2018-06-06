@@ -13,7 +13,7 @@ export default {
     {
       format: 'umd',
       name: 'ThreeForceGraph',
-      globals: { three: 'THREE' },
+      // globals: { three: 'THREE' },
       file: `./src/js/output.js`,
       sourcemap: false,
       banner: `// Version ${name} - Shit`
