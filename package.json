@@ -11,6 +11,8 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "g": "^2.0.1",
+    "npm": "^6.3.0",
     "postcss-nested": "^3.0.0",
     "postcss-simple-vars": "^4.1.0",
     "rollup": "^0.56.5",
