@@ -1,7 +1,10 @@
 <?php
 
 namespace datapeak\public_html\src\scripts;
+
+use datapeak\public_html\sphinx\Sphinx_Shit;
 use datapeak\server\classes\SQL_Database;
+
 include $_SERVER['DOCUMENT_ROOT'] . "/config.php";
 ini_set('max_execution_time', 300);     # Set the maximum script execution time to 300 seconds (5 min.)
 
@@ -10,16 +13,23 @@ $http_origin = $_SERVER['HTTP_ORIGIN'];
 if($http_origin == "http://purewebber.dev" || $http_origin == "http://purewebber.com" || $http_origin == "https://prowebber.github.io"){
 	header("Access-Control-Allow-Origin: $http_origin");
 }
+
 class Fetch_Ajax_Script_Multi{
 	public $execution_time = array();
 	
 	public $used_page_title;
 	
+	
+	
 	public function __construct(){
 		$this->db = new SQL_Database(WIKIMAP_DB);
 	}
+	
+	
+	
 	/**
 	 * Start Here
+	 *
 	 * @param $post_data        An array of data being fed from the user's submit action
 	 */
 	public function classConfig($post_data){
@@ -29,51 +39,56 @@ class Fetch_Ajax_Script_Multi{
 		$class_name = $post_data['server_class'];       # Get the name of the class to be loaded
 		$this->$class_name($post_data);                 # Calls that function
 	}
+	
+	
+	
+	
+	
 	public function fetchMultiData($post_data){
-		$user_input           = $post_data['user_input'] ?? 'HTTP_404';    # Default to 'HTTP_404' if not found
-		$start_time           = microtime(true);
-		$nodeColor            = 0x0000ff;                                  # Color constant to use for all nodes
-		$linkColor            = 0x00ffff;                                  # Color constant to use for all links
-		$target_data          = $this->getPageId($user_input);             # Use the user's input to grab the correct page_id
-		$T0_page_id           = $target_data['page_id'];
-		$T0_page_title        = $target_data['page_title'];
-		$T0_pretty_page_title = $this->makeTitleReadable($T0_page_title);
-		$max_tiers      = 5;
-		$nodes_per_tier = 4;
-		$links_counter = $node_counter = $min_shared_links = $max_shared_links  = 0;    # Initialize int variables
-		$t0_array = $t1_array = $data = $history = array();                             # Initialize arrays
-		$t0_array[0] = $T0_page_id;
+		$user_input                 = $post_data['user_input'] ?? 'HTTP_404';    # Default to 'HTTP_404' if not found
+		$max_tiers                  = $post_data['max_tiers'] ?? 5;                 # Default to 5 tiers
+		$start_time                 = microtime(TRUE);
+		$nodeColor                  = 0x0000ff;                                  # Color constant to use for all nodes
+		$linkColor                  = 0x00ffff;                                  # Color constant to use for all links
+		$target_data                = $this->getPageId($user_input);             # Use the user's input to grab the correct page_id
+		$T0_page_id                 = $target_data['page_id'];
+		$T0_page_title              = $target_data['page_title'];
+		$T0_pretty_page_title       = $this->makeTitleReadable($T0_page_title);
+		$nodes_per_tier             = 5;
+		$max_visible_nodes_per_tier = 4;
+		$links_counter              = $node_counter = $min_shared_links = $max_shared_links = 0;    # Initialize int variables
+		$t0_array                   = $t1_array = $data = $history = array();                             # Initialize arrays
+		$t0_array[0]                = $T0_page_id;
 		for($tier = 0; $tier < $max_tiers; $tier++){
 			$temp_array = array();
 			foreach($t0_array as $t0){                  # Loop through all the T0's
-				if(!array_key_exists($t0,$history)){    # If t0 not in history, avoids data being queried for same t0 twice
+				if(!array_key_exists($t0, $history)){    # If t0 not in history, avoids data being queried for same t0 twice
 					$history[$t0] = array();              # Add to history
-					if ($node_counter == 0){             # On initial T0
-						$data['nodes'][$node_counter]['id']   = $T0_page_id;           # Set nodes[0] = T0_page_id
-						$data['nodes'][$node_counter]['name'] = $T0_page_title;
-						$data['nodes'][$node_counter]['color']    = 0xffffff;
+					if($node_counter == 0){             # On initial T0
+						$data['nodes'][$node_counter]['id']    = $T0_page_id;           # Set nodes[0] = T0_page_id
+						$data['nodes'][$node_counter]['name']  = $T0_page_title;
+						$data['nodes'][$node_counter]['color'] = 0xffffff;
 						$node_counter++;
 						$history['nodes'][$T0_page_id] = $target_data['total_connections'];                            # Add total_connections for T0 to history
 					}
 					$t1_array = $this->newAlgo_fetchLinks($t0, $nodes_per_tier); #Get T1s for this t0
 					foreach(array_keys($t1_array) as $t1){  #Loop through T1's
-						if (!isset($history[$t1][$t0])){        # Do not add link if the opposite has already been added
+						if(!isset($history[$t1][$t0])){        # Do not add link if the opposite has already been added
 							$history[$t0][$t1] = 1;
-//							$sc_val = $t1_array[$t1]['shared_connections'];              # simply shared connections count, old
-							$sc_val = $t1_array[$t1]['shared_connections']/($t1_array[$t1]['T0_total_connections']+$t1_array[$t1]['T1_total_connections']); # shared links weighted by total
-							$min_shared_links = (($sc_val < $min_shared_links or $min_shared_links == 0) ? $sc_val : $min_shared_links);
-							$max_shared_links = (($sc_val > $max_shared_links or $max_shared_links == 0) ? $sc_val : $max_shared_links);
+//							$data['links']['visible'] = ($t0['count'] <= $max_visible_nodes_per_tier);
+							$sc_val                                  = $t1_array[$t1]['shared_connections'] / ($t1_array[$t1]['T0_total_connections'] + $t1_array[$t1]['T1_total_connections']); # shared links weighted by total
+							$min_shared_links                        = (($sc_val < $min_shared_links or $min_shared_links == 0) ? $sc_val : $min_shared_links);
+							$max_shared_links                        = (($sc_val > $max_shared_links or $max_shared_links == 0) ? $sc_val : $max_shared_links);
 							$data['links'][$links_counter]['source'] = $t0;
 							$data['links'][$links_counter]['target'] = $t1;
 							$data['links'][$links_counter]['val']    = $sc_val;
-							$data['links'][$links_counter]['color']    = $linkColor;
-							
+							$data['links'][$links_counter]['color']  = $linkColor;
 							$links_counter++;
 							if(!isset($history['nodes'][$t1])){        # Only add node if it doesn't already exist
-								$data['nodes'][$node_counter]['id']   = $t1;
-								$data['nodes'][$node_counter]['name'] = $this->makeTitleReadable($t1_array[$t1]['page_title']);
-								$data['nodes'][$node_counter]['color']    = $nodeColor;
-								$history['nodes'][$t1]                = 1; # Add the page ID to the history array so we can prevent it from being included multiple times
+								$data['nodes'][$node_counter]['id']    = $t1;
+								$data['nodes'][$node_counter]['name']  = $this->makeTitleReadable($t1_array[$t1]['page_title']);
+								$data['nodes'][$node_counter]['color'] = $nodeColor;
+								$history['nodes'][$t1]                 = 1; # Add the page ID to the history array so we can prevent it from being included multiple times
 								$node_counter++;
 							}
 							$temp_array[] = $t1;        #append to temp_array (to feed next t0_array)
@@ -84,10 +99,10 @@ class Fetch_Ajax_Script_Multi{
 			$t0_array = $temp_array;
 		}
 //		echo "<pre>".print_r($data, true)."</pre>";
-		$final                      = array();             # Array to store the final output data
-		$final['results']           = $data;
+		$final            = array();             # Array to store the final output data
+		$final['results'] = $data;
 //		$final['execution_time']    = $this->execution_time;    # Not required - Used to display the execution time to the user
-		$final['execution_time']    = microtime(true) - $start_time;
+		$final['execution_time']    = microtime(TRUE) - $start_time;
 		$final['target_page_id']    = $T0_page_id;              # Not required - Used to show the target page ID to the user
 		$final['target_page_title'] = $T0_page_title;           # Not required - Used to show the target page name to the user
 		$final['converted_node']    = $this->used_page_title;
@@ -95,6 +110,8 @@ class Fetch_Ajax_Script_Multi{
 		$final['min_shared_links']  = $min_shared_links;
 		echo json_encode($final);
 	}
+	
+	
 	
 	public function getPageId($user_input){
 		// If the user entered a wikipedia URL
@@ -110,8 +127,8 @@ class Fetch_Ajax_Script_Multi{
 		}
 		
 		$this->used_page_title = $page_title;
-		$page_title = $this->db->cleanText($page_title);
-		$result = $this->db->query("	SELECT
+		$page_title            = $this->db->cleanText($page_title);
+		$result                = $this->db->query("	SELECT
 												p.page_id,
 												p.page_title,
 												p.total_connections
@@ -122,20 +139,23 @@ class Fetch_Ajax_Script_Multi{
 											LIMIT 1
                                 ");
 		
-		$data               = array();
-		$data['page_id']    = '308';             # Set a fallback page_id (HTTP_404)
-		$data['page_title'] = 'Aristotle';
+		$data                      = array();
+		$data['page_id']           = '308';             # Set a fallback page_id (HTTP_404)
+		$data['page_title']        = 'Aristotle';
 		$data['total_connections'] = '5186';
 		
 		if($result->num_rows){
-			$row                = $result->fetch_assoc();
-			$data['page_id']    = $row['page_id'];
-			$data['page_title'] = $row['page_title'];
+			$row                       = $result->fetch_assoc();
+			$data['page_id']           = $row['page_id'];
+			$data['page_title']        = $row['page_title'];
 			$data['total_connections'] = $row['total_connections'];
 		}
 		
 		return $data;
 	}
+	
+	
+	
 	public function formatInputText($user_input){
 		$wiki_title = str_replace('_', ' ', $user_input);    # Convert any user entered underscores to spaces
 		$wiki_title = strtolower($wiki_title);                           # Convert the entire string to lowercase words
@@ -146,10 +166,12 @@ class Fetch_Ajax_Script_Multi{
 		return $wiki_title;
 	}
 	
+	
+	
 	public function newAlgo_fetchLinks($t0, $nodes_per_tier){
-		$t0 = $this->db->cleanText($t0);
+		$t0           = $this->db->cleanText($t0);
 		$return_array = array();
-		$result = $this->db->query("	SELECT
+		$result       = $this->db->query("	SELECT
 											pct.T0 AS T0_page_id,
 											CAST(p.page_title AS CHAR) AS T0_page_title,
 											p.total_connections AS T0_total_connections,
@@ -169,15 +191,17 @@ class Fetch_Ajax_Script_Multi{
                                 ");
 		if($result->num_rows){
 			while($row = $result->fetch_assoc()){
-				$T1_page_id                                         = $row['T1_page_id'];
-				$return_array[$T1_page_id]['page_title']            = $row['T1_page_title'];
-				$return_array[$T1_page_id]['shared_connections']    = $row['T0_T1_shared_connections'];
-				$return_array[$T1_page_id]['T0_total_connections']  = $row['T0_total_connections'];
-				$return_array[$T1_page_id]['T1_total_connections']  = $row['T1_total_connections'];
+				$T1_page_id                                        = $row['T1_page_id'];
+				$return_array[$T1_page_id]['page_title']           = $row['T1_page_title'];
+				$return_array[$T1_page_id]['shared_connections']   = $row['T0_T1_shared_connections'];
+				$return_array[$T1_page_id]['T0_total_connections'] = $row['T0_total_connections'];
+				$return_array[$T1_page_id]['T1_total_connections'] = $row['T1_total_connections'];
 			}
 		}
 		return $return_array;
 	}
+	
+	
 	
 	public function makeTitleReadable($wiki_title){
 		return str_replace('_', ' ', $wiki_title);

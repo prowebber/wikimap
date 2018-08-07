@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>WikiMap</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,400i,700|Source+Code+Pro:300,400,500"
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:100:300,400,400i,700|Source+Code+Pro:300,400,500"
           rel="stylesheet">
     <link rel='stylesheet' type='text/css' href='/wikimap/src/css/style.css'>
     <link rel="icon" type="image/png" href="/wikimap/icon.png">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="/wikimap/src/js/global_variables.js"></script>
-    <script src="/wikimap/src/js/server-bridge.js"></script>
-    <script src="/wikimap/src/node_modules/3d-force-graph/dist/3d-force-graph.js"></script>
-    <!--<script src="/wikimap/src/node_modules/3d-force-graph/src/3d-force-graph.js"></script>-->
+    <script src="/wikimap/src/js/output.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
@@ -20,15 +16,17 @@
     <div>
         <form>
             <input type="text" id="user_input" placeholder="Page Title OR Wikipedia URL" required autocomplete="off">
-            <button>Go!</button>
         </form>
     </div>
+    <section class="sphinx-results hide" id="sphinx_results">
+
+    </section>
+    <section class="slider">
+        <b>Max Tiers </b><label><input type="range" min="3" max="10" value="5" id="wiki_slider"></label>
+    </section>
 </header>
 <div id="3d-graph" style="graph-canvas"></div>
 <span class="close"><i class="material-icons">close</i></span>
-<section id="results" class="response-results">
-    <b>Raw JSON</b><br><textarea id="results_text"></textarea>
-</section>
-<aside class='pageinfo'></aside>
+<aside class='pageinfo' id="wikipedia_preview"></aside>
 </body>
 </html>
