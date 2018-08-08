@@ -44,24 +44,42 @@ class Fetch_Ajax_Script_Multi{
 	
 	public function extendTiers($post_data){
 		$history = json_decode($post_data['history'], true);
-		echo "<pre>".print_r($history, true)."</pre>";
+//		echo "<pre>".print_r($history, true)."</pre>";
+		
+		$this->fetchMultiData(array(), $history);
 	}
 	
 	
 	
-	public function fetchMultiData($post_data){
+	public function fetchMultiData($post_data, $history = array()){
 		$user_input                 = $post_data['user_input'] ?? 'HTTP_404';                           # Default to 'HTTP_404' if not found
 		$max_tiers                  = $post_data['max_tiers'] ?? 5;                                     # Default to 5 tiers
 		$start_time                 = microtime(TRUE);
-		$target_data                = $this->getPageId($user_input);                                    # Use the user's input to grab the correct page_id
-		$T0_page_id                 = $target_data['page_id'];
-		$T0_page_title              = $target_data['page_title'];
-		$T0_pretty_page_title       = $this->makeTitleReadable($T0_page_title);
+		
+		if(empty($history)){                                                                            # If there is the initial request (no history)
+			$target_data                = $this->getPageId($user_input);                                # Use the user's input to grab the correct page_id
+			$T0_page_id                 = $target_data['page_id'];
+			$T0_page_title              = $target_data['page_title'];
+			
+			$t0_array                   = $t1_array = $data = array();                                      # Initialize arrays
+			$t0_array[0]                = $T0_page_id;
+		}
+		else{                                                                                           # If it is an extended request
+			$previous_tier = $history;
+			unset($previous_tier['nodes']);
+			
+			$key = key(end($previous_tier));
+			$t0_array = $previous_tier[$key];
+			
+			$T0_page_id                 = $key;
+			$T0_page_title              = "WIKII";
+		}
+		
+//		$T0_pretty_page_title       = $this->makeTitleReadable($T0_page_title);
 		$nodes_per_tier             = 5;
 		$max_visible_nodes_per_tier = 4;
 		$links_counter              = $node_counter = $min_shared_links = $max_shared_links = 0;        # Initialize int variables
-		$t0_array                   = $t1_array = $data = $history = array();                           # Initialize arrays
-		$t0_array[0]                = $T0_page_id;
+		
 		
 		
 		for($tier = 0; $tier < $max_tiers; $tier++){                                                    # Loop through each max tier
@@ -71,11 +89,11 @@ class Fetch_Ajax_Script_Multi{
 					$history[$t0] = array();                                                            # Add to history
 					
 					if($node_counter == 0){                                                             # On initial T0
-						$data['nodes'][$node_counter]['id']    = $T0_page_id;                           # Set nodes[0] = T0_page_id
+						$data['nodes'][$node_counter]['id']    = $t0;                           # Set nodes[0] = T0_page_id
 						$data['nodes'][$node_counter]['name']  = $T0_page_title;
 						$data['nodes'][$node_counter]['color'] = 0xffffff;
 						$node_counter++;
-						$history['nodes'][$T0_page_id] = $target_data['total_connections'];             # Add total_connections for T0 to history
+						$history['nodes'][$t0] = $target_data['total_connections'];             # Add total_connections for T0 to history
 					}
 					
 					// Get nodes from database
