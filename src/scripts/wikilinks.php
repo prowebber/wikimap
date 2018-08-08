@@ -43,9 +43,7 @@ class Fetch_Ajax_Script_Multi{
 	
 	
 	public function extendTiers($post_data){
-		$history = $post_data['history'] ?? array();
-		$history = json_decode($history, TRUE);
-		
+		$history = json_decode($post_data['history'], true);
 		echo "<pre>".print_r($history, true)."</pre>";
 	}
 	
