@@ -43,9 +43,10 @@ class Fetch_Ajax_Script_Multi{
 	
 	public function extendTiers($post_data){
 		$history = json_decode($post_data['history'], TRUE);
-//		echo "<pre>" . print_r($history, TRUE) . "</pre>";
-
-		$this->fetchMultiData(array(), $history);
+//		$prev_results = json_decode($post_data['prev_results'], TRUE);
+		
+		echo "<pre>".print_r($history, true)."</pre>";
+//		$this->fetchMultiData(array(), $history);
 	}
 	
 	
@@ -54,6 +55,7 @@ class Fetch_Ajax_Script_Multi{
 		$start_time       = microtime(TRUE);
 		$user_input       = $post_data['user_input'] ?? 'HTTP_404';                           # Default to 'HTTP_404' if not found
 		$max_tiers        = $post_data['max_tiers'] ?? 5;                                     # Default to 5 tiers
+		$prev_results     = array();
 		$nodes_per_tier   = 5;
 		$min_shared_links = 0;
 		$max_shared_links = 0;
@@ -70,13 +72,19 @@ class Fetch_Ajax_Script_Multi{
 			$t0_array[0] = $T0_page_id;
 		} // Subsequent Requests
 		else{                                                       # If it is an extended request
+			$data          = $history['data'];
 			$node_counter  = $history['node_counter'];
 			$links_counter = $history['links_counter'];
-			$previous_tier = $history['data'];
+			$previous_tier = $history['data'];                      # Nodes/links from prev request
+			$prev_results  = $history['results'];
+			
+			echo "<pre>".print_r($previous_tier['nodes'], true)."</pre>";
 			
 			unset($previous_tier['links_counter']);                 # Remove links counter key from history array
 			unset($previous_tier['node_counter']);                  # Remove node counter key from history array
 			unset($previous_tier['nodes']);                         # Remove the nodes from the previous request
+			unset($previous_tier['results']);                       # Remove the nodes from the previous request
+
 			
 			// Get the last set of the previous request
 			$key      = key(end($previous_tier));                   # Get the T0 in the previous request
@@ -136,15 +144,16 @@ class Fetch_Ajax_Script_Multi{
 		}
 		
 		
-		$final                             = array();             # Array to store the final output data
-		$final['results']                  = $data;
+		$final                             = array();
+		$final['results']                  = (empty($prev_results)) ? $data : array_merge_recursive($data, $prev_results);
 		$final['execution_time']           = microtime(TRUE) - $start_time;
 		$final['target_page_id']           = $T0_page_id;              # Not required - Used to show the target page ID to the user
 		$final['target_page_title']        = $T0_page_title;           # Not required - Used to show the target page name to the user
 		$final['converted_node']           = $this->used_page_title;
 		$final['max_shared_links']         = $max_shared_links;
 		$final['min_shared_links']         = $min_shared_links;
-		$final['history']['data']          = $history;
+		$final['history']['data']          = $data;
+		$final['history']['results']       = $final['results'];
 		$final['history']['node_counter']  = $node_counter;
 		$final['history']['links_counter'] = $links_counter;
 		
