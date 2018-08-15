@@ -43,40 +43,52 @@ class Fetch_Ajax_Script_Multi{
 	
 	public function extendTiers($post_data){
 		$history = json_decode($post_data['history'], TRUE);
-//		echo "<pre>".print_r($history, true)."</pre>";
-		
+//		echo "<pre>" . print_r($history, TRUE) . "</pre>";
+
 		$this->fetchMultiData(array(), $history);
 	}
 	
 	
 	
 	public function fetchMultiData($post_data, $history = array()){
-		$user_input = $post_data['user_input'] ?? 'HTTP_404';                           # Default to 'HTTP_404' if not found
-		$max_tiers  = $post_data['max_tiers'] ?? 5;                                     # Default to 5 tiers
-		$start_time = microtime(TRUE);
+		$start_time       = microtime(TRUE);
+		$user_input       = $post_data['user_input'] ?? 'HTTP_404';                           # Default to 'HTTP_404' if not found
+		$max_tiers        = $post_data['max_tiers'] ?? 5;                                     # Default to 5 tiers
+		$nodes_per_tier   = 5;
+		$min_shared_links = 0;
+		$max_shared_links = 0;
 		
-		if(empty($history)){                                                                            # If there is the initial request (no history)
-			$target_data   = $this->getPageId($user_input);                                # Use the user's input to grab the correct page_id
+		// First Request
+		if(empty($history)){                                        # If there is the initial request (no history)
+			$node_counter  = 0;
+			$links_counter = 0;                                     # Initialize int variables
+			$target_data   = $this->getPageId($user_input);         # Use the user's input to grab the correct page_id
 			$T0_page_id    = $target_data['page_id'];
 			$T0_page_title = $target_data['page_title'];
 			
-			$t0_array    = $t1_array = $data = array();                                      # Initialize arrays
+			$t0_array    = $t1_array = $data = array();             # Initialize arrays
 			$t0_array[0] = $T0_page_id;
-		} else{                                                                                           # If it is an extended request
-			$previous_tier = $history;
-			unset($previous_tier['nodes']);
+		} // Subsequent Requests
+		else{                                                       # If it is an extended request
+			$node_counter  = $history['node_counter'];
+			$links_counter = $history['links_counter'];
+			$previous_tier = $history['data'];
 			
-			$key      = key(end($previous_tier));
-			$t0_array = $previous_tier[$key];
+			unset($previous_tier['links_counter']);                 # Remove links counter key from history array
+			unset($previous_tier['node_counter']);                  # Remove node counter key from history array
+			unset($previous_tier['nodes']);                         # Remove the nodes from the previous request
 			
-			$T0_page_id    = $key;
+			// Get the last set of the previous request
+			$key      = key(end($previous_tier));                   # Get the T0 in the previous request
+			$t0_array = $previous_tier[$key];                       # Set t0_array
+			
+			$T0_page_id    = $key;                                  # Specify the starting T0
 			$T0_page_title = "WIKII";
 		}
 
 //		$T0_pretty_page_title       = $this->makeTitleReadable($T0_page_title);
-		$nodes_per_tier             = 5;
+		
 		$max_visible_nodes_per_tier = 4;
-		$links_counter              = $node_counter = $min_shared_links = $max_shared_links = 0;        # Initialize int variables
 		
 		
 		for($tier = 0; $tier < $max_tiers; $tier++){                                                    # Loop through each max tier
@@ -124,87 +136,18 @@ class Fetch_Ajax_Script_Multi{
 		}
 		
 		
-		$final                      = array();             # Array to store the final output data
-		$final['results']           = $data;
-		$final['execution_time']    = microtime(TRUE) - $start_time;
-		$final['target_page_id']    = $T0_page_id;              # Not required - Used to show the target page ID to the user
-		$final['target_page_title'] = $T0_page_title;           # Not required - Used to show the target page name to the user
-		$final['converted_node']    = $this->used_page_title;
-		$final['max_shared_links']  = $max_shared_links;
-		$final['min_shared_links']  = $min_shared_links;
-		$final['history']           = $history;
+		$final                             = array();             # Array to store the final output data
+		$final['results']                  = $data;
+		$final['execution_time']           = microtime(TRUE) - $start_time;
+		$final['target_page_id']           = $T0_page_id;              # Not required - Used to show the target page ID to the user
+		$final['target_page_title']        = $T0_page_title;           # Not required - Used to show the target page name to the user
+		$final['converted_node']           = $this->used_page_title;
+		$final['max_shared_links']         = $max_shared_links;
+		$final['min_shared_links']         = $min_shared_links;
+		$final['history']['data']          = $history;
+		$final['history']['node_counter']  = $node_counter;
+		$final['history']['links_counter'] = $links_counter;
 		
-		echo json_encode($final);
-	}
-	
-	
-	
-	public function fetchMultiData__old($post_data){
-		$user_input                 = $post_data['user_input'] ?? 'HTTP_404';    # Default to 'HTTP_404' if not found
-		$max_tiers                  = $post_data['max_tiers'] ?? 5;                 # Default to 5 tiers
-		$start_time                 = microtime(TRUE);
-		$nodeColor                  = 0x0000ff;                                  # Color constant to use for all nodes
-		$linkColor                  = 0x00ffff;                                  # Color constant to use for all links
-		$target_data                = $this->getPageId($user_input);             # Use the user's input to grab the correct page_id
-		$T0_page_id                 = $target_data['page_id'];
-		$T0_page_title              = $target_data['page_title'];
-		$T0_pretty_page_title       = $this->makeTitleReadable($T0_page_title);
-		$nodes_per_tier             = 5;
-		$max_visible_nodes_per_tier = 4;
-		$links_counter              = $node_counter = $min_shared_links = $max_shared_links = 0;    # Initialize int variables
-		$t0_array                   = $t1_array = $data = $history = array();                             # Initialize arrays
-		$t0_array[0]                = $T0_page_id;
-		
-		
-		for($tier = 0; $tier < $max_tiers; $tier++){
-			$temp_array = array();
-			foreach($t0_array as $t0){                  # Loop through all the T0's
-				if(!array_key_exists($t0, $history)){    # If t0 not in history, avoids data being queried for same t0 twice
-					$history[$t0] = array();              # Add to history
-					if($node_counter == 0){             # On initial T0
-						$data['nodes'][$node_counter]['id']    = $T0_page_id;           # Set nodes[0] = T0_page_id
-						$data['nodes'][$node_counter]['name']  = $T0_page_title;
-						$data['nodes'][$node_counter]['color'] = 0xffffff;
-						$node_counter++;
-						$history['nodes'][$T0_page_id] = $target_data['total_connections'];                            # Add total_connections for T0 to history
-					}
-					$t1_array = $this->newAlgo_fetchLinks($t0, $nodes_per_tier); #Get T1s for this t0
-					foreach(array_keys($t1_array) as $t1){  #Loop through T1's
-						if(!isset($history[$t1][$t0])){        # Do not add link if the opposite has already been added
-							$history[$t0][$t1] = 1;
-//							$data['links']['visible'] = ($t0['count'] <= $max_visible_nodes_per_tier);
-							$sc_val                                  = $t1_array[$t1]['shared_connections'] / ($t1_array[$t1]['T0_total_connections'] + $t1_array[$t1]['T1_total_connections']); # shared links weighted by total
-							$min_shared_links                        = (($sc_val < $min_shared_links or $min_shared_links == 0) ? $sc_val : $min_shared_links);
-							$max_shared_links                        = (($sc_val > $max_shared_links or $max_shared_links == 0) ? $sc_val : $max_shared_links);
-							$data['links'][$links_counter]['source'] = $t0;
-							$data['links'][$links_counter]['target'] = $t1;
-							$data['links'][$links_counter]['val']    = $sc_val;
-							$data['links'][$links_counter]['color']  = $linkColor;
-							$links_counter++;
-							if(!isset($history['nodes'][$t1])){        # Only add node if it doesn't already exist
-								$data['nodes'][$node_counter]['id']    = $t1;
-								$data['nodes'][$node_counter]['name']  = $this->makeTitleReadable($t1_array[$t1]['page_title']);
-								$data['nodes'][$node_counter]['color'] = $nodeColor;
-								$history['nodes'][$t1]                 = 1; # Add the page ID to the history array so we can prevent it from being included multiple times
-								$node_counter++;
-							}
-							$temp_array[] = $t1;        #append to temp_array (to feed next t0_array)
-						}
-					}
-				}
-			}
-			$t0_array = $temp_array;
-		}
-//		echo "<pre>".print_r($data, true)."</pre>";
-		$final            = array();             # Array to store the final output data
-		$final['results'] = $data;
-//		$final['execution_time']    = $this->execution_time;    # Not required - Used to display the execution time to the user
-		$final['execution_time']    = microtime(TRUE) - $start_time;
-		$final['target_page_id']    = $T0_page_id;              # Not required - Used to show the target page ID to the user
-		$final['target_page_title'] = $T0_page_title;           # Not required - Used to show the target page name to the user
-		$final['converted_node']    = $this->used_page_title;
-		$final['max_shared_links']  = $max_shared_links;
-		$final['min_shared_links']  = $min_shared_links;
 		echo json_encode($final);
 	}
 	
