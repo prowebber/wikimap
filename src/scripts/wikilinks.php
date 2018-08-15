@@ -33,9 +33,8 @@ class Fetch_Ajax_Script_Multi{
 	 * @param $post_data        An array of data being fed from the user's submit action
 	 */
 	public function classConfig($post_data){
-		if(!isset($post_data['server_class'])){
-			return;
-		}
+		if(!isset($post_data['server_class'])) return;
+		
 		$class_name = $post_data['server_class'];       # Get the name of the class to be loaded
 		$this->$class_name($post_data);                 # Calls that function
 	}
@@ -43,7 +42,7 @@ class Fetch_Ajax_Script_Multi{
 	
 	
 	public function extendTiers($post_data){
-		$history = json_decode($post_data['history'], true);
+		$history = json_decode($post_data['history'], TRUE);
 //		echo "<pre>".print_r($history, true)."</pre>";
 		
 		$this->fetchMultiData(array(), $history);
@@ -52,34 +51,32 @@ class Fetch_Ajax_Script_Multi{
 	
 	
 	public function fetchMultiData($post_data, $history = array()){
-		$user_input                 = $post_data['user_input'] ?? 'HTTP_404';                           # Default to 'HTTP_404' if not found
-		$max_tiers                  = $post_data['max_tiers'] ?? 5;                                     # Default to 5 tiers
-		$start_time                 = microtime(TRUE);
+		$user_input = $post_data['user_input'] ?? 'HTTP_404';                           # Default to 'HTTP_404' if not found
+		$max_tiers  = $post_data['max_tiers'] ?? 5;                                     # Default to 5 tiers
+		$start_time = microtime(TRUE);
 		
 		if(empty($history)){                                                                            # If there is the initial request (no history)
-			$target_data                = $this->getPageId($user_input);                                # Use the user's input to grab the correct page_id
-			$T0_page_id                 = $target_data['page_id'];
-			$T0_page_title              = $target_data['page_title'];
+			$target_data   = $this->getPageId($user_input);                                # Use the user's input to grab the correct page_id
+			$T0_page_id    = $target_data['page_id'];
+			$T0_page_title = $target_data['page_title'];
 			
-			$t0_array                   = $t1_array = $data = array();                                      # Initialize arrays
-			$t0_array[0]                = $T0_page_id;
-		}
-		else{                                                                                           # If it is an extended request
+			$t0_array    = $t1_array = $data = array();                                      # Initialize arrays
+			$t0_array[0] = $T0_page_id;
+		} else{                                                                                           # If it is an extended request
 			$previous_tier = $history;
 			unset($previous_tier['nodes']);
 			
-			$key = key(end($previous_tier));
+			$key      = key(end($previous_tier));
 			$t0_array = $previous_tier[$key];
 			
-			$T0_page_id                 = $key;
-			$T0_page_title              = "WIKII";
+			$T0_page_id    = $key;
+			$T0_page_title = "WIKII";
 		}
-		
+
 //		$T0_pretty_page_title       = $this->makeTitleReadable($T0_page_title);
 		$nodes_per_tier             = 5;
 		$max_visible_nodes_per_tier = 4;
 		$links_counter              = $node_counter = $min_shared_links = $max_shared_links = 0;        # Initialize int variables
-		
 		
 		
 		for($tier = 0; $tier < $max_tiers; $tier++){                                                    # Loop through each max tier
@@ -218,9 +215,7 @@ class Fetch_Ajax_Script_Multi{
 		if(preg_match("/https:\/\//i", $user_input)){             # If the user entered a URL e.g. https://en.wikipedia.org/wiki/The_Simpsons
 			preg_match('/([^\/]*)$/i', $user_input, $matches);      # Get the page_title from the URL
 			$page_title = $matches[0];
-		}
-		
-		// If the user entered a page title
+		} // If the user entered a page title
 		else{
 			//$page_title = str_replace('_', ' ', $user_input);   # Convert any underscores to spaces
 			$page_title = $this->formatInputText($user_input);
