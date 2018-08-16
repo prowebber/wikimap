@@ -33,7 +33,9 @@ class Fetch_Ajax_Script_Multi{
 	 * @param $post_data        An array of data being fed from the user's submit action
 	 */
 	public function classConfig($post_data){
-		if(!isset($post_data['server_class'])) return;
+		if(!isset($post_data['server_class'])){
+			return;
+		}
 		
 		$class_name = $post_data['server_class'];       # Get the name of the class to be loaded
 		$this->$class_name($post_data);                 # Calls that function
@@ -45,8 +47,8 @@ class Fetch_Ajax_Script_Multi{
 		$history = json_decode($post_data['history'], TRUE);
 //		$prev_results = json_decode($post_data['prev_results'], TRUE);
 		
-		echo "<pre>".print_r($history, true)."</pre>";
-//		$this->fetchMultiData(array(), $history);
+		echo "<pre>" . print_r($history, TRUE) . "</pre>";
+		$this->fetchMultiData(array(), $history);
 	}
 	
 	
@@ -72,23 +74,18 @@ class Fetch_Ajax_Script_Multi{
 			$t0_array[0] = $T0_page_id;
 		} // Subsequent Requests
 		else{                                                       # If it is an extended request
-			$data          = $history['data'];
+			$data          = $history['results'];
 			$node_counter  = $history['node_counter'];
 			$links_counter = $history['links_counter'];
-			$previous_tier = $history['data'];                      # Nodes/links from prev request
-			$prev_results  = $history['results'];
-			
-			echo "<pre>".print_r($previous_tier['nodes'], true)."</pre>";
-			
-			unset($previous_tier['links_counter']);                 # Remove links counter key from history array
-			unset($previous_tier['node_counter']);                  # Remove node counter key from history array
-			unset($previous_tier['nodes']);                         # Remove the nodes from the previous request
-			unset($previous_tier['results']);                       # Remove the nodes from the previous request
+			$t0_array      = $history['prev_tier'];                      # Nodes/links from prev request
 
+			echo "<pre>" . print_r($t0_array, TRUE) . "</pre>";
+
+//			unset($previous_tier['links_counter']);                 # Remove links counter key from history array
+//			unset($previous_tier['node_counter']);                  # Remove node counter key from history array
+//			unset($previous_tier['nodes']);                         # Remove the nodes from the previous request
+//			unset($previous_tier['results']);                       # Remove the nodes from the previous request
 			
-			// Get the last set of the previous request
-			$key      = key(end($previous_tier));                   # Get the T0 in the previous request
-			$t0_array = $previous_tier[$key];                       # Set t0_array
 			
 			$T0_page_id    = $key;                                  # Specify the starting T0
 			$T0_page_title = "WIKII";
@@ -100,7 +97,8 @@ class Fetch_Ajax_Script_Multi{
 		
 		
 		for($tier = 0; $tier < $max_tiers; $tier++){                                                    # Loop through each max tier
-			$temp_array = array();
+			$temp_array      = array();
+			$prev_tier_array = array();
 			foreach($t0_array as $t0){                                                                  # Loop through all the T0's
 				if(!array_key_exists($t0, $history)){                                                   # If t0 not in history, avoids data being queried for same t0 twice
 					$history[$t0] = array();                                                            # Add to history
@@ -118,9 +116,9 @@ class Fetch_Ajax_Script_Multi{
 					
 					
 					foreach(array_keys($t1_array) as $t1){                                              # Loop through T1's
-						if(!isset($history[$t1][$t0])){                                                 # Do not add link if the opposite has already been added
-							$history[$t0][$t1] = 1;
-							
+						if(!isset($history[$t1][$t0])){                                                # Do not add link if the opposite has already been added
+							$prev_tier_array[$t1]                    = 1;
+							$history[$t0][$t1]                       = 1;
 							$sc_val                                  = $t1_array[$t1]['shared_connections'] / ($t1_array[$t1]['T0_total_connections'] + $t1_array[$t1]['T1_total_connections']); # shared links weighted by total
 							$min_shared_links                        = (($sc_val < $min_shared_links or $min_shared_links == 0) ? $sc_val : $min_shared_links);
 							$max_shared_links                        = (($sc_val > $max_shared_links or $max_shared_links == 0) ? $sc_val : $max_shared_links);
@@ -144,15 +142,20 @@ class Fetch_Ajax_Script_Multi{
 		}
 		
 		
-		$final                             = array();
-		$final['results']                  = (empty($prev_results)) ? $data : array_merge_recursive($data, $prev_results);
-		$final['execution_time']           = microtime(TRUE) - $start_time;
-		$final['target_page_id']           = $T0_page_id;              # Not required - Used to show the target page ID to the user
-		$final['target_page_title']        = $T0_page_title;           # Not required - Used to show the target page name to the user
-		$final['converted_node']           = $this->used_page_title;
-		$final['max_shared_links']         = $max_shared_links;
-		$final['min_shared_links']         = $min_shared_links;
-		$final['history']['data']          = $data;
+		$final                      = array();
+		$final['results']           = (empty($prev_results)) ? $data : array_merge_recursive($data, $prev_results);
+		$final['execution_time']    = microtime(TRUE) - $start_time;
+		$final['target_page_id']    = $T0_page_id;              # Not required - Used to show the target page ID to the user
+		$final['target_page_title'] = $T0_page_title;           # Not required - Used to show the target page name to the user
+		$final['converted_node']    = $this->used_page_title;
+		$final['max_shared_links']  = $max_shared_links;
+		$final['min_shared_links']  = $min_shared_links;
+
+//		// Get the last set of the previous request
+//		$key      = key(end($data['nodes']));                   # Get the T0 in the previous request
+//		$t0_array = $previous_tier[$key];                       # Set t0_array
+		
+		$final['history']['prev_tier']     = $prev_tier_array;                    # Set of prev T1s to feed next t0_array
 		$final['history']['results']       = $final['results'];
 		$final['history']['node_counter']  = $node_counter;
 		$final['history']['links_counter'] = $links_counter;
