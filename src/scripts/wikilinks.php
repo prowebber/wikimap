@@ -84,6 +84,7 @@ class Fetch_Ajax_Script_Multi
             $links_counter = $history['links_counter'];
             $t0_array = array_keys($history['prev_tier']);                      # Nodes/links from prev request
             $is_history_request = 1;
+            $max_tiers = 1;
 
 //			echo "Get the last key<pre>" . print_r($t0_array, TRUE) . "</pre>";
 
