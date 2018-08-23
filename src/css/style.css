@@ -7,30 +7,68 @@ body {
     overflow-y:hidden;
 }
 
+header.wikimap-header *{
+    transition: opacity 0.5s ease;
+}
 header.wikimap-header{
     background-color:transparent;
     display:inline-block;
-    position:absolute;
-    top:0; left:0;
-    width:100%;
+    opacity: 1;
+    overflow: auto;
+    margin: auto;
+    position: absolute;
+    text-align: center;
+    top: 200px; left: 0; bottom: 0; right: 0;
+    width: 100%; height: 50%;
     z-index:100;
 }
+header.wikimap-header.fade-out{
+    opacity: 0;
+}
+header.wikimap-header.user-active{      /* When the user is active */
+    margin:10px 0 0 0;
+    top: 0;
+    text-align: left;
+    width:100%;
+    transition: all 0.5s ease;
+    opacity: 1;
+}
+
+
 header.wikimap-header h1{
     color: #00b0f0;
-    display: inline-block;
-    float: left;
+    display: block;
+    font-size:70px;
     margin:0;
     padding:0 15px;
 }
-header.wikimap-header div{
-    padding:5px;
+header.wikimap-header.user-active h1{
+    display: inline-block;
+    font-size: 2em;
+    float: left;
 }
 
-/* New Slider Stuff */
-section.slider{
-    display:inline-block;
+header input.search-input{
+    background-color: #eceff1;
+    border:1px solid #37474f;
+    border-radius: 3px;
+    font-family: 'Source Code Pro', monospace;
+    font-size:24px;
+    font-weight:500;
+    padding:2px 5px;
+    width:600px;
+}
+
+header.wikimap-header.user-active input.search-input{
+    font-size:18px;
+}
+
+header.wikimap-header section.slider{
+    display:none;
     width:100%;
-    /*border-radius: 50%;*/
+}
+header.wikimap-header.user-active section.slider{
+    display:inline-block;
 }
 section.slider b{
     color: rgba(255, 255, 255, 0.25);
@@ -59,30 +97,13 @@ section.slider label input[type='range']::-webkit-slider-thumb{
     box-shadow:         0px 0px 30px 0px rgba(0,184,230,1);
 }
 
-form input{
-    background-color: #eceff1;
-    border:1px solid #37474f;
-    border-radius: 3px;
-    font-family: 'Source Code Pro', monospace;
-    font-size:18px;
-    font-weight:500;
-    padding:2px 5px;
-    width:600px;
-}
-form input .dark{
-    color:#fafafa !important;
-}
-button{
-    background-color: #607d8b;
-    color: #fff;
-    cursor:pointer;
-    border: 0;
-    border-radius: 3px;
-    font-size: 18px;
-    font-family: 'Roboto Condensed', sans-serif;
-    height: 30px;
-    margin:-2px 0 0 10px;
-}
+
+
+
+
+
+/* --------------------------------------------- Header Before -------------------------------------- */
+
 
 div.nodetest{
     color:#fff;
@@ -90,13 +111,6 @@ div.nodetest{
     position:absolute;
 }
 
-section.wiki-header{
-    background-color:#fff;
-    opacity: 0.5;
-    position:absolute;
-    width:100%;
-    top:0;
-}
 
 
 div.graph-canvas{
