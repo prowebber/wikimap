@@ -82,28 +82,16 @@ class Fetch_Ajax_Script_Multi
             $data = $history['results'];
             $node_counter = $history['node_counter'];
             $links_counter = $history['links_counter'];
-            $t0_array = array_keys($history['prev_tier']);                      # Nodes/links from prev request
+            $t0_array = array_keys($history['prev_tier']);    # Nodes/links from prev request
             $is_history_request = 1;
-            $max_tiers = 1;
-
-//			echo "Get the last key<pre>" . print_r($t0_array, TRUE) . "</pre>";
-
-//			unset($previous_tier['links_counter']);                 # Remove links counter key from history array
-//			unset($previous_tier['node_counter']);                  # Remove node counter key from history array
-//			unset($previous_tier['nodes']);                         # Remove the nodes from the previous request
-//			unset($previous_tier['results']);                       # Remove the nodes from the previous request
-//            $key = key(end($previous_tier));
-//            $t0_array = $previous_tier[$key];
-
-//			$T0_page_id    = $key;                                  # Specify the starting T0
-            $T0_page_title = "WIKII";
+            $max_tiers = 1;                                   #
+	        $T0_page_title = "WIKII";
         }
 
 //		$T0_pretty_page_title       = $this->makeTitleReadable($T0_page_title);
 
         $max_visible_nodes_per_tier = 4;
-
-
+	    
         for ($tier = 0; $tier < $max_tiers; $tier++) {                                                    # Loop through each max tier
             $temp_array = array();
             $prev_tier_array = array();
