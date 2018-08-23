@@ -139,7 +139,7 @@ class Fetch_Ajax_Script_Multi
 
         $final = array();
         $final['results'] = (empty($prev_results)) ? $data : array_merge_recursive($data, $prev_results);
-
+	    $final['new_data'] = $data;
 //        if($is_history_request) echo "AFTER: <pre>" . print_r($final['results']['nodes'], true) . "</pre>";
 
         $final['execution_time'] = microtime(TRUE) - $start_time;
