@@ -73,72 +73,64 @@ class Fetch_Ajax_Script_Multi
             $target_data = $this->getPageId($user_input);         # Use the user's input to grab the correct page_id
             $T0_page_id = $target_data['page_id'];
             $T0_page_title = $target_data['page_title'];
-
-            $t0_array = $t1_array = $data = array();             # Initialize arrays
+	        $all_history = array();
+	        $t0_array = $t1_array = $data = array();             # Initialize arrays
             $t0_array[0] = $T0_page_id;
         } // Subsequent Requests
         else {                                                       # If it is an extended request
             $this->starting_node = NULL;
             $data = $history['results'];
+            $new_data = array();
+	        $all_history = $history['all_history'];
             $node_counter = $history['node_counter'];
             $links_counter = $history['links_counter'];
-            $t0_array = array_keys($history['prev_tier']);                      # Nodes/links from prev request
+            $t0_array = array_keys($history['prev_tier']);    # Nodes/links from prev request
             $is_history_request = 1;
-
-//			echo "Get the last key<pre>" . print_r($t0_array, TRUE) . "</pre>";
-
-//			unset($previous_tier['links_counter']);                 # Remove links counter key from history array
-//			unset($previous_tier['node_counter']);                  # Remove node counter key from history array
-//			unset($previous_tier['nodes']);                         # Remove the nodes from the previous request
-//			unset($previous_tier['results']);                       # Remove the nodes from the previous request
-//            $key = key(end($previous_tier));
-//            $t0_array = $previous_tier[$key];
-
-//			$T0_page_id    = $key;                                  # Specify the starting T0
-            $T0_page_title = "WIKII";
+            $max_tiers = 1;                                   # Only load 1 more tier per extend request
+	        $T0_page_title = "WIKII";
         }
 
 //		$T0_pretty_page_title       = $this->makeTitleReadable($T0_page_title);
 
         $max_visible_nodes_per_tier = 4;
-
-
+	    
         for ($tier = 0; $tier < $max_tiers; $tier++) {                                                    # Loop through each max tier
             $temp_array = array();
             $prev_tier_array = array();
             foreach ($t0_array as $t0) {                                                                  # Loop through all the T0's
-                if (!array_key_exists($t0, $history)) {                                                   # If t0 not in history, avoids data being queried for same t0 twice
-                    $history[$t0] = array();                                                            # Add to history
+                if (!array_key_exists($t0, $all_history)) {                                                   # If t0 not in history, avoids data being queried for same t0 twice
+	                $all_history[$t0] = array();                                                            # Add to history
 
                     if ($node_counter == 0) {                                                             # On initial T0
                         $data['nodes'][$node_counter]['id'] = $t0;                           # Set nodes[0] = T0_page_id
                         $data['nodes'][$node_counter]['name'] = $T0_page_title;
                         $data['nodes'][$node_counter]['color'] = 0xffffff;
                         $node_counter++;
-                        $history['nodes'][$t0] = $target_data['total_connections'];             # Add total_connections for T0 to history
+	                    $all_history['nodes'][$t0] = $target_data['total_connections'];             # Add total_connections for T0 to history
                     }
 
-                    // Get nodes from database
                     $t1_array = $this->newAlgo_fetchLinks($t0, $nodes_per_tier);                        # Get T1s for this t0
-
-
+	                
                     foreach (array_keys($t1_array) as $t1) {                                              # Loop through T1's
-                        if (!isset($history[$t1][$t0])) {                                                # Do not add link if the opposite has already been added
+                        if (!isset($all_history[$t1][$t0])) {                                                # Do not add link if the opposite has already been added
                             $prev_tier_array[$t1] = 1;
-                            $history[$t0][$t1] = 1;
+	                        $all_history[$t0][$t1] = 1;
                             $sc_val = $t1_array[$t1]['shared_connections'] / ($t1_array[$t1]['T0_total_connections'] + $t1_array[$t1]['T1_total_connections']); # shared links weighted by total
                             $min_shared_links = (($sc_val < $min_shared_links or $min_shared_links == 0) ? $sc_val : $min_shared_links);
                             $max_shared_links = (($sc_val > $max_shared_links or $max_shared_links == 0) ? $sc_val : $max_shared_links);
                             $data['links'][$links_counter]['source'] = $t0;
                             $data['links'][$links_counter]['target'] = $t1;
                             $data['links'][$links_counter]['val'] = $sc_val;
+	                        $new_data['links'][] = $data['links'][$links_counter];      # Add to new_data array
                             $links_counter++;
+                            
 
-                            if (!isset($history['nodes'][$t1])) {                 # Only add node if it doesn't already exist
+                            if (!isset($all_history['nodes'][$t1])) {                 # Only add node if it doesn't already exist
                                 $data['nodes'][$node_counter]['id'] = $t1;
                                 $data['nodes'][$node_counter]['name'] = $this->makeTitleReadable($t1_array[$t1]['page_title']);
-                                $history['nodes'][$t1] = 1;      # Add the page ID to the history array so we can prevent it from being included multiple times
-                                $node_counter++;
+	                            $all_history['nodes'][$t1] = 1;      # Add the page ID to the history array so we can prevent it from being included multiple times
+	                            $new_data['nodes'][] = $data['nodes'][$node_counter];
+	                            $node_counter++;
                             }
                             $temp_array[] = $t1;                                # Append to temp_array (to feed next t0_array)
                         }
@@ -152,6 +144,7 @@ class Fetch_Ajax_Script_Multi
 
         $final = array();
         $final['results'] = (empty($prev_results)) ? $data : array_merge_recursive($data, $prev_results);
+	    $final['new_data'] = $new_data;
 
 //        if($is_history_request) echo "AFTER: <pre>" . print_r($final['results']['nodes'], true) . "</pre>";
 
@@ -170,7 +163,7 @@ class Fetch_Ajax_Script_Multi
         $final['history']['results'] = $final['results'];
         $final['history']['node_counter'] = $node_counter;
         $final['history']['links_counter'] = $links_counter;
-
+	    $final['history']['all_history'] = $all_history;
         echo json_encode($final);
     }
 
