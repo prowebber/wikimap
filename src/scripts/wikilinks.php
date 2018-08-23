@@ -127,6 +127,7 @@ class Fetch_Ajax_Script_Multi
 
                             if (!isset($all_history['nodes'][$t1])) {                 # Only add node if it doesn't already exist
                                 $data['nodes'][$node_counter]['id'] = $t1;
+	                            $data['nodes'][$node_counter]['color'] = 'blue';
                                 $data['nodes'][$node_counter]['name'] = $this->makeTitleReadable($t1_array[$t1]['page_title']);
 	                            $all_history['nodes'][$t1] = 1;      # Add the page ID to the history array so we can prevent it from being included multiple times
 	                            $new_data['nodes'][] = $data['nodes'][$node_counter];
