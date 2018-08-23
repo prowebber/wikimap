@@ -8,6 +8,7 @@ body {
 }
 
 header.wikimap-header *{
+    transition: top 0s linear;
     transition: opacity 0.5s ease;
 }
 header.wikimap-header{
@@ -24,13 +25,14 @@ header.wikimap-header{
 }
 header.wikimap-header.fade-out{
     opacity: 0;
+    transition: opacity 0.5s ease;
 }
 header.wikimap-header.user-active{      /* When the user is active */
     margin:10px 0 0 0;
     top: 0;
     text-align: left;
     width:100%;
-    transition: all 0.5s ease;
+    transition: opacity 0.5s ease;
     opacity: 1;
 }
 
