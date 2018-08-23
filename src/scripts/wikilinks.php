@@ -84,7 +84,7 @@ class Fetch_Ajax_Script_Multi
             $links_counter = $history['links_counter'];
             $t0_array = array_keys($history['prev_tier']);    # Nodes/links from prev request
             $is_history_request = 1;
-            $max_tiers = 1;                                   #
+            $max_tiers = 1;                                   # Only load 1 more tier per extend request
 	        $T0_page_title = "WIKII";
         }
 
