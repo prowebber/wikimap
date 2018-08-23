@@ -119,10 +119,8 @@ class Fetch_Ajax_Script_Multi
                         $history['nodes'][$t0] = $target_data['total_connections'];             # Add total_connections for T0 to history
                     }
 
-                    // Get nodes from database
                     $t1_array = $this->newAlgo_fetchLinks($t0, $nodes_per_tier);                        # Get T1s for this t0
-
-
+	                
                     foreach (array_keys($t1_array) as $t1) {                                              # Loop through T1's
                         if (!isset($history[$t1][$t0])) {                                                # Do not add link if the opposite has already been added
                             $prev_tier_array[$t1] = 1;
