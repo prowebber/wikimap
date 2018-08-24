@@ -17,6 +17,7 @@ header.wikimap-header{
     opacity: 1;
     overflow: auto;
     margin: auto;
+    pointer-events: none;
     position: absolute;
     text-align: center;
     top: 200px; left: 0; bottom: 0; right: 0;
@@ -43,6 +44,7 @@ header.wikimap-header h1{
     font-size:70px;
     margin:0;
     padding:0 15px;
+    pointer-events: all;
 }
 header.wikimap-header.user-active h1{
     display: inline-block;
@@ -58,6 +60,7 @@ header input.search-input{
     font-size:24px;
     font-weight:500;
     padding:2px 5px;
+    pointer-events: all;
     width:600px;
 }
 
@@ -180,7 +183,6 @@ span.close{
 }
 .hide{
     display:none !important;
-    pointer-events: none;
 }
 
 
