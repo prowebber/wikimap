@@ -186,15 +186,20 @@ span.close{
 }
 
 
+
 header.wikimap-header section.sphinx-results{
     background-color: rgba(0, 0, 0, 0.30);
     border-radius: 3px;
-    display:inline-block;
-    position:absolute;
-    top:65px; left:142px;
-
+    display:block;
+    margin:auto;
     width:610px; height:80px;
     z-index: 500;
+}
+header.wikimap-header.user-active section.sphinx-results{
+    position: absolute;
+    top: 30px;
+    left: 140px;
+    width: 610px;
 }
 ul.sphinx-search-results{
     list-style: none;
@@ -209,8 +214,10 @@ ul.sphinx-search-results li{
     font-weight:300;
     margin: 0;
     padding: 5px;
+    pointer-events: auto;
     width: 100%;
     height: 30px;
+    z-index:501;
 }
 ul.sphinx-search-results li:hover{
     background-color: rgba(2, 136, 209, 0.30);
