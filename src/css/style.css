@@ -7,74 +7,131 @@ body {
     overflow-y:hidden;
 }
 
+header.wikimap-header *{
+    transition: top 0s linear;
+    transition: opacity 0.5s ease;
+}
 header.wikimap-header{
     background-color:transparent;
     display:inline-block;
-    position:absolute;
-    top:0; left:0;
-    width:100%;
+    opacity: 1;
+    overflow: auto;
+    margin: auto;
+    pointer-events: none;
+    position: absolute;
+    text-align: center;
+    top: 200px; left: 0; bottom: 0; right: 0;
+    width: 100%; height: 50%;
     z-index:100;
 }
-header.wikimap-header h1{
-    color: #00b0f0;
-    display: inline-block;
-    float: left;
-    margin:0;
-    padding:0 15px;
+header.wikimap-header.fade-out{
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
-header.wikimap-header div{
-    padding:5px;
+header.wikimap-header.user-active{      /* When the user is active */
+    margin:10px 0 0 0;
+    top: 0;
+    text-align: left;
+    width:100%;
+    transition: opacity 0.5s ease;
+    opacity: 1;
 }
 
-form input{
+
+header.wikimap-header h1{
+    color: #00b0f0;
+    display: block;
+    font-size:70px;
+    margin:0;
+    padding:0 15px;
+    pointer-events: all;
+}
+header.wikimap-header.user-active h1{
+    display: inline-block;
+    font-size: 2em;
+    float: left;
+}
+
+header input.search-input{
     background-color: #eceff1;
     border:1px solid #37474f;
     border-radius: 3px;
     font-family: 'Source Code Pro', monospace;
-    font-size:18px;
+    font-size:24px;
     font-weight:500;
     padding:2px 5px;
+    pointer-events: all;
     width:600px;
 }
-form input .dark{
-    color:#fafafa !important;
-}
-button{
-    background-color: #607d8b;
-    color: #fff;
-    cursor:pointer;
-    border: 0;
-    border-radius: 3px;
-    font-size: 18px;
-    font-family: 'Roboto Condensed', sans-serif;
-    height: 30px;
-    margin:-2px 0 0 10px;
+
+header.wikimap-header.user-active input.search-input{
+    font-size:18px;
 }
 
-section.response-results{
+header.wikimap-header section.slider{
     display:none;
-    font-family: 'Source Code Pro', monospace;
-    font-size:14px;
-    text-align: center;
+    width:100%;
 }
-textarea{
-    font-family: 'Source Code Pro', monospace;
-    font-size:14px;
-    margin:0 auto;
-    width:80%;
-    height:500px;
+header.wikimap-header.user-active section.slider{
+    display:inline-block;
+}
+section.slider b{
+    color: rgba(255, 255, 255, 0.25);
+    display:inline-block;
+    float:left;
+    margin-left:40px;
+    width:100px;
+}
+section.slider label input[type='range']{
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 3px;
+    -webkit-appearance: none;
+    width:610px; height:10px;
+}
+section.slider label input[type='range']:focus{
+    outline: none;
+}
+section.slider label input[type='range']::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.30);
+    cursor: pointer;
+    box-shadow:         0px 0px 30px 0px rgba(0,184,230,1);
 }
 
-table.results{
-    float:left;
-    text-align: left;
-    font-family: 'Roboto Condensed', sans-serif;
+
+
+
+
+
+/* --------------------------------------------- Header Before -------------------------------------- */
+
+
+div.nodetest{
+    color:#fff;
+    display:inline-block;
+    position:absolute;
 }
-table.results tr td:nth-child(1){
-    font-weight:300;
-}
-table.results tr td:nth-child(1){
-    font-weight:700;
+
+
+
+div.graph-canvas{
+    position: absolute;
+    top: 0;
+    left: 0;
+ }
+.graph-nav-info{
+    position: absolute !important;
+    color: lavender;
+    font-size: 18px !important;
+    top: 90%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.5;
 }
 
 .graph-tooltip {
@@ -83,36 +140,24 @@ table.results tr td:nth-child(1){
     font-size:18px !important;
 }
 
-.node-label {
-     position: absolute !important;
-     color: lavender;
- }
-
-div.nodetest{
-    color:#fff;
-    display:inline-block;
-    position:absolute;
-}
-
-section.wiki-header{
-    background-color:#fff;
-    opacity: 0.5;
-    position:absolute;
-    width:100%;
-    top:0;
-}
-
-
-div.graph-canvas{
+.graph-info-msg{
+    color: teal;
+    font-size: 60px; !important
     position: absolute;
-    top: 0;
-    left: 0;
- }
+    top: 90%;
+    left: 50%;
+    opacity: 0.8;
+}
+
+.node-label {
+    position: absolute !important;
+    color: lavender;
+}
 
 
 aside.pageinfo{
     background-color: #fafafa;
-    display: none;
+    display: inline-block;
     position: absolute;
     top: 0;
     right: -400px;
@@ -124,7 +169,10 @@ aside.pageinfo iframe{
     width:100%;
     height:100%;
 }
-
+aside.pageinfo.show{
+    right:0px;
+    transition-duration: 1s;
+}
 
 span.close{
     display:none;
@@ -132,4 +180,39 @@ span.close{
     top: 100px;
     right: 410px;
     color: #fff;
+}
+.hide{
+    display:none !important;
+}
+
+
+header.wikimap-header section.sphinx-results{
+    background-color: rgba(0, 0, 0, 0.30);
+    border-radius: 3px;
+    display:inline-block;
+    position:absolute;
+    top:65px; left:142px;
+
+    width:610px; height:80px;
+    z-index: 500;
+}
+ul.sphinx-search-results{
+    list-style: none;
+    margin:0;
+    padding:0;
+}
+ul.sphinx-search-results li{
+    border-bottom: 1px solid rgba(2, 136, 209, 0.30);
+    box-sizing: border-box;
+    color: rgba(2, 136, 209, 0.70);
+    cursor: pointer;
+    font-weight:300;
+    margin: 0;
+    padding: 5px;
+    width: 100%;
+    height: 30px;
+}
+ul.sphinx-search-results li:hover{
+    background-color: rgba(2, 136, 209, 0.30);
+    color:#fff;
 }
