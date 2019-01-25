@@ -157,7 +157,7 @@ div.graph-canvas{
 
 aside.pageinfo{
     background-color: #fafafa;
-    display: inline-block;
+    display: none;
     position: absolute;
     top: 0;
     right: -400px;
@@ -171,6 +171,7 @@ aside.pageinfo iframe{
 }
 aside.pageinfo.show{
     right:0px;
+    display: inline-block;
     transition-duration: 1s;
 }
 
