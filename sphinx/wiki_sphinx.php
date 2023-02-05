@@ -10,7 +10,7 @@ $keyword = $_POST['user_input'] ?? 'apple';
 
 class Sphinx_Shit{
 	public function __construct(){
-		$this->db = new SQL_Database(WIKIMAP_DB);
+		$this->db = new SQL_Database(WORKSTATION_DB);
 	}
 	
 	
